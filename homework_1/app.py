@@ -54,7 +54,7 @@ def export_parquet(df):
     Args:
         df (dataframe): filtered dataframe by user input
     """    
-    df.to_parquet(f"{cwd}/parquet/movies.parquet.gzip'", compression='gzip')  
+    df.to_parquet(f"{cwd}/parquet/movies.parquet.gzip'", compression='brotli')  
     print('Parquet file exported')
 
 
@@ -99,3 +99,4 @@ while True:
             break
         else:
             print('Program stopped please check it requirements')
+            
