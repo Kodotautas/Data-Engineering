@@ -12,14 +12,21 @@ import re
 
 #get working directory
 cwd = os.getcwd()
-print(cwd)
 
-# --------------------------- READ & SAVE DATAFRAME -------------------------- #
-#create dataframe from file
-df = pd.read_csv(f"{cwd}/ml-latest-small/movies.csv", sep=',')
+# ---------------------------------- PARSER ---------------------------------- #
+# init parser
+parser = argparse.ArgumentParser(description="Filter movies.csv data.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
+#parse command line arguments
+parser.add_argument("--year", default=2018, action="store_true", help="Filter dataframe by year")
+parser.add_argument("--genre", default='Comedy', action="store_true", help="Filter dataframe by genre")
+args = parser.parse_args()
 
-# ---------------------------------- FILTER ---------------------------------- #
+# -------------------------- READ, MODIFY DATAFRAME -------------------------- #
+#parse dataframe from csv
+# df = pd.read_csv(f"{cwd}/ml-latest-small/movies.csv", sep=',')
+df = pd.read_csv(f"{cwd}/ml-latest-small/movies.csv",  sep=',')
+
 #get year, clean
 # (TO DO: clean full or use regex \(\d{4}\))
 df['year'] = df['title'].str[-5:].str[:-1]
@@ -29,14 +36,6 @@ df['year'] = df['year'].apply(lambda x: pd.to_numeric(x, errors = 'coerce')).dro
 min_year = int(df['year'].min())
 max_year = int(df['year'].max())
 
-tank_to_fish = {
-    "tank_a": "shark, tuna, herring",
-    "tank_b": "cod, flounder",
-}
-
-parser = argparse.ArgumentParser(description="List fish in aquarium.")
-parser.add_argument("tank", type=str)
-args = parser.parse_args()
-
-fish = tank_to_fish.get(args.tank, "")
-print(fish)
+# ---------------------------------- FILTERS --------------------------------- #
+if args.year:
+    print(df[df['year'] == 2017])
