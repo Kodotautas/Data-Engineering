@@ -10,7 +10,7 @@ import re
 # by user inputs full dataframe is filtered by year and/or main genre
 # results are printed to console and exported as parquet format file 
 
-#get working directory
+#get working directory.
 cwd = os.getcwd()
 print(cwd)
 
