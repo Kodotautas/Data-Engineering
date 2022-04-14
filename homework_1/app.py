@@ -10,7 +10,18 @@ import re
 # by user inputs full dataframe is filtered by year and/or main genre
 # results are printed to console and exported as parquet format file 
 
-#get working directory.
+# --------------------------------- FUNCTIONS -------------------------------- #
+def export_parquet(df):
+    """function export parquet file to cwd/parquet directory
+
+    Args:
+        df (dataframe): filtered dataframe by user input
+    """    
+    df.to_parquet(f"{cwd}/movies.parquet.gzip'", compression='brotli')  
+    print('Parquet file exported')
+# ------------------------------------- . ------------------------------------ #
+
+#get working directory
 cwd = os.getcwd()
 print(cwd)
 
@@ -47,17 +58,6 @@ genres = df['main_genre'].unique()
 
 
 # -------------------------------- USER INPUTS / APP ------------------------------- #
-#functions
-def export_parquet(df):
-    """function export parquet file to cwd/parquet directory
-
-    Args:
-        df (dataframe): filtered dataframe by user input
-    """    
-    df.to_parquet(f"{cwd}/parquet/movies.parquet.gzip'", compression='brotli')  
-    print('Parquet file exported')
-
-
 #ask user input choices, print values and save as Parquet
 while True:
     need_year = input("Would you like choose movies year? (yes/no) ")
@@ -71,7 +71,6 @@ while True:
         if need_genre == 'yes':
             print('You can choose main genres: ','\n'.join(genres))
             genre_choose = input("Write genre: ")
-            print('Please choose available main genre.')
             user_df = df[(df['year'] == year) & (df['main_genre'] == genre_choose)]
             print(user_df)
             export_parquet(user_df)
@@ -98,5 +97,4 @@ while True:
             print("You didn't choose any values. App is closed")
             break
         else:
-            print('Program stopped please check it requirements')
-            
+            print('Program stopped please check input requirements')
