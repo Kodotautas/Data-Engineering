@@ -1,61 +1,135 @@
 ,movieId,title,genres,year
-8,9,Sudden Death (1995),Action,1995.0
-63,71,Fair Game (1995),Action,1995.0
-172,204,Under Siege 2: Dark Territory (1995),Action,1995.0
-215,251,"Hunted, The (1995)",Action,1995.0
-555,667,Bloodsport 2 (a.k.a. Bloodsport II: The Next Kumite) (1996),Action,1996.0
-876,1170,Best of the Best 3: No Turning Back (1995),Action,1995.0
-1143,1497,Double Team (1997),Action,1997.0
-1201,1599,Steel (1997),Action,1997.0
-1647,2196,Knock Off (1998),Action,1998.0
-1910,2534,Avalanche (1978),Action,1978.0
-2120,2817,Aces: Iron Eagle III (1992),Action,1992.0
-2230,2965,"Omega Code, The (1999)",Action,1999.0
-2466,3283,Minnie and Moskowitz (1971),Action,1971.0
-2575,3444,Bloodsport (1988),Action,1988.0
-2821,3769,Thunderbolt and Lightfoot (1974),Action,1974.0
-3122,4200,Double Impact (1991),Action,1991.0
-3245,4387,Kiss of the Dragon (2001),Action,2001.0
-3281,4441,Game of Death (1978),Action,1978.0
-3345,4531,Red Heat (1988),Action,1988.0
-3362,4568,Best of the Best (1989),Action,1989.0
-3391,4614,Kickboxer (1989),Action,1989.0
-3404,4630,No Holds Barred (1989),Action,1989.0
-3408,4636,"Punisher, The (1989)",Action,1989.0
-3555,4866,"Last Castle, The (2001)",Action,2001.0
-3603,4947,"Gauntlet, The (1977)",Action,1977.0
-3725,5155,"Big Bird Cage, The (1972)",Action,1972.0
-3726,5156,"Big Doll House, The (1971)",Action,1971.0
-3742,5212,"Octagon, The (1980)",Action,1980.0
-3848,5409,Rapid Fire (1992),Action,1992.0
-3959,5580,Aspen Extreme (1993),Action,1993.0
-4123,5922,Attila (Attila Flagello di Dio) (1982),Action,1982.0
-4209,6095,Dragon Lord (a.k.a. Dragon Strike) (Long Xiao Ye) (1982),Action,1982.0
-4379,6417,Live Wire (1992),Action,1992.0
-4536,6723,Once Upon a Time in China III (Wong Fei-hung tsi sam: Siwong tsangba) (1993),Action,1993.0
-4824,7192,Only the Strong (1993),Action,1993.0
-4879,7310,Raw Deal (1986),Action,1986.0
-4920,7376,Walking Tall (2004),Action,2004.0
-4991,7704,"Delta Force, The (1986)",Action,1986.0
-5052,7899,Master of the Flying Guillotine (Du bi quan wang da po xue di zi) (1975),Action,1975.0
-5502,26399,Five Deadly Venoms (1978),Action,1978.0
-5554,26696,Lionheart (1990),Action,1990.0
-6711,58627,Never Back Down (2008),Action,2008.0
-6891,63276,Crows Zero (Kurôzu zero) (2007),Action,2007.0
-7168,71910,"Tournament, The (2009)",Action,2009.0
-7208,72874,"Peacekeeper, The (1997)",Action,1997.0
-7388,79553,Ip Man 2 (2010),Action,2010.0
-7579,86142,13 Assassins (Jûsan-nin no shikaku) (2010),Action,2010.0
-8558,116169,Reign of Assassins (2010),Action,2010.0
-8702,123310,Tornado! (1996),Action,1996.0
-8720,126420,American Heist (2015),Action,2015.0
-8789,129657,Tracers (2015),Action,2015.0
-8920,135803,Five Element Ninjas (1982),Action,1982.0
-9034,141400,Invincible Shaolin (1978),Action,1978.0
-9153,147657,Masked Avengers (1981),Action,1981.0
-9232,152591,Ip Man 3 (2015),Action,2015.0
-9290,158402,The Crew (2016),Action,2016.0
-9328,160438,Jason Bourne (2016),Action,2016.0
-9339,160684,Marauders (2016),Action,2016.0
-9354,161290,Vigilante Diaries (2016),Action,2016.0
-9615,176935,Geostorm (2017),Action,2017.0
+15,16,Casino (1995),Crime|Drama,1995.0
+29,30,Shanghai Triad (Yao a yao yao dao waipo qiao) (1995),Crime|Drama,1995.0
+33,36,Dead Man Walking (1995),Crime|Drama,1995.0
+86,97,"Hate (Haine, La) (1995)",Crime|Drama,1995.0
+102,117,"Young Poisoner's Handbook, The (1995)",Crime|Drama,1995.0
+211,247,Heavenly Creatures (1994),Crime|Drama,1994.0
+245,283,New Jersey Drive (1995),Crime|Drama,1995.0
+251,290,Once Were Warriors (1994),Crime|Drama,1994.0
+277,318,"Shawshank Redemption, The (1994)",Crime|Drama,1994.0
+348,391,Jason's Lyric (1994),Crime|Drama,1994.0
+354,409,Above the Rim (1994),Crime|Drama,1994.0
+375,431,Carlito's Way (1993),Crime|Drama,1993.0
+634,806,American Buffalo (1996),Crime|Drama,1996.0
+659,858,"Godfather, The (1972)",Crime|Drama,1972.0
+824,1084,Bonnie and Clyde (1967),Crime|Drama,1967.0
+846,1114,"Funeral, The (1996)",Crime|Drama,1996.0
+914,1213,Goodfellas (1990),Crime|Drama,1990.0
+922,1221,"Godfather: Part II, The (1974)",Crime|Drama,1974.0
+928,1227,Once Upon a Time in America (1984),Crime|Drama,1984.0
+1124,1466,Donnie Brasco (1997),Crime|Drama,1997.0
+1332,1804,"Newton Boys, The (1998)",Crime|Drama,1998.0
+1336,1809,Fireworks (Hana-bi) (1997),Crime|Drama,1997.0
+1422,1945,On the Waterfront (1954),Crime|Drama,1954.0
+1574,2112,Grand Canyon (1991),Crime|Drama,1991.0
+1679,2260,Wisdom (1986),Crime|Drama,1986.0
+1734,2329,American History X (1998),Crime|Drama,1998.0
+1737,2332,Belly (1998),Crime|Drama,1998.0
+2052,2731,"400 Blows, The (Les quatre cents coups) (1959)",Crime|Drama,1959.0
+2083,2769,"Yards, The (2000)",Crime|Drama,2000.0
+2276,3019,Drugstore Cowboy (1989),Crime|Drama,1989.0
+2372,3147,"Green Mile, The (1999)",Crime|Drama,1999.0
+2409,3198,Papillon (1973),Crime|Drama,1973.0
+2459,3272,Bad Lieutenant (1992),Crime|Drama,1992.0
+2494,3328,Ghost Dog: The Way of the Samurai (1999),Crime|Drama,1999.0
+2514,3362,Dog Day Afternoon (1975),Crime|Drama,1975.0
+2793,3735,Serpico (1973),Crime|Drama,1973.0
+2826,3783,Croupier (1998),Crime|Drama,1998.0
+3024,4043,At Close Range (1986),Crime|Drama,1986.0
+3083,4139,No Man's Land (1987),Crime|Drama,1987.0
+3134,4218,River's Edge (1986),Crime|Drama,1986.0
+3152,4239,Blow (2001),Crime|Drama,2001.0
+3235,4371,Baby Boy (2001),Crime|Drama,2001.0
+3239,4378,Sexy Beast (2000),Crime|Drama,2000.0
+3386,4608,"Innocent Man, An (1989)",Crime|Drama,1989.0
+3388,4611,Johnny Handsome (1989),Crime|Drama,1989.0
+3443,4695,Who'll Stop the Rain (1978),Crime|Drama,1978.0
+3534,4830,Brubaker (1980),Crime|Drama,1980.0
+3565,4881,"Man Who Wasn't There, The (2001)",Crime|Drama,2001.0
+3571,4889,Heist (2001),Crime|Drama,2001.0
+3733,5178,Fun (1994),Crime|Drama,1994.0
+3809,5333,Bob le Flambeur (1955),Crime|Drama,1955.0
+3836,5384,I Want to Live! (1958),Crime|Drama,1958.0
+3890,5464,Road to Perdition (2002),Crime|Drama,2002.0
+3949,5563,City by the Sea (2002),Crime|Drama,2002.0
+3957,5575,Alias Betty (Betty Fisher et autres histoires) (2001),Crime|Drama,2001.0
+4019,5680,Auto Focus (2002),Crime|Drama,2002.0
+4024,5689,Billy Bathgate (1991),Crime|Drama,1991.0
+4108,5888,Brother (Brat) (1997),Crime|Drama,1997.0
+4116,5901,Empire (2002),Crime|Drama,2002.0
+4139,5954,25th Hour (2002),Crime|Drama,2002.0
+4141,5956,Gangs of New York (2002),Crime|Drama,2002.0
+4159,5989,Catch Me If You Can (2002),Crime|Drama,2002.0
+4295,6279,"Good Thief, The (2002)",Crime|Drama,2002.0
+4302,6288,Better Luck Tomorrow (2002),Crime|Drama,2002.0
+4305,6291,Lilya 4-Ever (Lilja 4-ever) (2002),Crime|Drama,2002.0
+4331,6330,People I Know (2002),Crime|Drama,2002.0
+4575,6796,Boyz N the Hood (1991),Crime|Drama,1991.0
+4576,6797,Bugsy (1991),Crime|Drama,1991.0
+4601,6852,In Cold Blood (1967),Crime|Drama,1967.0
+4606,6860,Mobsters (1991),Crime|Drama,1991.0
+4638,6932,Shattered Glass (2003),Crime|Drama,2003.0
+4686,6997,Hoffa (1992),Crime|Drama,1992.0
+4805,7160,Monster (2003),Crime|Drama,2003.0
+4892,7326,"Reckoning, The (2004)",Crime|Drama,2004.0
+4921,7377,"United States of Leland, The (2003)",Crime|Drama,2003.0
+4949,7459,Carandiru (2003),Crime|Drama,2003.0
+5006,7748,Pierrot le fou (1965),Crime|Drama,1965.0
+5026,7820,"Virgin Spring, The (Jungfrukällan) (1960)",Crime|Drama,1960.0
+5094,8042,Mean Streets (1973),Crime|Drama,1973.0
+5120,8158,Rush (1991),Crime|Drama,1991.0
+5211,8495,Animal Factory (2000),Crime|Drama,2000.0
+5266,8645,"Maria Full of Grace (Maria, Llena eres de gracia) (2004)",Crime|Drama,2004.0
+5268,8656,"Short Film About Killing, A (Krótki film o zabijaniu) (1988)",Crime|Drama,1988.0
+5408,25773,Little Caesar (1931),Crime|Drama,1931.0
+5410,25788,Scarface (1932),Crime|Drama,1932.0
+5439,25963,"Young and the Damned, The (Olvidados, Los) (1950)",Crime|Drama,1950.0
+5446,26052,Pickpocket (1959),Crime|Drama,1959.0
+5462,26151,Au Hasard Balthazar (1966),Crime|Drama,1966.0
+5661,27592,Sympathy for Mr. Vengeance (Boksuneun naui geot) (2002),Crime|Drama,2002.0
+5758,31086,Battles Without Honor & Humanity (Jingi naki tatakai) (1973),Crime|Drama,1973.0
+5772,31309,Rocco and His Brothers (Rocco e i suoi fratelli) (1960),Crime|Drama,1960.0
+5885,33166,Crash (2004),Crime|Drama,2004.0
+5940,34271,Hustle & Flow (2005),Crime|Drama,2005.0
+6006,37731,Green Street Hooligans (a.k.a. Hooligans) (2005),Crime|Drama,2005.0
+6010,37741,Capote (2005),Crime|Drama,2005.0
+6031,39292,"Good Night, and Good Luck. (2005)",Crime|Drama,2005.0
+6138,43912,Freedomland (2006),Crime|Drama,2006.0
+6156,44204,Tsotsi (2005),Crime|Drama,2005.0
+6161,44301,Lights in the Dusk (Laitakaupungin valot) (2006),Crime|Drama,2006.0
+6188,44937,"Child, The (L'enfant) (2005)",Crime|Drama,2005.0
+6201,45210,United 93 (2006),Crime|Drama,2006.0
+6386,50442,Alpha Dog (2007),Crime|Drama,2007.0
+6459,52375,"Hoax, The (2007)",Crime|Drama,2007.0
+6501,53447,Paranoid Park (2007),Crime|Drama,2007.0
+6560,55036,Gotti (1996),Crime|Drama,1996.0
+6587,55272,We Own the Night (2007),Crime|Drama,2007.0
+6613,55820,No Country for Old Men (2007),Crime|Drama,2007.0
+6767,59995,Boy A (2007),Crime|Drama,2007.0
+6800,60753,Felon (2008),Crime|Drama,2008.0
+6856,62250,Gomorrah (Gomorra) (2008),Crime|Drama,2008.0
+6874,62792,Pride and Glory (2008),Crime|Drama,2008.0
+6899,63768,Tattooed Life (Irezumi ichidai) (1965),Crime|Drama,1965.0
+6922,64614,Gran Torino (2008),Crime|Drama,2008.0
+7055,69394,"Stoning of Soraya M., The (2008)",Crime|Drama,2008.0
+7085,70015,Polytechnique (2009),Crime|Drama,2009.0
+7187,72405,Bad Lieutenant: Port of Call New Orleans (2009),Crime|Drama,2009.0
+7226,73344,"Prophet, A (Un Prophète) (2009)",Crime|Drama,2009.0
+7227,73386,Staten Island (2009),Crime|Drama,2009.0
+7332,77846,12 Angry Men (1997),Crime|Drama,1997.0
+7535,84844,Brother 2 (Brat 2) (2000),Crime|Drama,2000.0
+7967,96432,Lawless (2012),Crime|Drama,2012.0
+8129,101525,"Place Beyond the Pines, The (2012)",Crime|Drama,2012.0
+8188,103137,"Bling Ring, The (2013)",Crime|Drama,2013.0
+8311,106916,American Hustle (2013),Crime|Drama,2013.0
+8928,136018,Black Mass (2015),Crime|Drama,2015.0
+8952,136664,Wild Horses (2015),Crime|Drama,2015.0
+8991,139415,Irrational Man (2015),Crime|Drama,2015.0
+9118,145745,Witch Hunt (1999),Crime|Drama,1999.0
+9352,161127,The Infiltrator (2016),Crime|Drama,2016.0
+9357,161582,Hell or High Water (2016),Crime|Drama,2016.0
+9465,168266,T2: Trainspotting (2017),Crime|Drama,2017.0
+9577,174727,Good Time (2017),Crime|Drama,2017.0
+9618,177593,"Three Billboards Outside Ebbing, Missouri (2017)",Crime|Drama,2017.0
+9714,188675,Dogman (2018),Crime|Drama,2018.0

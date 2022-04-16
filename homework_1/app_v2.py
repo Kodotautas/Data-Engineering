@@ -1,5 +1,4 @@
 import argparse
-import requests, zipfile, io
 import os
 import pandas as pd
 import re
@@ -41,7 +40,7 @@ parser = argparse.ArgumentParser(description="Filter movies.csv data.", formatte
 
 #parse command line arguments
 parser.add_argument('-Y', '--year', dest='year', type=int, nargs='+', help='Write one or multiple years. e.g. 2014 2017')
-parser.add_argument('-G','--genre', dest='genre', type=str, choices=list_of_genres, help='Write movie genre or multiple genres. e.g. Drama')
+parser.add_argument('-G','--genre', dest='genre', type=str, help="Write movie genre or multiple genres. e.g. 'Drama', 'Crime|Drama'")
 
 args = parser.parse_args()
 
@@ -59,4 +58,3 @@ if args.genre:
     filtered = df[df['genres'] == args.genre]
     print(filtered)
     export_parquet(filtered)
-    print(args.genre)
