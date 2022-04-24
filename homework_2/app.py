@@ -26,10 +26,10 @@ def run_query_and_export(conn, query, year_cli, genre_cli):
     """run SQL query and results is exported to csv file
 
     Args:
-        conn (_type_): connection to database
-        query (_type_): SQL query which function will run
-        year_cli (_type_): year input from CLI
-        genre_cli (_type_): genre (will be excluded) input from CLI 
+        conn (str): connection to database
+        query (str): SQL query which function will run
+        year_cli (int): year input from CLI
+        genre_cli (str): genre (will be excluded) input from CLI 
     """
     cur = conn.cursor()
 
@@ -42,7 +42,7 @@ def run_query_and_export(conn, query, year_cli, genre_cli):
 parser = argparse.ArgumentParser(description="Filter movies.csv data.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
 #parse command line arguments
-parser.add_argument('-Y', '--year', dest='year', type=int, nargs='+', action='append', help='Write one or multiple years. e.g. 2014 2017')
+parser.add_argument('-Y', '--year', dest='year', type=int, nargs='+', action='append', help='Write year. e.g. 2014')
 parser.add_argument('-G','--genre', dest='genre', type=str, action='append', help="Write movie genre or multiple genres. e.g. 'Drama' or 'Crime|Drama'")
 
 args = parser.parse_args()
