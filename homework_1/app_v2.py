@@ -2,6 +2,7 @@ import argparse
 import os
 import pandas as pd
 import re
+import numpy as np
 
 # ----------------------------- SHORT DESCRIPTION ---------------------------- #
 # read csv file about movies (from grouplens)
@@ -27,8 +28,13 @@ def export_parquet(df):
 df = pd.read_csv(f"{cwd}/ml-latest-small/movies.csv",  sep=',', encoding="UTF-8")
 
 #get year, clean
-df['year'] = df['title'].str[-5:].str[:-1]
+df['year'] = df['title'].str.extract(r'(\(\d{4}\))')
+df['year'] = df['year'].str[-5:].str[:-1]
 df['year'] = df['year'].apply(lambda x: pd.to_numeric(x, errors = 'coerce')).dropna().astype(int)
+#edge cases like movie: Death Note: Desu nôto (2006–2007)
+df['year'] = np.where(df['title']=='Death Note: Desu nôto (2006–2007)', 2006, df['year'])
+#drop movies without year
+df = df.dropna()
 
 #extract unique list of genres
 list_of_genres = df['genres'].unique()

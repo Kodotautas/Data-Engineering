@@ -3,6 +3,7 @@ import argparse
 import os
 import pandas as pd
 import sqlite3
+import numpy as np
 
 # ----------------------------- SHORT DESCRIPTION ---------------------------- #
 # read csv files from ml-latest-small folder (data about movies)
@@ -63,9 +64,15 @@ links = pd.read_csv(f'{cwd}/ml-latest-small/links.csv')
 
 #movies file
 movies = pd.read_csv(f'{cwd}/ml-latest-small/movies.csv')
-#get year, clean
-movies['year'] = movies['title'].str[-5:].str[:-1]
+#movies:get year, clean
+movies['year'] = movies['title'].str.extract(r'(\(\d{4}\))')
+movies['year'] = movies['year'].str[-5:].str[:-1]
 movies['year'] = movies['year'].apply(lambda x: pd.to_numeric(x, errors = 'coerce')).dropna().astype(int)
+movies = movies.drop(columns='Unnamed: 3')
+#edge cases like movie: Death Note: Desu nôto (2006–2007)
+movies['year'] = np.where(movies['title']=='Death Note: Desu nôto (2006–2007)', 2006, movies['year'])
+#drop movies without year
+movies = movies.dropna()
 
 #ratings file
 ratings = pd.read_csv(f'{cwd}/ml-latest-small/ratings.csv')
