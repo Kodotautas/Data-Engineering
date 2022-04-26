@@ -31,7 +31,8 @@ movies = movies.dropna()
 movies['genres'] = movies['genres'].str.split('|')
 #convert genres to normal form
 lens = list(map(len, movies['genres'].values))
- 
+
+#normalize table 
 movies = pd.DataFrame({'movieId': np.repeat(movies['movieId'], lens),
                     'title': np.repeat(movies['title'], lens),
                     'year': np.repeat(movies['year'], lens),
