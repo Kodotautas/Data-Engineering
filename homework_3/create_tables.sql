@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS links
 CREATE TABLE IF NOT EXISTS movies
 (movieId INT, title TEXT, year INT, genres TEXT);
 
---create movies table
+--create ratings table
 CREATE TABLE IF NOT EXISTS ratings
 (userId INT, movieId INT, rating INT, timestamp INT, datetime TEXT);
 

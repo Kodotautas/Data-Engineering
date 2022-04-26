@@ -4,6 +4,9 @@ import argparse
 import pandas as pd
 import sqlite3
 import numpy as np
+import calendar
+import time
+from datetime import datetime
 
 # ----------------------------- SHORT DESCRIPTION ---------------------------- #
 
@@ -19,6 +22,24 @@ import numpy as np
 cwd = os.getcwd()
 
 # --------------------------------- FUNCTIONS -------------------------------- #
+def get_timestamp():
+    """function generates current timestamp
+    Returns:
+        str: the corresponding Unix timestamp value
+    """    
+    gmt = time.gmtime()
+    ts = calendar.timegm(gmt)
+    return ts
+
+def to_tuple(lst):
+    """function convert to 
+    Args:
+        lst (list): data list which need to convert
+    Returns:
+        tuple: returns converted tuple
+    """    
+    return tuple(to_tuple(i) if isinstance(i, list) else i for i in lst)
+
 # def ratings_input():
 #     """function get ratings data inputs from CLI and save values to list
 #     Returns:
@@ -51,6 +72,11 @@ cwd = os.getcwd()
 #         pass
 #     return ratings_values
 
+# ----------------------------- CONNECT DATABASE ----------------------------- #
+connection = sqlite3.connect('movies.db')
+cursor = connection.cursor()
+
+
 # ---------------------------- ARGPARSER & INPUTS --------------------------- #
 # init parser
 parser = argparse.ArgumentParser(description="Filter movies.csv data.", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -61,26 +87,56 @@ parser.add_argument('-M','--movie', dest='movie', type=str, nargs='+', help="Mov
 
 args = parser.parse_args()
 
-ratings_values = []
+
+# ---------------------------- ADD RATINGS SECTION --------------------------- #
+#ratings
+ratings_values = [] #get from CLI
+
 for _, value in parser.parse_args()._get_kwargs():
     if value is not None:
-        print(value)
+        # print(value)
         ratings_values.append(value)
+    
+#get time stamp and convert it to datetime
+ts = get_timestamp()
+dt = datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
 
-print(ratings_values)
-#rating list and getter
+#append timestamp and datetime to list items
+if range(len(ratings_values) >= 0):
+    for i in range(len(ratings_values) + 1):
+        for item in ratings_values:
+            try:
+                item[i].append(ts)
+                item[i].append(dt)
+            except Exception as e: #error occurs if user input one row data
+                ratings_values.append(ts)
+                ratings_values.append(dt)
 
-# ratings_input()
 
-#movies list and getter
-movies_values = []
-# movies_input()
+print('Ratings list:', ratings_values)
+converted =  to_tuple(ratings_values)
+print(converted)
 
+#inser data to ratings table
+try:
+    sqliteConnection = sqlite3.connect('movies.db')
+    cursor = sqliteConnection.cursor()
+    print("Successfully Connected to SQLite")
 
+    sqlite_insert_query = """INSERT INTO ratings
+                          (userId, movieId, rating, timestamp, datetime) 
+                           VALUES (22, 333, 7, 9999999, '2022-03-01 00:00:00')
+                          """
 
-# -------------------------- TRANSFER TO OLTP TABLES ------------------------- #
-# connection = sqlite3.connect('movies.db')
-# cursor = connection.cursor()
+    count = cursor.execute(sqlite_insert_query)
+    sqliteConnection.commit()
+    print("Record inserted successfully into ratings table ", cursor.rowcount)
+    cursor.close()
 
-# TO DO: allow multiple inputs from CLI 
-# or append every time after new entry
+except sqlite3.Error as error:
+    print("Failed to insert data into sqlite table", error)
+finally:
+    if sqliteConnection:
+        sqliteConnection.close()
+        print("The SQLite connection is closed")
+        
