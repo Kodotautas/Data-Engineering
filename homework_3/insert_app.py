@@ -8,6 +8,7 @@ import time
 from datetime import datetime
 from functools import reduce
 import re
+import copy
 
 # ----------------------------- SHORT DESCRIPTION ---------------------------- #
 
@@ -67,6 +68,15 @@ def sql_inserter(db_name, sql_statement):
             sqliteConnection.close()
             print("The SQLite connection is closed")
 
+def duplicate(copyList, n):
+    """function n times copy list items to create it nested or not
+    Args:
+        copyList (list): list name
+        n (int): how many times copy list
+    Returns:
+        list: multiple times copied list
+    """    
+    return [copy.deepcopy(ele) for ele in copyList for _ in range(n)] 
 
 # ----------------------------- CONNECT DATABASE ----------------------------- #
 connection = sqlite3.connect('movies.db')
@@ -155,15 +165,21 @@ if args.movie:
     final_movies_values.append(movieid_cli)
     final_movies_values.append(title_cli)
     final_movies_values.append(year)
+  
+    #create multiple lists
+    final_movies_values = duplicate([final_movies_values], len(genres))
     
-    final_movies_values.extend(genres)
-        
+    for l in final_movies_values:
+        i = 0
+        for i in range(len(genres)):
+            l.append(genres[i])
+        i += 1
+            
     print(final_movies_values)
-    print(genres)
-    print(movieid_cli, title_cli, genres_cli)
     
-    #TO DO: create nested list for SQL input
-
+    
+    
+    
     
     #ratings data SQL statement
     # movies_insert_query = f'''INSERT INTO movies
