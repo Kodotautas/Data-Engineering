@@ -10,18 +10,16 @@ from functools import reduce
 import re
 import copy
 
+
 # ----------------------------- SHORT DESCRIPTION ---------------------------- #
 
-# 4.Develop an application#2 which
-# 	1.Receives either new ratings or new movies (e.g., via CLI dialogue)
-# 	2.Populates proper OLTP tables with it
-# 	3.Consider edge cases!
-# 5.Provide README.md explaining what your app does and what to use it
-# 6.Commit the code to your Coherent Bitbucket.
-# 7.Extra: try to avoid using high-level frameworks like Spark and Pandas
+# App receives either new ratings or new movies (via CLI dialogue)
+# Populates proper OLTP tables with data from user
+# App check edge cases: is year not string, capitalize title and genres
 
 #get working directory
 cwd = os.getcwd()
+
 
 # --------------------------------- FUNCTIONS -------------------------------- #
 def get_timestamp():
@@ -121,7 +119,9 @@ if args.rating:
                             VALUES {ratings_values}'''
             
     sql_inserter('movies.db', rating_insert_query)
-
+    print('Ratings added.')
+    
+    
 # ---------------------------- ADD MOVIE SECTION --------------------------- #
 movies_values = [] #get from CLI
 
@@ -131,9 +131,6 @@ if args.movie:
         if value is not None:
             movies_values.append(value)
         
-    # #combine to one list and convert to tuple
-    # movies_values = to_tuple(reduce(lambda x,y: x+y, movies_values))
-    # print('Final movie data: ', movies_values)
 
     # ------------------------------ SOME EDGE CASES ----------------------------- #
     #save as variables from year, genre inputs
@@ -153,12 +150,15 @@ if args.movie:
     
     #get year
     year = re.search('(\(\d{4}\))', title_cli)[0]
-    year = year[1:-1]
+    year = int(year[1:-1])
     
     #genres 
     genres_cli = str(args.movie[2])
     #delimit data by: , | . ; symbols
     genres = re.split("[, \|.;]", genres_cli)
+    #capitalize each genre
+    for i in range(len(genres)):
+        genres[i] = genres[i].capitalize()    
     
     #construct final values
     final_movies_values = []
@@ -169,24 +169,26 @@ if args.movie:
     #create multiple lists
     final_movies_values = duplicate([final_movies_values], len(genres))
     
-    for l in final_movies_values:
-        i = 0
-        for i in range(len(genres)):
-            l.append(genres[i])
-        i += 1
+    #add separate genres to list
+    for i in range(len(genres)):
+        final_movies_values[i].insert(i + 10, genres[i])
             
-    print(final_movies_values)
+    if len(genres) != 1:
+        final_movies_values = to_tuple(reduce(lambda x,y: x+y, final_movies_values))
+        #split whole tuple to nested tuple
+        final_movies_values = str(tuple(final_movies_values[x:x + 4] for x in range(0, len(final_movies_values), 4)))[1:-1]
+
+    else:
+        final_movies_values = to_tuple(reduce(lambda x,y: x+y, final_movies_values))
+            
+    print('Your final input is: ', '\n', final_movies_values)
     
-    
-    
-    
-    
-    #ratings data SQL statement
-    # movies_insert_query = f'''INSERT INTO movies
-    #                         (movieId, title, genres) 
-    #                         VALUES {movies_values}'''
+     
+    #movies data SQL statement
+    movies_insert_query = f'''INSERT INTO movies
+                             (movieId, title, year, genres) 
+                             VALUES {final_movies_values}'''
     
 
-    
-            
-    # sql_inserter('movies.db', rating_insert_query)
+    sql_inserter('movies.db', movies_insert_query)
+    print('Movies data added.')

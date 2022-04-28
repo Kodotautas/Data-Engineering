@@ -3,6 +3,7 @@ import pandas as pd
 import sqlite3
 import numpy as np
 
+
 # ----------------------------- SHORT DESCRIPTION ---------------------------- #
 # read csv files from ml-latest-small folder (data about movies)
 # extract movies year, genres and normalize genres column
@@ -10,6 +11,7 @@ import numpy as np
 
 #get working directory
 cwd = os.getcwd()
+
 
 # ------------------------ READ, TRANSFORM DATAFRAMES ------------------------ #
 # Read CSV files
@@ -49,6 +51,7 @@ tags = pd.read_csv(f'{cwd}/ml-latest-small/tags.csv')
 tags['datetime'] = pd.to_datetime(tags['timestamp'], unit='s')
 
 print('CSV files parsed')
+
 
 # ------------------------ CREATE DATABASE AND TABLES ------------------------ #
 connection = sqlite3.connect('movies.db')
