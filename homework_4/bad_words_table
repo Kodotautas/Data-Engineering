@@ -1,0 +1,17 @@
+SELECT filter.movieId, title, year, lower_tag, category as status
+FROM(
+	SELECT
+		movieId,
+		lower(tag) as lower_tag,
+		CASE
+			WHEN lower(tag) IN (SELECT bad_words_column FROM bad_words) THEN
+				'moderate'
+			ELSE
+				'OK'
+			END category
+	FROM
+		tags
+	) AS filter
+LEFT JOIN movies
+ON filter.movieId = movies.movieId
+ORDER BY CATEGORY DESC

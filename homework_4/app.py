@@ -3,20 +3,13 @@ import pandas as pd
 import sqlite3
 
 # ----------------------------- SHORT DESCRIPTION ---------------------------- #
-# Task 4
-# 1.Take your OLTP from HW#3 and ml-latest-small.zip dataset. 
-# 2.Develop an application which 
-# 	1.Reads your DB
-# 	2.Reads tags.csv 
-# 	3.Builds a report(sql view) on movies, containing 
-# 		1.avg rating
-# 		2.count of existing tags (metric describing the will of people to discuss the movie)
-# 		3.total word count of tags (metric on opinion expression intensity) 
-# 		4.mark on whether movie page should be moderated better (tags contain sensitive or obscene language)
-# 	4.Uploads the report your separate OLAP DB.
-# 3.Prepare views that will allow your OLAP users analyze metrics 2.3.1-2.3.4 by genres
-# 4.Extra: try to avoid using high-level frameworks like Spark and Pandas
-
+# App use OLTP from HW#3 and ml-latest-small.zip dataset. 
+# Reads database (tags.csv was read previously)
+# Create a reports(sql views) on movies, containing: 
+# 		1.Average rating for movie per genre
+# 		2.Count of existing tags (metric describing the will of people to discuss the movie)
+# 		3.Total word count of tags (metric on opinion expression intensity) 
+# 		4.Mark on whether movie page should be moderated better (tags contain sensitive or obscene language)
 #get cwd
 cwd = os.getcwd()
 
@@ -107,3 +100,39 @@ conn.commit()
 print(f'VIEW: {count_of_different_tags} is created.')
 
 # ----------------------- IS MOVIE SHOULD BE MODERATED? ---------------------- #
+#load and insert to db bad words list from Github repository: "List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words"
+bad_words = pd.read_csv(f'{cwd}/ml-latest-small/bad_words.csv')
+bad_words.to_sql('bad_words', con=conn, if_exists = 'replace')
+
+bad_words_filter = 'bad_words_filter'
+drop_view(bad_words_filter)
+
+#SQL statement
+conn.execute(f'''
+            CREATE VIEW {bad_words_filter} AS
+            SELECT filter.movieId, title, year, lower_tag, category as status
+            FROM(
+                SELECT
+                    movieId,
+                    lower(tag) as lower_tag,
+                    CASE
+                        WHEN lower(tag) IN (SELECT bad_words_column FROM bad_words) THEN
+                            'moderate'
+                        ELSE
+                            'OK'
+                        END category
+                FROM
+                    tags
+                ) AS filter
+            LEFT JOIN movies
+            ON filter.movieId = movies.movieId
+            ORDER BY CATEGORY DESC
+            ''')
+
+conn.commit()
+print(f'VIEW: {bad_words_filter} is created.')
+
+# ----------------------------- CLOSE CONNECTION ----------------------------- #
+conn.commit()
+conn.close()
+print('Views created & connection closed')
