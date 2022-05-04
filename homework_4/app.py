@@ -3,13 +3,14 @@ import pandas as pd
 import sqlite3
 
 # ----------------------------- SHORT DESCRIPTION ---------------------------- #
-# App use OLTP from HW#3 and ml-latest-small.zip dataset. 
+# App use OLTP from HW#3 and ml-latest-small.zip, bad words datasets. 
 # Reads database (tags.csv was read previously)
 # Create a reports(sql views) on movies, containing: 
 # 		1.Average rating for movie per genre
 # 		2.Count of existing tags (metric describing the will of people to discuss the movie)
 # 		3.Total word count of tags (metric on opinion expression intensity) 
-# 		4.Mark on whether movie page should be moderated better (tags contain sensitive or obscene language)
+# 		4.Mark movie's page which should be moderated better (tags contain sensitive or obscene language)
+
 #get cwd
 cwd = os.getcwd()
 
@@ -104,6 +105,7 @@ print(f'VIEW: {count_of_different_tags} is created.')
 bad_words = pd.read_csv(f'{cwd}/ml-latest-small/bad_words.csv')
 bad_words.to_sql('bad_words', con=conn, if_exists = 'replace')
 
+
 bad_words_filter = 'bad_words_filter'
 drop_view(bad_words_filter)
 
@@ -116,7 +118,7 @@ conn.execute(f'''
                     movieId,
                     lower(tag) as lower_tag,
                     CASE
-                        WHEN lower(tag) IN (SELECT bad_words_column FROM bad_words) THEN
+                        WHEN lower(tag) IN (SELECT bad_words_column FROM tags, bad_words WHERE bad_words_column like '%' || bad_words.bad_words_column || '%') THEN
                             'moderate'
                         ELSE
                             'OK'
