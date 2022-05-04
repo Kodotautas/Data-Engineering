@@ -8,13 +8,12 @@
  		b.Count of existing tags (metric describing the will of people to discuss the movie)
  		c.Total word count of tags (metric on opinion expression intensity) 
  		d.Mark movie's page which should be moderated better (tags contain sensitive or obscene language)
+        
+Bad words list: 
+https://github.com/LDNOOBW/List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words/blob/master/en
 
 ## Main functions / arguments
 `def create_connection(db_file)` - function connect db from homework_3. (`db_file` - database file path.
 
 ## How to use it?
 run file in terminal: `"python app.py"` or text editor.
-
-
-
-
