@@ -28,7 +28,7 @@ def drop_view(view_name):
     conn.execute(f'''DROP VIEW IF EXISTS {view_name}''')
     
 # ------------------------------ SQLITE SECTION ------------------------------ #
-conn = create_connection('movies.db')
+conn = create_connection('reports.db')
 
 # ---------------------------------------------------------------------------- #
 #                                    REPORTS                                   #
