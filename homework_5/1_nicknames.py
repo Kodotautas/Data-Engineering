@@ -37,10 +37,11 @@ users_df = pd.read_sql_query('''SELECT DISTINCT userId FROM ratings''', conn)
 
 # --------------------- GENERATE NICKNAMES AND LOAD TO DB -------------------- #
 #heroes names list from Github
-heroes_df = pd.read_json('https://raw.githubusercontent.com/sindresorhus/superheroes/main/superheroes.json').rename(columns={0:'hero'})
+heroes_df = pd.read_json('https://raw.githubusercontent.com/sindresorhus/superheroes/main/superheroes.json', orient='records').rename(columns={0:'hero'})
 
 #generate nicknames for users
-users_df['nickname'] = users_df['userId'].map(lambda x: heroes_df['hero'].sample() + ' ' + str(x))
+users_df['nickname'] = users_df['userId'].map(lambda x: ' '.join((heroes_df['hero'].sample()).values) + ' ' + str(x))
+users_df['nickname'] = users_df['nickname'].astype(str)
 
 #load userId and nicknames to OLTP
 try:
@@ -48,8 +49,7 @@ try:
 except ValueError:
     print("You want regenerate nicknames for users. Change action parameter to 'replace'.")
 
-#
+#close connection
 conn.commit()
 conn.close()
-
 print('Database connection closed.')
