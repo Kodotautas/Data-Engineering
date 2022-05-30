@@ -19,13 +19,13 @@ def export_parquet(df):
     Args:
         df (dataframe): filtered dataframe by user input
     """    
-    df.to_parquet(f"{cwd}/parquet/movies.parquet.gzip'", compression='brotli')  
+    df.to_parquet(f"{cwd}/files/parquet/movies.parquet.gzip'", compression='brotli')  
     print('Parquet file exported')
 
 
 # -------------------------- READ, MODIFY DATAFRAME -------------------------- #
 #parse dataframe from csv
-df = pd.read_csv(f"{cwd}/ml-latest-small/movies.csv",  sep=',', encoding="UTF-8")
+df = pd.read_csv(f"{cwd}/files/ml-latest-small/movies.csv",  sep=',', encoding="UTF-8")
 
 #get year, clean
 df['year'] = df['title'].str.extract(r'(\(\d{4}\))')

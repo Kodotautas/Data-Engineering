@@ -20,7 +20,7 @@ def export_to_csv(df):
     Args:
         df (dataframe): filtered dataframe by sql query
     """    
-    df.to_csv(f"{cwd}/results.csv")  
+    df.to_csv(f"{cwd}/files/results.csv")  
     print('Results exported to csv')
 
 def run_query_and_export(conn, query, year_cli, genre_cli):
@@ -60,10 +60,10 @@ print(f'Excluded genre: {genre_cli}')
 # ------------------------ READ, TRANSFORM DATAFRAMES ------------------------ #
 # Read CSV files
 #links file
-links = pd.read_csv(f'{cwd}/ml-latest-small/links.csv')
+links = pd.read_csv(f'{cwd}/files/ml-latest-small/links.csv')
 
 #movies file
-movies = pd.read_csv(f'{cwd}/ml-latest-small/movies.csv')
+movies = pd.read_csv(f'{cwd}/files/ml-latest-small/movies.csv')
 #movies:get year, clean
 movies['year'] = movies['title'].str.extract(r'(\(\d{4}\))')
 movies['year'] = movies['year'].str[-5:].str[:-1]
@@ -75,12 +75,12 @@ movies['year'] = np.where(movies['title']=='Death Note: Desu nôto (2006–2007)
 movies = movies.dropna()
 
 #ratings file
-ratings = pd.read_csv(f'{cwd}/ml-latest-small/ratings.csv')
+ratings = pd.read_csv(f'{cwd}/files/ml-latest-small/ratings.csv')
 #convert timestamp to datetime and drop timestamp column
 ratings['datetime'] = pd.to_datetime(ratings['timestamp'], unit='s')
 
 #tags file
-tags = pd.read_csv(f'{cwd}/ml-latest-small/tags.csv')
+tags = pd.read_csv(f'{cwd}/files/ml-latest-small/tags.csv')
 #convert timestamp to datetime and drop timestamp column
 tags['datetime'] = pd.to_datetime(tags['timestamp'], unit='s')
 

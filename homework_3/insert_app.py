@@ -77,7 +77,7 @@ def duplicate(copyList, n):
     return [copy.deepcopy(ele) for ele in copyList for _ in range(n)] 
 
 # ----------------------------- CONNECT DATABASE ----------------------------- #
-connection = sqlite3.connect('movies.db')
+connection = sqlite3.connect(f'{cwd}/SQL_DB/movies.db')
 cursor = connection.cursor()
 
 
@@ -118,7 +118,7 @@ if args.rating:
                             (userId, movieId, rating, timestamp, datetime) 
                             VALUES {ratings_values}'''
             
-    sql_inserter('movies.db', rating_insert_query)
+    sql_inserter(f'{cwd}/SQL_DB/movies.db', rating_insert_query)
     print('Ratings added.')
     
     
@@ -190,5 +190,5 @@ if args.movie:
                              VALUES {final_movies_values}'''
     
 
-    sql_inserter('movies.db', movies_insert_query)
+    sql_inserter(f'{cwd}/SQL_DB/movies.db', movies_insert_query)
     print('Movies data added.')

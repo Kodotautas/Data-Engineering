@@ -1,0 +1,5 @@
+Task 7
+
+1. Setup GCP Dataproc cluster (include Zeppelin on creation step)+++
+2. Download ml-latest-small.zip to Master Node and put its content into HDFS++++
+3. Build Hive external tables on top of every entity inside dataset. Commit DDLs to Bitbucket. 

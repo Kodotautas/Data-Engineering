@@ -16,10 +16,10 @@ cwd = os.getcwd()
 # ------------------------ READ, TRANSFORM DATAFRAMES ------------------------ #
 # Read CSV files
 #LINKS file
-links = pd.read_csv(f'{cwd}/ml-latest-small/links.csv')
+links = pd.read_csv(f'{cwd}/files/ml-latest-small/links.csv')
 
 #MOVIES file
-movies = pd.read_csv(f'{cwd}/ml-latest-small/movies.csv')
+movies = pd.read_csv(f'{cwd}/files/ml-latest-small/movies.csv')
 #movies:get year, clean
 movies['year'] = movies['title'].str.extract(r'(\(\d{4}\))')
 movies['year'] = movies['year'].str[-5:].str[:-1]
@@ -41,12 +41,12 @@ movies = pd.DataFrame({'movieId': np.repeat(movies['movieId'], lens),
                     'genres': np.concatenate(movies['genres'].values)})
  
 #RATINGS file
-ratings = pd.read_csv(f'{cwd}/ml-latest-small/ratings.csv')
+ratings = pd.read_csv(f'{cwd}/files/ml-latest-small/ratings.csv')
 #convert timestamp to datetime and drop timestamp column
 ratings['datetime'] = pd.to_datetime(ratings['timestamp'], unit='s')
 
 #TAGS file
-tags = pd.read_csv(f'{cwd}/ml-latest-small/tags.csv')
+tags = pd.read_csv(f'{cwd}/files/ml-latest-small/tags.csv')
 #convert timestamp to datetime and drop timestamp column
 tags['datetime'] = pd.to_datetime(tags['timestamp'], unit='s')
 
@@ -57,7 +57,7 @@ print('CSV files parsed')
 connection = sqlite3.connect('movies.db')
 cursor = connection.cursor()
 
-sql_file = open("create_tables.sql")
+sql_file = open(f'{cwd}/SQL_DB/create_tables.sql')
 sql_as_string = sql_file.read()
 cursor.executescript(sql_as_string)
 print('Create tables if not exist')

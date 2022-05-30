@@ -28,7 +28,7 @@ def drop_view(view_name):
     conn.execute(f'''DROP VIEW IF EXISTS {view_name}''')
     
 # ------------------------------ SQLITE SECTION ------------------------------ #
-conn = create_connection('reports.db')
+conn = create_connection(f'{cwd}/SQL_DB/reports.db')
 
 # ---------------------------------------------------------------------------- #
 #                                    REPORTS                                   #
@@ -102,7 +102,7 @@ print(f'VIEW: {count_of_different_tags} is created.')
 
 # ----------------------- IS MOVIE SHOULD BE MODERATED? ---------------------- #
 #load and insert to db bad words list from Github repository: "List-of-Dirty-Naughty-Obscene-and-Otherwise-Bad-Words"
-bad_words = pd.read_csv(f'{cwd}/ml-latest-small/bad_words.csv')
+bad_words = pd.read_csv(f'{cwd}/files/ml-latest-small/bad_words.csv')
 bad_words.to_sql('bad_words', con=conn, if_exists = 'replace')
 
 

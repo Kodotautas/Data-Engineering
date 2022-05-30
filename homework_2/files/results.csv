@@ -1,0 +1,259 @@
+,userId,user_count,movieId,title,year,rating,genres,user_rank
+0,534,2,112897,The Expendables 3 (2014),2014.0,4.0,Action|Adventure,1
+1,567,1,112911,Hercules (2014),2014.0,1.5,Action|Adventure,2
+2,509,1,129229,Northmen - A Viking Saga (2014),2014.0,2.0,Action|Adventure,3
+3,610,1,112175,How to Train Your Dragon 2 (2014),2014.0,5.0,Action|Adventure|Animation,1
+4,567,1,112175,How to Train Your Dragon 2 (2014),2014.0,2.5,Action|Adventure|Animation,2
+5,551,1,112175,How to Train Your Dragon 2 (2014),2014.0,3.5,Action|Adventure|Animation,3
+6,89,1,111146,Alpha and Omega 3: The Great Wolf Games (2014),2014.0,4.5,Action|Adventure|Animation|Children|Comedy,1
+7,610,1,108932,The Lego Movie (2014),2014.0,4.0,Action|Adventure|Animation|Children|Comedy|Fantasy,1
+8,596,1,108932,The Lego Movie (2014),2014.0,3.5,Action|Adventure|Animation|Children|Comedy|Fantasy,2
+9,586,1,108932,The Lego Movie (2014),2014.0,4.5,Action|Adventure|Animation|Children|Comedy|Fantasy,3
+10,586,1,111659,Maleficent (2014),2014.0,3.0,Action|Adventure|Children|IMAX,1
+11,564,1,111659,Maleficent (2014),2014.0,1.0,Action|Adventure|Children|IMAX,2
+12,563,1,111659,Maleficent (2014),2014.0,3.5,Action|Adventure|Children|IMAX,3
+13,610,1,113348,Teenage Mutant Ninja Turtles (2014),2014.0,2.5,Action|Adventure|Comedy,1
+14,448,1,113348,Teenage Mutant Ninja Turtles (2014),2014.0,2.0,Action|Adventure|Comedy,2
+15,380,1,113348,Teenage Mutant Ninja Turtles (2014),2014.0,3.0,Action|Adventure|Comedy,3
+16,448,2,116887,Exodus: Gods and Kings (2014),2014.0,2.0,Action|Adventure|Drama,1
+17,382,1,116887,Exodus: Gods and Kings (2014),2014.0,3.5,Action|Adventure|Drama,2
+18,210,1,123553,In the Name of the King III (2014),2014.0,1.0,Action|Adventure|Drama|Fantasy,1
+19,448,4,111362,X-Men: Days of Future Past (2014),2014.0,3.0,Action|Adventure|Sci-Fi,1
+20,567,3,111362,X-Men: Days of Future Past (2014),2014.0,3.0,Action|Adventure|Sci-Fi,2
+21,534,3,111362,X-Men: Days of Future Past (2014),2014.0,3.5,Action|Adventure|Sci-Fi,3
+22,610,2,110102,Captain America: The Winter Soldier (2014),2014.0,4.5,Action|Adventure|Sci-Fi|IMAX,1
+23,567,2,110102,Captain America: The Winter Soldier (2014),2014.0,3.5,Action|Adventure|Sci-Fi|IMAX,2
+24,448,2,110102,Captain America: The Winter Soldier (2014),2014.0,3.5,Action|Adventure|Sci-Fi|IMAX,3
+25,610,1,115617,Big Hero 6 (2014),2014.0,4.0,Action|Animation|Comedy,1
+26,601,1,115617,Big Hero 6 (2014),2014.0,4.5,Action|Animation|Comedy,2
+27,599,1,115617,Big Hero 6 (2014),2014.0,2.0,Action|Animation|Comedy,3
+28,380,1,113278,Batman: Assault on Arkham (2014),2014.0,3.0,Action|Animation|Crime|Thriller,1
+29,564,2,108156,Ride Along (2014),2014.0,4.0,Action|Comedy,1
+30,448,2,108156,Ride Along (2014),2014.0,2.0,Action|Comedy,2
+31,365,2,108156,Ride Along (2014),2014.0,3.0,Action|Comedy,3
+32,448,3,112138,22 Jump Street (2014),2014.0,4.0,Action|Comedy|Crime,1
+33,249,2,112138,22 Jump Street (2014),2014.0,4.0,Action|Comedy|Crime,2
+34,21,2,112138,22 Jump Street (2014),2014.0,3.5,Action|Comedy|Crime,3
+35,610,2,111663,Zombeavers (2014),2014.0,3.5,Action|Comedy|Horror,1
+36,534,1,116668,Dead Snow 2: Red vs. Dead (2014) ,2014.0,3.5,Action|Comedy|Horror,2
+37,448,1,111663,Zombeavers (2014),2014.0,1.5,Action|Comedy|Horror,3
+38,448,1,115151,Plastic (2014),2014.0,2.0,Action|Crime,1
+39,448,3,110826,Brick Mansions (2014),2014.0,1.5,Action|Crime|Drama,1
+40,567,1,109569,3 Days to Kill (2014),2014.0,0.5,Action|Crime|Drama,2
+41,365,1,109569,3 Days to Kill (2014),2014.0,1.5,Action|Crime|Drama,3
+42,534,1,109850,Need for Speed (2014),2014.0,4.0,Action|Crime|Drama|IMAX,1
+43,305,1,109850,Need for Speed (2014),2014.0,3.5,Action|Crime|Drama|IMAX,2
+44,448,1,132618,Kite (2014),2014.0,1.5,Action|Crime|Drama|Mystery|Thriller,1
+45,610,1,138632,Tokyo Tribe (2014),2014.0,5.0,Action|Crime|Drama|Sci-Fi,1
+46,305,1,114246,"Walk Among the Tombstones, A (2014)",2014.0,3.0,Action|Crime|Mystery|Thriller,1
+47,599,1,108945,RoboCop (2014),2014.0,2.5,Action|Crime|Sci-Fi|IMAX,1
+48,567,1,108945,RoboCop (2014),2014.0,1.5,Action|Crime|Sci-Fi|IMAX,2
+49,534,1,108945,RoboCop (2014),2014.0,1.5,Action|Crime|Sci-Fi|IMAX,3
+50,610,3,110501,The Raid 2: Berandal (2014),2014.0,5.0,Action|Crime|Thriller,1
+51,599,2,110501,The Raid 2: Berandal (2014),2014.0,3.0,Action|Crime|Thriller,2
+52,448,2,112171,"Equalizer, The (2014)",2014.0,2.5,Action|Crime|Thriller,3
+53,21,1,111844,Bad Asses (Bad Ass 2) (2014),2014.0,3.5,Action|Drama,1
+54,610,1,114795,Dracula Untold (2014),2014.0,2.5,Action|Drama|Fantasy,1
+55,408,1,114795,Dracula Untold (2014),2014.0,4.0,Action|Drama|Fantasy,2
+56,382,1,114795,Dracula Untold (2014),2014.0,3.5,Action|Drama|Fantasy,3
+57,448,2,122490,Wicked Blood (2014),2014.0,1.5,Action|Drama|Thriller,1
+58,567,1,108188,Jack Ryan: Shadow Recruit (2014),2014.0,1.5,Action|Drama|Thriller|IMAX,1
+59,448,1,108188,Jack Ryan: Shadow Recruit (2014),2014.0,2.5,Action|Drama|Thriller|IMAX,2
+60,610,1,117867,'71 (2014),2014.0,4.0,Action|Drama|Thriller|War,1
+61,448,2,108928,"Monuments Men, The (2014)",2014.0,2.5,Action|Drama|War,1
+62,339,2,108928,"Monuments Men, The (2014)",2014.0,3.0,Action|Drama|War,2
+63,249,2,108928,"Monuments Men, The (2014)",2014.0,3.5,Action|Drama|War,3
+64,448,1,109673,300: Rise of an Empire (2014),2014.0,1.5,Action|Drama|War|IMAX,1
+65,365,1,109673,300: Rise of an Empire (2014),2014.0,3.0,Action|Drama|War|IMAX,2
+66,298,1,109673,300: Rise of an Empire (2014),2014.0,0.5,Action|Drama|War|IMAX,3
+67,567,1,108689,"I, Frankenstein (2014)",2014.0,0.5,Action|Fantasy|Sci-Fi|IMAX,1
+68,119,1,108689,"I, Frankenstein (2014)",2014.0,4.0,Action|Fantasy|Sci-Fi|IMAX,2
+69,610,1,112818,"Purge: Anarchy, The (2014)",2014.0,3.0,Action|Horror|Thriller,1
+70,534,1,112818,"Purge: Anarchy, The (2014)",2014.0,3.5,Action|Horror|Thriller,2
+71,448,1,112818,"Purge: Anarchy, The (2014)",2014.0,2.0,Action|Horror|Thriller,3
+72,610,1,114180,"Maze Runner, The (2014)",2014.0,3.5,Action|Mystery|Sci-Fi,1
+73,599,1,114180,"Maze Runner, The (2014)",2014.0,2.5,Action|Mystery|Sci-Fi,2
+74,567,1,114180,"Maze Runner, The (2014)",2014.0,1.0,Action|Mystery|Sci-Fi,3
+75,610,1,114935,Predestination (2014),2014.0,4.5,Action|Mystery|Sci-Fi|Thriller,1
+76,511,1,114935,Predestination (2014),2014.0,3.5,Action|Mystery|Sci-Fi|Thriller,2
+77,448,1,114935,Predestination (2014),2014.0,4.0,Action|Mystery|Sci-Fi|Thriller,3
+78,610,1,109578,Non-Stop (2014),2014.0,3.5,Action|Mystery|Thriller,1
+79,567,1,109578,Non-Stop (2014),2014.0,2.0,Action|Mystery|Thriller,2
+80,249,1,109578,Non-Stop (2014),2014.0,3.5,Action|Mystery|Thriller,3
+81,610,1,111360,Lucy (2014),2014.0,3.0,Action|Sci-Fi,1
+82,599,1,111360,Lucy (2014),2014.0,3.0,Action|Sci-Fi,2
+83,567,1,111360,Lucy (2014),2014.0,1.0,Action|Sci-Fi,3
+84,610,2,110553,The Amazing Spider-Man 2 (2014),2014.0,2.0,Action|Sci-Fi|IMAX,1
+85,596,2,110553,The Amazing Spider-Man 2 (2014),2014.0,2.5,Action|Sci-Fi|IMAX,2
+86,567,2,110553,The Amazing Spider-Man 2 (2014),2014.0,1.0,Action|Sci-Fi|IMAX,3
+87,125,1,149902,Garm Wars: The Last Druid (2014),2014.0,2.0,Action|Sci-Fi|Thriller,1
+88,448,2,107962,Freezer (2014),2014.0,2.0,Action|Thriller,1
+89,610,1,115149,John Wick (2014),2014.0,5.0,Action|Thriller,2
+90,599,1,115149,John Wick (2014),2014.0,3.0,Action|Thriller,3
+91,563,1,114662,American Sniper (2014),2014.0,3.5,Action|War,1
+92,551,1,114662,American Sniper (2014),2014.0,4.0,Action|War,2
+93,448,1,114662,American Sniper (2014),2014.0,4.0,Action|War,3
+94,586,2,110130,"Nut Job, The (2014)",2014.0,4.0,Adventure|Animation|Children|Comedy,1
+95,21,2,110130,"Nut Job, The (2014)",2014.0,4.0,Adventure|Animation|Children|Comedy,2
+96,567,1,110655,Rio 2 (2014),2014.0,1.5,Adventure|Animation|Children|Comedy,3
+97,382,2,109846,Mr. Peabody & Sherman (2014),2014.0,3.5,Adventure|Animation|Comedy,1
+98,517,1,109846,Mr. Peabody & Sherman (2014),2014.0,1.0,Adventure|Animation|Comedy,2
+99,483,1,109846,Mr. Peabody & Sherman (2014),2014.0,3.5,Adventure|Animation|Comedy,3
+100,401,1,115664,The Book of Life (2014),2014.0,3.5,Adventure|Animation|Romance,1
+101,306,1,115664,The Book of Life (2014),2014.0,4.5,Adventure|Animation|Romance,2
+102,517,1,119155,Night at the Museum: Secret of the Tomb (2014),2014.0,3.0,Adventure|Children|Comedy|Fantasy,1
+103,448,1,119155,Night at the Museum: Secret of the Tomb (2014),2014.0,2.5,Adventure|Children|Comedy|Fantasy,2
+104,256,1,119155,Night at the Museum: Secret of the Tomb (2014),2014.0,4.0,Adventure|Children|Comedy|Fantasy,3
+105,534,1,119655,Seventh Son (2014),2014.0,3.5,Adventure|Children|Fantasy,1
+106,448,1,119655,Seventh Son (2014),2014.0,1.0,Adventure|Children|Fantasy,2
+107,210,1,166203,Sapphire Blue (2014),2014.0,4.0,Adventure|Children|Fantasy|Sci-Fi,1
+108,483,1,110297,Muppets Most Wanted (2014),2014.0,3.5,Adventure|Comedy|Crime,1
+109,448,1,110297,Muppets Most Wanted (2014),2014.0,3.0,Adventure|Comedy|Crime,2
+110,249,1,110297,Muppets Most Wanted (2014),2014.0,3.5,Adventure|Comedy|Crime,3
+111,318,1,114678,Hector and the Search for Happiness (2014),2014.0,4.0,Adventure|Comedy|Drama,1
+112,62,1,114678,Hector and the Search for Happiness (2014),2014.0,4.5,Adventure|Comedy|Drama,2
+113,380,1,147372,Doctor Who: Last Christmas (2014),2014.0,3.0,Adventure|Drama|Fantasy|Sci-Fi,1
+114,210,1,147372,Doctor Who: Last Christmas (2014),2014.0,4.5,Adventure|Drama|Fantasy|Sci-Fi,2
+115,567,1,110127,Noah (2014),2014.0,0.5,Adventure|Drama|IMAX,1
+116,448,1,110127,Noah (2014),2014.0,2.0,Adventure|Drama|IMAX,2
+117,382,1,110127,Noah (2014),2014.0,3.5,Adventure|Drama|IMAX,3
+118,414,1,115828,Copenhagen (2014),2014.0,4.5,Adventure|Drama|Romance,1
+119,586,1,118696,The Hobbit: The Battle of the Five Armies (2014),2014.0,5.0,Adventure|Fantasy,1
+120,551,1,118696,The Hobbit: The Battle of the Five Armies (2014),2014.0,1.0,Adventure|Fantasy,2
+121,534,1,118696,The Hobbit: The Battle of the Five Armies (2014),2014.0,3.0,Adventure|Fantasy,3
+122,598,1,124851,Delirium (2014),2014.0,5.0,Adventure|Romance|Sci-Fi,1
+123,567,1,108190,Divergent (2014),2014.0,0.5,Adventure|Romance|Sci-Fi|IMAX,1
+124,563,1,108190,Divergent (2014),2014.0,3.5,Adventure|Romance|Sci-Fi|IMAX,2
+125,561,1,108190,Divergent (2014),2014.0,1.0,Adventure|Romance|Sci-Fi|IMAX,3
+126,610,1,116823,The Hunger Games: Mockingjay - Part 1 (2014),2014.0,4.0,Adventure|Sci-Fi|Thriller,1
+127,596,1,116823,The Hunger Games: Mockingjay - Part 1 (2014),2014.0,3.5,Adventure|Sci-Fi|Thriller,2
+128,586,1,116823,The Hunger Games: Mockingjay - Part 1 (2014),2014.0,4.5,Adventure|Sci-Fi|Thriller,3
+129,382,1,117545,Asterix: The Land of the Gods (Astérix: Le domaine des dieux) (2014),2014.0,3.5,Animation,1
+130,318,1,117545,Asterix: The Land of the Gods (Astérix: Le domaine des dieux) (2014),2014.0,4.0,Animation,2
+131,599,1,138702,Feast (2014),2014.0,3.0,Animation|Children|Comedy|Drama|Romance,1
+132,105,1,117444,Song of the Sea (2014),2014.0,3.0,Animation|Children|Fantasy,1
+133,318,1,128991,Johnny Express (2014),2014.0,4.5,Animation|Comedy|Sci-Fi,1
+134,567,1,117887,Paddington (2014),2014.0,3.5,Children|Comedy,1
+135,514,1,141994,Saving Christmas (2014),2014.0,0.5,Children|Comedy,2
+136,256,1,117887,Paddington (2014),2014.0,4.0,Children|Comedy,3
+137,567,1,118997,Into the Woods (2014),2014.0,1.0,Children|Comedy|Fantasy|Musical,1
+138,563,1,118997,Into the Woods (2014),2014.0,4.0,Children|Comedy|Fantasy|Musical,2
+139,556,1,118997,Into the Woods (2014),2014.0,4.0,Children|Comedy|Fantasy|Musical,3
+140,448,1,122932,Elsa & Fred (2014),2014.0,2.0,Children|Comedy|Romance,1
+141,448,13,109183,Date and Switch (2014),2014.0,2.0,Comedy,1
+142,111,11,111113,Neighbors (2014),2014.0,4.0,Comedy,2
+143,89,5,111617,Blended (2014),2014.0,3.5,Comedy,3
+144,564,2,113453,Let's Be Cops (2014),2014.0,3.0,Comedy|Crime,1
+145,448,2,113453,Let's Be Cops (2014),2014.0,2.5,Comedy|Crime,2
+146,365,2,113453,Let's Be Cops (2014),2014.0,3.5,Comedy|Crime,3
+147,448,2,109864,Veronica Mars (2014),2014.0,2.0,Comedy|Crime|Drama,1
+148,596,1,132454,Girltrash: All Night Long (2014),2014.0,3.5,Comedy|Crime|Drama,2
+149,89,1,118572,The Mule (2014),2014.0,4.0,Comedy|Crime|Drama,3
+150,610,1,116799,Inherent Vice (2014),2014.0,4.5,Comedy|Crime|Drama|Mystery|Romance,1
+151,599,1,116799,Inherent Vice (2014),2014.0,3.0,Comedy|Crime|Drama|Mystery|Romance,2
+152,448,1,116799,Inherent Vice (2014),2014.0,2.5,Comedy|Crime|Drama|Mystery|Romance,3
+153,21,1,117572,Hit by Lightning (2014),2014.0,2.5,Comedy|Crime|Romance,1
+154,610,1,118082,The Voices (2014),2014.0,3.5,Comedy|Crime|Thriller,1
+155,408,1,110669,"Honest Liar, An (2014)",2014.0,3.5,Comedy|Documentary,1
+156,111,1,110669,"Honest Liar, An (2014)",2014.0,4.0,Comedy|Documentary,2
+157,448,9,108715,Better Living Through Chemistry (2014),2014.0,1.5,Comedy|Drama,1
+158,89,5,109374,"Grand Budapest Hotel, The (2014)",2014.0,3.5,Comedy|Drama,2
+159,153,3,109374,"Grand Budapest Hotel, The (2014)",2014.0,4.0,Comedy|Drama,3
+160,105,1,120138,PK (2014),2014.0,5.0,Comedy|Drama|Fantasy|Mystery|Romance,1
+161,610,1,114670,Tusk (2014),2014.0,3.5,Comedy|Drama|Horror,1
+162,563,1,128832,The Last Five Years (2014),2014.0,3.5,Comedy|Drama|Musical|Romance,1
+163,567,1,112421,Frank (2014),2014.0,4.5,Comedy|Drama|Mystery,1
+164,105,1,112421,Frank (2014),2014.0,4.5,Comedy|Drama|Mystery,2
+165,18,1,112421,Frank (2014),2014.0,4.0,Comedy|Drama|Mystery,3
+166,448,4,109853,Barefoot (2014),2014.0,2.0,Comedy|Drama|Romance,1
+167,598,1,113829,"One I Love, The (2014)",2014.0,5.0,Comedy|Drama|Romance,2
+168,10,1,109853,Barefoot (2014),2014.0,4.0,Comedy|Drama|Romance,3
+169,445,1,116897,Wild Tales (2014),2014.0,5.0,Comedy|Drama|Thriller,1
+170,326,1,116897,Wild Tales (2014),2014.0,4.0,Comedy|Drama|Thriller,2
+171,318,1,116897,Wild Tales (2014),2014.0,4.5,Comedy|Drama|Thriller,3
+172,610,1,115122,What We Do in the Shadows (2014),2014.0,4.5,Comedy|Horror,1
+173,534,1,115122,What We Do in the Shadows (2014),2014.0,5.0,Comedy|Horror,2
+174,122,1,115122,What We Do in the Shadows (2014),2014.0,5.0,Comedy|Horror,3
+175,610,1,113159,Life After Beth (2014),2014.0,3.5,Comedy|Horror|Romance,1
+176,610,1,113252,Housebound (2014),2014.0,4.5,Comedy|Horror|Thriller,1
+177,89,1,113252,Housebound (2014),2014.0,4.0,Comedy|Horror|Thriller,2
+178,448,9,109372,About Last Night (2014),2014.0,1.5,Comedy|Romance,1
+179,563,4,109483,That Awkward Moment (2014),2014.0,3.5,Comedy|Romance,2
+180,598,2,110771,"Other Woman, The (2014)",2014.0,2.0,Comedy|Romance,3
+181,610,1,132422,Da Sweet Blood of Jesus (2014),2014.0,2.0,Comedy|Romance|Thriller,1
+182,89,1,132422,Da Sweet Blood of Jesus (2014),2014.0,4.5,Comedy|Romance|Thriller,2
+183,610,1,111743,A Million Ways to Die in the West (2014),2014.0,3.0,Comedy|Western,1
+184,599,1,111743,A Million Ways to Die in the West (2014),2014.0,1.0,Comedy|Western,2
+185,509,1,111743,A Million Ways to Die in the West (2014),2014.0,3.5,Comedy|Western,3
+186,448,2,118354,Kill the Messenger (2014),2014.0,3.0,Crime|Drama|Mystery|Thriller,1
+187,448,1,115680,Time Lapse (2014),2014.0,3.5,Crime|Drama|Sci-Fi|Thriller,1
+188,125,1,115680,Time Lapse (2014),2014.0,4.0,Crime|Drama|Sci-Fi|Thriller,2
+189,62,1,115680,Time Lapse (2014),2014.0,4.0,Crime|Drama|Sci-Fi|Thriller,3
+190,448,4,114060,The Drop (2014),2014.0,3.0,Crime|Drama|Thriller,1
+191,610,1,115569,Nightcrawler (2014),2014.0,4.5,Crime|Drama|Thriller,2
+192,560,1,115569,Nightcrawler (2014),2014.0,4.0,Crime|Drama|Thriller,3
+193,610,1,112727,Deliver Us from Evil (2014),2014.0,3.0,Crime|Horror|Thriller,1
+194,599,1,137345,That Demon Within (2014),2014.0,2.0,Crime|Thriller,1
+195,318,3,117531,Watermark (2014),2014.0,5.0,Documentary,1
+196,18,3,112334,"Internet's Own Boy: The Story of Aaron Swartz, The (2014)",2014.0,4.5,Documentary,2
+197,119,2,117533,Citizenfour (2014),2014.0,4.0,Documentary,3
+198,448,1,132333,Seve (2014),2014.0,5.0,Documentary|Drama,1
+199,18,1,114066,"20,000 Days on Earth (2014)",2014.0,4.0,Documentary|Drama|Musical,1
+200,233,1,118198,The Green Prince (2014),2014.0,2.5,Documentary|Drama|Thriller,1
+201,318,1,117364,Virunga (2014),2014.0,4.0,Documentary|War,1
+202,610,1,130050,Digging Up the Marrow (2014),2014.0,3.0,Drama|Fantasy|Horror|Mystery|Thriller,1
+203,610,1,139655,Goodnight Mommy (Ich seh ich seh) (2014),2014.0,3.0,Drama|Fantasy|Horror|Thriller,1
+204,448,1,109191,Winter's Tale (2014),2014.0,1.5,Drama|Fantasy|Mystery,1
+205,610,1,130052,Clown (2014),2014.0,3.5,Drama|Horror,1
+206,339,1,174053,Black Mirror: White Christmas (2014),2014.0,4.0,Drama|Horror|Mystery|Sci-Fi|Thriller,1
+207,338,1,174053,Black Mirror: White Christmas (2014),2014.0,5.0,Drama|Horror|Mystery|Sci-Fi|Thriller,2
+208,125,1,174053,Black Mirror: White Christmas (2014),2014.0,5.0,Drama|Horror|Mystery|Sci-Fi|Thriller,3
+209,610,1,112515,"Babadook, The (2014)",2014.0,4.5,Drama|Horror|Thriller,1
+210,424,1,112515,"Babadook, The (2014)",2014.0,4.5,Drama|Horror|Thriller,2
+211,122,1,112515,"Babadook, The (2014)",2014.0,4.5,Drama|Horror|Thriller,3
+212,483,1,112316,Jersey Boys (2014),2014.0,2.5,Drama|Musical,1
+213,285,1,113207,Get on Up (2014),2014.0,3.5,Drama|Musical,2
+214,123,1,143458,The Great Hypnotist (2014),2014.0,4.0,Drama|Mystery|Thriller,1
+215,177,2,111921,The Fault in Our Stars (2014),2014.0,5.0,Drama|Romance,1
+216,153,2,111921,The Fault in Our Stars (2014),2014.0,2.0,Drama|Romance,2
+217,50,2,111921,The Fault in Our Stars (2014),2014.0,2.5,Drama|Romance,3
+218,448,2,112804,I Origins (2014),2014.0,2.0,Drama|Sci-Fi,1
+219,567,1,113378,"Giver, The (2014)",2014.0,1.0,Drama|Sci-Fi,2
+220,292,1,113378,"Giver, The (2014)",2014.0,3.0,Drama|Sci-Fi,3
+221,567,1,110730,Transcendence (2014),2014.0,0.5,Drama|Sci-Fi|IMAX,1
+222,448,1,110730,Transcendence (2014),2014.0,1.5,Drama|Sci-Fi|IMAX,2
+223,352,1,110730,Transcendence (2014),2014.0,3.0,Drama|Sci-Fi|IMAX,3
+224,448,3,110611,Cold in July (2014),2014.0,2.5,Drama|Thriller,1
+225,610,1,112556,Gone Girl (2014),2014.0,4.0,Drama|Thriller,2
+226,601,1,112556,Gone Girl (2014),2014.0,4.0,Drama|Thriller,3
+227,601,1,116797,The Imitation Game (2014),2014.0,4.0,Drama|Thriller|War,1
+228,582,1,116797,The Imitation Game (2014),2014.0,3.5,Drama|Thriller|War,2
+229,581,1,116797,The Imitation Game (2014),2014.0,4.0,Drama|Thriller|War,3
+230,610,1,118702,Unbroken (2014),2014.0,3.0,Drama|War,1
+231,567,1,118702,Unbroken (2014),2014.0,2.0,Drama|War,2
+232,448,1,118702,Unbroken (2014),2014.0,2.5,Drama|War,3
+233,448,1,115216,"Salvation, The (2014)",2014.0,3.0,Drama|Western,1
+234,610,3,114044,Honeymoon (2014),2014.0,3.5,Horror,1
+235,599,1,121231,It Follows (2014),2014.0,3.5,Horror,2
+236,496,1,114713,Annabelle (2014),2014.0,2.5,Horror,3
+237,610,1,114707,Horns (2014),2014.0,3.0,Horror|Mystery,1
+238,610,1,118880,"Girl Walks Home Alone at Night, A (2014)",2014.0,3.0,Horror|Romance|Thriller,1
+239,318,1,118880,"Girl Walks Home Alone at Night, A (2014)",2014.0,4.0,Horror|Romance|Thriller,2
+240,125,1,149144,Parasyte: Part 1 (2014),2014.0,4.0,Horror|Sci-Fi,1
+241,610,4,110286,13 Sins (2014),2014.0,3.5,Horror|Thriller,1
+242,567,1,136602,Creep (2014),2014.0,2.0,Horror|Thriller,2
+243,448,1,129333,Julia (2014),2014.0,1.5,Horror|Thriller,3
+244,448,1,143255,Narcopolis (2014),2014.0,1.5,Mystery|Sci-Fi|Thriller,1
+245,563,1,139747,Before We Go (2014),2014.0,3.5,Romance,1
+246,610,1,112623,Dawn of the Planet of the Apes (2014),2014.0,4.5,Sci-Fi,1
+247,599,1,112623,Dawn of the Planet of the Apes (2014),2014.0,3.0,Sci-Fi,2
+248,567,1,112623,Dawn of the Planet of the Apes (2014),2014.0,2.0,Sci-Fi,3
+249,610,1,109487,Interstellar (2014),2014.0,3.5,Sci-Fi|IMAX,1
+250,601,1,109487,Interstellar (2014),2014.0,5.0,Sci-Fi|IMAX,2
+251,599,1,109487,Interstellar (2014),2014.0,3.5,Sci-Fi|IMAX,3
+252,318,1,114847,Autómata (Automata) (2014),2014.0,3.0,Sci-Fi|Thriller,1
+253,119,1,112868,"Signal, The (2014)",2014.0,4.5,Sci-Fi|Thriller,2
+254,448,2,127319,The Loft (2014),2014.0,1.5,Thriller,1
+255,610,1,113862,"Guest, The (2014)",2014.0,4.0,Thriller,2
+256,414,1,112940,A Most Wanted Man (2014),2014.0,4.5,Thriller,3
+257,50,1,128695,The Dark Valley (2014),2014.0,2.5,Western,1
