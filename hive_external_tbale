@@ -1,0 +1,7 @@
+CREATE EXTERNAL TABLE ratings(
+userId INT,
+movieId INT,
+rating FLOAT,
+timestamp TIMESTAMP)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+LOCATION 'gs://movies_data/data/';
