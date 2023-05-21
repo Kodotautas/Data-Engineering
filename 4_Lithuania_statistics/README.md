@@ -1,0 +1,1 @@
+# This project is about Lithuania market statistics which come from official Lithuania portal.
