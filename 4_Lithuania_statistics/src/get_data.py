@@ -25,3 +25,4 @@ for obs in root.findall('.//g:Obs', namespaces=root.nsmap):
 
 # Create a DataFrame
 df = pd.DataFrame(data)
+print(df)
