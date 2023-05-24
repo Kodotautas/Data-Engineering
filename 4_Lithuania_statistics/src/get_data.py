@@ -1,28 +1,66 @@
 import pandas as pd
 import xml.etree.ElementTree as ET
 import requests
-from lxml import etree
+from google.cloud import storage
+import logging
+from pydantic import BaseModel, validator, HttpUrl
+from typing import List
 
-url = 'https://osp-rs.stat.gov.lt/rest_xml/data/S3R168_M3010101_1/?startPeriod=2005-01&endPeriod=2005-03'
+client = storage.Client()
 
-response = requests.get(url)
-print(f"Response status code: {response.status_code}")
+data_code = 'S3R168_M3010101_1'
+url = f'https://osp-rs.stat.gov.lt/rest_xml/data/{data_code}'
 
-xml_data = response.text
+class Row(BaseModel):
+    id: str
+    value: str
 
-# Parse the XML file
-tree = etree.parse('/home/vytautas/Documents/GitHub/Data-Engineering/4_Lithuania_statistics/data/test_data.xml')
-root = tree.getroot()
+class Data(BaseModel):
+    rows: List[Row]
 
-# Extract the data
-data = []
-for obs in root.findall('.//g:Obs', namespaces=root.nsmap):
-    row = {}
-    for value in obs.findall('.//g:Value', namespaces=root.nsmap):
-        row[value.get('id')] = value.get('value')
-    row['value'] = obs.find('.//g:ObsValue', namespaces=root.nsmap).get('value')
-    data.append(row)
+class URL(BaseModel):
+    url: HttpUrl
 
-# Create a DataFrame
-df = pd.DataFrame(data)
-print(df)
+    @validator('url')
+    def url_must_be_https(cls, v):
+        if not v.startswith('https'):
+            raise ValueError('URL must be https')
+        return v
+
+def get_data(url: URL) -> str:
+    '''Get data from url and return data as xml'''
+    response = requests.get(url)
+    logging.info(f'Response status code: {response.status_code}')
+    xml_data = response.text
+    return xml_data
+
+def parse_xml(xml_data: str) -> Data:
+    root = ET.fromstring(xml_data)
+    data = []
+    for obs in root.findall('.//Obs'):
+        row = {}
+        for value in obs.findall('.//Value'):
+            row[value.get('id')] = value.get('value')
+        row['value'] = obs.find('.//ObsValue').get('value')
+        data.append(Row(**row))
+    return Data(rows=data)
+
+class GCP(BaseModel):
+    bucket_name: str
+    filename: str
+
+def save_data_to_gcp(df: pd.DataFrame, gcp: GCP):
+    df.to_csv(f'gs://{gcp.bucket_name}/{gcp.filename}', index=False)
+    logging.info(f'Data saved to gs://{gcp.bucket_name}/{gcp.filename}')
+
+def main():
+    logging.basicConfig(level=logging.INFO)
+    xml_data = get_data(url)
+    data = parse_xml(xml_data)
+    df = pd.DataFrame(data.rows)
+    print(df.head())
+    gcp = GCP(bucket_name='lithuania_statistics', filename=f'{data_code}.csv')
+    save_data_to_gcp(df, gcp)
+
+if __name__ == '__main__':
+    main()
