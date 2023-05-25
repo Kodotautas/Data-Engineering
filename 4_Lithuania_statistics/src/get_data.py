@@ -9,7 +9,7 @@ from typing import List
 client = storage.Client()
 
 data_code = 'S3R168_M3010101_1'
-url = f'https://osp-rs.stat.gov.lt/rest_xml/data/{data_code}'
+url = 'https://osp-rs.stat.gov.lt/rest_xml/data/S3R168_M3010101_1'
 
 class Row(BaseModel):
     id: str
@@ -35,15 +35,13 @@ def get_data(url: URL) -> str:
     return xml_data
 
 def parse_xml(xml_data: str) -> Data:
+    '''Parse xml data and return data as Data object'''
     root = ET.fromstring(xml_data)
-    data = []
-    for obs in root.findall('.//Obs'):
-        row = {}
-        for value in obs.findall('.//Value'):
-            row[value.get('id')] = value.get('value')
-        row['value'] = obs.find('.//ObsValue').get('value')
-        data.append(Row(**row))
-    return Data(rows=data)
+    rows = []
+    for row in root.iter('ROW'):
+        rows.append(Row(id=row.attrib['ID'], value=row.attrib['VALUE']))
+    data = Data(rows=rows)
+    return data
 
 class GCP(BaseModel):
     bucket_name: str
@@ -57,8 +55,7 @@ def main():
     logging.basicConfig(level=logging.INFO)
     xml_data = get_data(url)
     data = parse_xml(xml_data)
-    df = pd.DataFrame(data.rows)
-    print(df.head())
+    df = pd.DataFrame([row.dict() for row in data.rows]) # changed this line to correctly create the DataFrame
     gcp = GCP(bucket_name='lithuania_statistics', filename=f'{data_code}.csv')
     save_data_to_gcp(df, gcp)
 
