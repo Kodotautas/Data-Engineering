@@ -1,54 +1,43 @@
-import os
 import pandas as pd
 import xml.etree.ElementTree as ET
+import requests
+import logging
+from pydantic import BaseModel, validator, HttpUrl
+from typing import List
+from google.cloud import storage
 
-xml_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'docs'))
+logging.basicConfig(level=logging.INFO)
 
+url = 'https://osp-rs.stat.gov.lt/rest_xml/dataflow/'
 
-xml_data = '''
-<mes:Structure xsi:schemaLocation="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message https://osp-rs.stat.gov.lt/xsd_scheme/SDMXMessage.xsd http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common https://osp-rs.stat.gov.lt/xsd_scheme/SDMXCommon.xsd http://www.sdmx.org/resources/sdmxml/schemas/v2_1/data/generic https://osp-rs.stat.gov.lt/xsd_scheme/SDMXDataGeneric.xsd">
-<mes:Header>
-<mes:ID>FDFE2235679B4AEFB4C456A7DD57D1DF</mes:ID>
-<mes:Test>true</mes:Test>
-<mes:Prepared>2023-05-21T21:37:42.397000000+03:00</mes:Prepared>
-<mes:Sender id="unknown"/>
-<mes:Receiver id="not_supplied"/>
-</mes:Header>
-<mes:Structures>
-<str:Dataflows>
-<str:Dataflow id="S1R003_M8020420" urn="urn:sdmx:org.sdmx.infomodel.datastructure.Dataflow=LSD:S1R003_M8020420(1.0)" isExternalReference="false" agencyID="LSD" isFinal="false" version="1.0">
-<com:Name xml:lang="lt">
-S1R003 - Būstai, aprūpinti karštu vandeniu centralizuotai iš miesto (rajono) šilumos tinklų
-</com:Name>
-<com:Name xml:lang="en">
-S1R003 - Dwellings with centralised hot water supply from city/town (district) heating networks
-</com:Name>
-<com:Description xml:lang="lt">
-Gyvenamoji vietovė (2009 - 2009) (Atnaujinta: 2013-01-16)
-</com:Description>
-<com:Description xml:lang="en">
-Place of residence (2009 - 2009) (Was renewed: 2013-01-16)
-</com:Description>
-<str:Structure>
-</str:Structure>
-</str:Dataflow>
-</str:Dataflows>
-</mes:Structures>
-</mes:Structure>
-'''
+def get_data(url):
+    '''Get data from URL and return data as XML'''
+    response = requests.get(url)  # Extract the URL string from the URL object
+    response.raise_for_status()  # Raise an exception if the request fails
+    logging.info(f'Response status code: {response.status_code}')
+    xml_data = response.text
+    return xml_data
 
+xml_ids = get_data(url)
 
-# Parse the xml file
-root = ET.fromstring(xml_data)
+# Load the XML file
+tree = ET.parse(xml_ids)
+root = tree.getroot()
 
-# Find the relevant elements
-dataflows = root.findall('.//{http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure}Dataflow')
-
-# Extract the id attribute and com:Name values
-for dataflow in dataflows:
+# Access specific elements and attributes
+for dataflow in root.iter('{http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure}Dataflow'):
     dataflow_id = dataflow.get('id')
-    com_names = dataflow.findall('.//{http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common}Name[@xml:lang="en"]')
+    urn = dataflow.get('urn')
+    # print(f"Dataflow ID: {dataflow_id}")
+    # print(f"URN: {urn}")
 
-    for name in com_names:
-        name_value = name.text
-        print(f"Dataflow id: {dataflow_id}, com:Name (en): {name_value}")
+    # Access child elements
+    # for name in dataflow.iter('{http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common}Name'):
+    #     lang = name.get('{http://www.w3.org/XML/1998/namespace}lang')
+    #     value = name.text
+    #     print(f"Name ({lang}): {value}")
+
+    # for description in dataflow.iter('{http://www.sdmx.org/resources/sdmxml/schemas/v2_1/common}Description'):
+    #     lang = description.get('{http://www.w3.org/XML/1998/namespace}lang')
+    #     value = description.text
+    #     print(f"Description ({lang}): {value}")
