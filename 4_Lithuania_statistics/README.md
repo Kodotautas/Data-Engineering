@@ -7,7 +7,4 @@ parse it and store in Cloud storage+
 parse all products id
 store it also in cloud storage
 
-create scheduled piepeline via dataflow and / or dataproc
-
-create simple streamlit dashboard
-create docs / process flow with (sphinx / mkdocs / jinja)
+create scheduled piepeline via dataflow and / or dataproc / data fusion
