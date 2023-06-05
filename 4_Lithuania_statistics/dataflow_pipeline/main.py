@@ -2,7 +2,7 @@
 import argparse
 import logging
 import apache_beam as beam
-from src.save_data import get_data, parse_data, save_data_to_gcp
+from src.save_data import get_data, parse_data, save_data_to_gcp, url
 
 logging.basicConfig(level=logging.INFO)
 

@@ -8,3 +8,6 @@ parse all products id
 store it also in cloud storage
 
 create scheduled piepeline via dataflow and / or dataproc / data fusion
+
+# API source / info:
+https://osp.stat.gov.lt/web/guest/rdb-rest

@@ -8,7 +8,11 @@ from google.cloud import storage
 
 logging.basicConfig(level=logging.INFO)
 
-url = 'https://osp-rs.stat.gov.lt/rest_xml/data/S3R168_M3010101_1'
+def url():
+    '''Return URL to download data'''
+    return 'https://osp-rs.stat.gov.lt/rest_xml/data/S3R168_M3010101_1'
+
+url = url()
 
 class Row(BaseModel):
     id: str
