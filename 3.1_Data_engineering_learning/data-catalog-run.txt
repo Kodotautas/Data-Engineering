@@ -1,0 +1,1 @@
+google-datacatalog-postgresql-connector --datacatalog-project-id=bfi-rnd-project --datacatalog-location-id=asia-southeast2 --datacatalog-entry-resource-url-prefix project/database-instance --postgresql-host=127.0.0.1 --postgresql-user=postgres --postgresql-pass=postgres --postgresql-database=postgres
