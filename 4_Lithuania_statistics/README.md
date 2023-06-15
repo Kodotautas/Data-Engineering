@@ -1,13 +1,13 @@
-# This project is about Lithuania market statistics which come from official Lithuania portal.
+# This project is about creating Lithuania market statistics ETP pipeline with GCP Dataflow.
 
 # About project:
-load data lithuania population from statistikos departamentas+
+Load data lithuania population from statistikos departamentas+
 parse it and store in Cloud storage+
 
 parse all products id
 store it also in cloud storage
 
-create scheduled piepeline via dataflow and / or dataproc / data fusion
+create scheduled piepeline via dataflow 
 
 # API source / info:
 https://osp.stat.gov.lt/web/guest/rdb-rest
