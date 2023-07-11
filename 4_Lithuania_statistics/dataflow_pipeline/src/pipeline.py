@@ -5,7 +5,9 @@ import pandas as pd
 import xml.etree.ElementTree as ET
 import requests
 import logging
+import re
 
+# --------------------------------- FUNCTIONS -------------------------------- #
 class DownloadData(beam.DoFn):
     def __init__(self, url):
         self.url = url
@@ -19,6 +21,7 @@ class DownloadData(beam.DoFn):
         xml_data = response.text
         yield xml_data
 
+
 class ParseData(beam.DoFn):
     def process(self, element):
         # Parse the XML data and extract the relevant information
@@ -26,10 +29,17 @@ class ParseData(beam.DoFn):
         root = ET.fromstring(element)
         namespaces = {'g': 'http://www.sdmx.org/resources/sdmxml/schemas/v2_1/data/generic'}
         observations = root.findall('.//g:Obs', namespaces)
-        rows = [{'id': obs.find('g:ObsKey/g:Value', namespaces).attrib['id'],
-                 'value': obs.find('g:ObsKey/g:Value', namespaces).attrib['value']}
-                for obs in observations]
+        rows = []
+        for obs in observations:
+            period = obs.find('g:ObsKey/g:Value[@id="LAIKOTARPIS"]', namespaces).attrib['value']
+            population = obs.find('g:ObsValue', namespaces).attrib['value']
+            
+            # Transform the period from "2008M12" to "2008-12"
+            period = re.sub(r'M(\d+)$', r'-\1', period)
+            
+            rows.append({'period': period, 'population': population})
         yield rows
+
 
 class SaveToGCS(beam.DoFn):
     def __init__(self, bucket_name, filename):
@@ -46,6 +56,8 @@ class SaveToGCS(beam.DoFn):
         blob.upload_from_string(df.to_csv(index=False), content_type='text/csv')
         logging.info(f'Data saved to gs://{self.bucket_name}/{self.filename}')
 
+
+# ------------------------------------ RUN ----------------------------------- #
 def run():
     # Set the URL to download data from and the GCS bucket and filename to save the data to
     url = 'https://osp-rs.stat.gov.lt/rest_xml/data/S3R168_M3010101_1'
@@ -61,6 +73,4 @@ def run():
             | 'Parse Data' >> beam.ParDo(ParseData())
             | 'Save to GCS' >> beam.ParDo(SaveToGCS(bucket_name, filename))
         )
-
-if __name__ == '__main__':
-    run()
+        
