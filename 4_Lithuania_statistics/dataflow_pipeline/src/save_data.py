@@ -54,16 +54,16 @@ class GCP(BaseModel):
     filename: str
 
 def save_data_to_gcp(df: pd.DataFrame, gcp: GCP):
-    '''Save DataFrame to Google Cloud Storage'''
+    '''Save DataFrame to Google Cloud Storage bucket'''
     storage_client = storage.Client()
     bucket = storage_client.bucket(gcp.bucket_name)
     blob = bucket.blob(gcp.filename)
     blob.upload_from_string(df.to_csv(index=False), content_type='text/csv')
     logging.info(f'Data saved to gs://{gcp.bucket_name}/{gcp.filename}')
 
-# def main():
-#     xml_data = get_data(URL(url=url))
-#     data = parse_data(xml_data)
-#     df = pd.DataFrame([row.dict() for row in data.rows])
-#     gcp = GCP(bucket_name='lithuania_statistics', filename='lithuania_monthly_population.csv')
-#     save_data_to_gcp(df, gcp)
+def main():
+    xml_data = get_data(URL(url=url))
+    data = parse_data(xml_data)
+    df = pd.DataFrame([row.dict() for row in data.rows])
+    gcp = GCP(bucket_name='lithuania_statistics', filename='lithuania_monthly_population.csv')
+    save_data_to_gcp(df, gcp)
