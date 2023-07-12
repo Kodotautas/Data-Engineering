@@ -1,5 +1,5 @@
 import apache_beam as beam
-from apache_beam.options.pipeline_options import PipelineOptions
+from apache_beam.options.pipeline_options import PipelineOptions, GoogleCloudOptions, StandardOptions
 from google.cloud import storage
 import pandas as pd
 import xml.etree.ElementTree as ET
@@ -65,6 +65,15 @@ def run():
     filename = 'lithuania_monthly_population.csv'
 
     options = PipelineOptions()
+    gcp_options = options.view_as(GoogleCloudOptions)
+    gcp_options.project = 'vl-data-learn'
+    gcp_options.job_name = 'lithuania-statistics'
+    gcp_options.job_name = 'lithuania-statistics-population'
+    gcp_options.staging_location = 'gs://lithuania_statistics/staging'
+    gcp_options.temp_location = 'gs://lithuania_statistics/temp'
+    gcp_options.region = 'europe-west1'
+    options.view_as(StandardOptions).runner = 'DataflowRunner'
+    
     with beam.Pipeline(options=options) as p:
         data = (
             p

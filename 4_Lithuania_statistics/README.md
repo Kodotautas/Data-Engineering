@@ -6,5 +6,14 @@ Created simple data pipeline which:
 - stores it in GCS Bucket
 - visualize data in Looker dashboard
 
+
 # API source / info:
 https://osp.stat.gov.lt/web/guest/rdb-rest
+
+# Don't forget install apache beam GCP:
+pip install apache_beam[gcp]
+
+# CLI to create Dataflow template:
+`python3 main.py -template_location gs://my-bucket/templates/my_template --setup_file /setup.py`
+
+--TO DO: build dataflow pipeline
