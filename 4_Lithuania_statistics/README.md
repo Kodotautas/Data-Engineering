@@ -17,3 +17,4 @@ pip install apache_beam[gcp]
 `python3 main.py -template_location gs://my-bucket/templates/my_template --setup_file /setup.py`
 
 --Next step: build dataflow pipeline
+-- Fix: ModuleNotFoundError: No module named 'src'
