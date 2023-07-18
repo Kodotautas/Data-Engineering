@@ -16,4 +16,4 @@ pip install apache_beam[gcp]
 # CLI to create Dataflow template:
 `python3 main.py -template_location gs://my-bucket/templates/my_template --setup_file /setup.py`
 
---TO DO: build dataflow pipeline
+--Next step: build dataflow pipeline
