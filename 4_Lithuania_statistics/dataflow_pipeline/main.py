@@ -1,5 +1,4 @@
 # import and run the pipeline
-from src.pipeline import run
+import src.pipeline as pipeline
 
-# Run the pipeline
-run()
+pipeline.run()

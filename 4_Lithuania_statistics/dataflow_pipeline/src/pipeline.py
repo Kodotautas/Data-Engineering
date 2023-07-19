@@ -79,7 +79,11 @@ def run():
             p
             | 'Create' >> beam.Create([None])
             | 'Download Data' >> beam.ParDo(DownloadData(url))
-            | 'Parse Data' >> beam.ParDo(ParseData())
-            | 'Save to GCS' >> beam.ParDo(SaveToGCS(bucket_name, filename))
+            # | 'Parse Data' >> beam.ParDo(ParseData())
+            # | 'Save to GCS' >> beam.ParDo(SaveToGCS(bucket_name, filename))
         )
         
+
+if __name__ == '__main__':
+    logging.getLogger().setLevel(logging.INFO)
+    run()

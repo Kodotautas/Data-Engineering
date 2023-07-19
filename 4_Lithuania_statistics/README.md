@@ -18,3 +18,4 @@ pip install apache_beam[gcp]
 
 --Next step: build dataflow pipeline
 -- Fix: ModuleNotFoundError: No module named 'src'
+-- dataflow dont see / dont have requests library
