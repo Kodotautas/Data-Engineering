@@ -1,4 +1,5 @@
 # import and run the pipeline
-import src.pipeline as pipeline
+from src.pipeline import run
 
-pipeline.run()
+if __name__ == '__main__':
+    run()
