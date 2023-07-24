@@ -4,7 +4,7 @@ import os
 
 # ----------------------------------- PARSE ---------------------------------- #
 cwd = os.getcwd()
-xml_string = open(cwd + "/dataflow.xml", "r").read()
+xml_string = open(f'{cwd}/4_Lithuania_statistics/dataflow_pipeline/mappings/all_products_ids.xml', 'r').read()
 
 root = ET.fromstring(xml_string)
 
