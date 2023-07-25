@@ -1,10 +1,14 @@
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions, GoogleCloudOptions, StandardOptions
+from google.cloud import storage
+import pandas as pd
 import logging
 import re
 
+
 # --------------------------------- FUNCTIONS -------------------------------- #
 class DownloadData(beam.DoFn):
+    """A DoFn that downloads data from a specified URL."""
     def __init__(self, url):
         self.url = url
 
@@ -20,6 +24,7 @@ class DownloadData(beam.DoFn):
 
 
 class ParseData(beam.DoFn):
+    """A DoFn that parses XML data and extracts the relevant information."""
     def process(self, element):
         import xml.etree.ElementTree as ET
         # Parse the XML data and extract the relevant information
@@ -39,25 +44,25 @@ class ParseData(beam.DoFn):
         yield rows
 
 
-class SaveToGCS(beam.DoFn):
+class SaveDataToGCS(beam.DoFn):
+    """A DoFn that saves data to a Google Cloud Storage bucket as a CSV file."""
+
     def __init__(self, bucket_name, filename):
         self.bucket_name = bucket_name
         self.filename = filename
 
     def process(self, element):
-        import pandas as pd
-        from google.cloud import storage
-        # Save the data to a Google Cloud Storage bucket as a CSV file
+        """Save the data to a Google Cloud Storage bucket as a CSV file."""
         logging.info(f'Saving data to gs://{self.bucket_name}/{self.filename}')
         df = pd.DataFrame(element)
-        storage_client = storage.Client()
-        bucket = storage_client.bucket(self.bucket_name)
-        blob = bucket.blob(self.filename)
-        blob.upload_from_string(df.to_csv(index=False), content_type='text/csv')
-        logging.info(f'Data saved to gs://{self.bucket_name}/{self.filename}')
+        with storage.Client() as client:
+            bucket = client.bucket(self.bucket_name)
+            blob = bucket.blob(self.filename)
+            blob.upload_from_string(df.to_csv(index=False), content_type='text/csv')
+            logging.info(f'Data saved to gs://{self.bucket_name}/{self.filename}')
 
 
-# ------------------------------------ RUN ----------------------------------- #
+# --------------------------------- PIPELINE --------------------------------- #
 def run():
     # Set the URL to download data from and the GCS bucket and filename to save the data to
     url = 'https://osp-rs.stat.gov.lt/rest_xml/data/S3R168_M3010101_1'
@@ -80,10 +85,9 @@ def run():
             | 'Create' >> beam.Create([None])
             | 'Download Data' >> beam.ParDo(DownloadData(url))
             | 'Parse Data' >> beam.ParDo(ParseData())
-            | 'Save to GCS' >> beam.ParDo(SaveToGCS(bucket_name, filename))
+            | 'Save to GCS' >> beam.ParDo(SaveDataToGCS(bucket_name, filename))
         )
         
-
 if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
     run()
