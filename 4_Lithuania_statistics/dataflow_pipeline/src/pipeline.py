@@ -45,6 +45,7 @@ def save_data_to_gcs(element, bucket_name, filename):
     blob.upload_from_string(df.to_csv(index=False), content_type='text/csv')
     logging.info(f'Data saved to gs://{bucket_name}/{filename}')
 
+
 # # --------------------------------- PIPELINE --------------------------------- #
 if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
@@ -66,33 +67,3 @@ if __name__ == '__main__':
         )
 
     pipeline.run()
-
-
-# def run():
-#     # Set the URL to download data from and the GCS bucket and filename to save the data to
-#     url = 'https://osp-rs.stat.gov.lt/rest_xml/data/S3R168_M3010101_1'
-#     bucket_name = 'lithuania_statistics'
-#     filename = 'lithuania_monthly_population.csv'
-
-#     options = PipelineOptions()
-#     gcp_options = options.view_as(GoogleCloudOptions)
-#     gcp_options.project = 'vl-data-learn'
-#     gcp_options.job_name = 'lithuania-statistics-population'
-#     gcp_options.staging_location = 'gs://lithuania_statistics/staging'
-#     gcp_options.temp_location = 'gs://lithuania_statistics/temp'
-#     gcp_options.region = 'europe-west1'
-#     options.view_as(StandardOptions).runner = 'DataflowRunner'
-
-#     with beam.Pipeline(options=options) as p:
-#         data = (
-#             p
-#             | 'Create' >> beam.Create([None])
-#             | 'Download Data' >> beam.ParDo(download_data, url)
-#             | 'Parse Data' >> beam.Map(parse_data)
-#             | 'Save to GCS' >> beam.ParDo(save_data_to_gcs, bucket_name, filename)
-#         )
-
-
-# if __name__ == '__main__':
-#     logging.getLogger().setLevel(logging.INFO)
-#     run()
