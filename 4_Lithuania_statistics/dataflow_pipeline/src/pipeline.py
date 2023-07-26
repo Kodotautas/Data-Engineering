@@ -4,90 +4,95 @@ from google.cloud import storage
 import pandas as pd
 import logging
 import re
+import requests
+import xml.etree.ElementTree as ET
 
 
 # --------------------------------- FUNCTIONS -------------------------------- #
-class DownloadData(beam.DoFn):
-    """A DoFn that downloads data from a specified URL."""
-    def __init__(self, url):
-        self.url = url
 
-    def process(self, element):
-        # Download data from the specified URL
-        import requests
-        logging.info(f'Downloading data from {self.url}')
-        response = requests.get(self.url)
-        response.raise_for_status()
-        logging.info(f'Response status code: {response.status_code}')
-        xml_data = response.text
-        yield xml_data
+def download_data(element, url):
+    """A function that downloads data from a specified URL."""
+    logging.info(f'Downloading data from {url}')
+    response = requests.get(url)
+    response.raise_for_status()
+    logging.info(f'Response status code: {response.status_code}')
+    return response.text
 
+def parse_data(element):
+    """A function that parses XML data and extracts the relevant information."""
+    logging.info('Parsing XML data')
+    root = ET.fromstring(element)
+    namespaces = {'g': 'http://www.sdmx.org/resources/sdmxml/schemas/v2_1/data/generic'}
+    observations = root.findall('.//g:Obs', namespaces)
+    rows = []
+    for obs in observations:
+        period = obs.find('g:ObsKey/g:Value[@id="LAIKOTARPIS"]', namespaces).attrib['value']
+        population = obs.find('g:ObsValue', namespaces).attrib['value']
 
-class ParseData(beam.DoFn):
-    """A DoFn that parses XML data and extracts the relevant information."""
-    def process(self, element):
-        import xml.etree.ElementTree as ET
-        # Parse the XML data and extract the relevant information
-        logging.info('Parsing XML data')
-        root = ET.fromstring(element)
-        namespaces = {'g': 'http://www.sdmx.org/resources/sdmxml/schemas/v2_1/data/generic'}
-        observations = root.findall('.//g:Obs', namespaces)
-        rows = []
-        for obs in observations:
-            period = obs.find('g:ObsKey/g:Value[@id="LAIKOTARPIS"]', namespaces).attrib['value']
-            population = obs.find('g:ObsValue', namespaces).attrib['value']
-            
-            # Transform the period from "2008M12" to "2008-12"
-            period = re.sub(r'M(\d+)$', r'-\1', period)
-            
-            rows.append({'period': period, 'population': population})
-        yield rows
+        # Transform the period from "2008M12" to "2008-12"
+        period = re.sub(r'M(\d+)$', r'-\1', period)
+
+        rows.append({'period': period, 'population': population})
+    return rows
 
 
-class SaveDataToGCS(beam.DoFn):
-    """A DoFn that saves data to a Google Cloud Storage bucket as a CSV file."""
+def save_data_to_gcs(element, bucket_name, filename):
+    """A function that saves data to a Google Cloud Storage bucket as a CSV file."""
+    df = pd.DataFrame(element)
+    logging.info(f'Saving data to gs://{bucket_name}/{filename}')
+    bucket = storage.Client().bucket(bucket_name)
+    blob = bucket.blob(filename)
+    blob.upload_from_string(df.to_csv(index=False), content_type='text/csv')
+    logging.info(f'Data saved to gs://{bucket_name}/{filename}')
 
-    def __init__(self, bucket_name, filename):
-        self.bucket_name = bucket_name
-        self.filename = filename
-
-    def process(self, element):
-        """Save the data to a Google Cloud Storage bucket as a CSV file."""
-        logging.info(f'Saving data to gs://{self.bucket_name}/{self.filename}')
-        df = pd.DataFrame(element)
-        with storage.Client() as client:
-            bucket = client.bucket(self.bucket_name)
-            blob = bucket.blob(self.filename)
-            blob.upload_from_string(df.to_csv(index=False), content_type='text/csv')
-            logging.info(f'Data saved to gs://{self.bucket_name}/{self.filename}')
-
-
-# --------------------------------- PIPELINE --------------------------------- #
-def run():
-    # Set the URL to download data from and the GCS bucket and filename to save the data to
-    url = 'https://osp-rs.stat.gov.lt/rest_xml/data/S3R168_M3010101_1'
-    bucket_name = 'lithuania_statistics'
-    filename = 'lithuania_monthly_population.csv'
-
-    options = PipelineOptions()
-    gcp_options = options.view_as(GoogleCloudOptions)
-    gcp_options.project = 'vl-data-learn'
-    gcp_options.job_name = 'lithuania-statistics'
-    gcp_options.job_name = 'lithuania-statistics-population'
-    gcp_options.staging_location = 'gs://lithuania_statistics/staging'
-    gcp_options.temp_location = 'gs://lithuania_statistics/temp'
-    gcp_options.region = 'europe-west1'
-    options.view_as(StandardOptions).runner = 'DataflowRunner'
-    
-    with beam.Pipeline(options=options) as p:
-        data = (
-            p
-            | 'Create' >> beam.Create([None])
-            | 'Download Data' >> beam.ParDo(DownloadData(url))
-            | 'Parse Data' >> beam.ParDo(ParseData())
-            | 'Save to GCS' >> beam.ParDo(SaveDataToGCS(bucket_name, filename))
-        )
-        
+# # --------------------------------- PIPELINE --------------------------------- #
 if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
-    run()
+
+    options = PipelineOptions()
+    options.view_as(StandardOptions).runner = 'DataflowRunner'
+    options.view_as(GoogleCloudOptions).project = 'vl-data-learn'
+    options.view_as(GoogleCloudOptions).region = 'europe-west1'
+    options.view_as(GoogleCloudOptions).job_name = 'lithuania-statistics-population'
+    options.view_as(GoogleCloudOptions).staging_location = 'gs://lithuania_statistics/staging'
+    options.view_as(GoogleCloudOptions).temp_location = 'gs://lithuania_statistics/temp'
+
+    with beam.Pipeline(options=options) as pipeline:
+        (pipeline
+            | 'Create' >> beam.Create([None])
+            | 'Download Data' >> beam.ParDo(download_data, 'https://osp-rs.stat.gov.lt/rest_xml/data/S3R168_M3010101_1')
+            | 'Parse Data' >> beam.Map(parse_data)
+            | 'Save to GCS' >> beam.ParDo(save_data_to_gcs, 'lithuania_statistics', 'lithuania_monthly_population.csv')
+        )
+
+    pipeline.run()
+
+
+# def run():
+#     # Set the URL to download data from and the GCS bucket and filename to save the data to
+#     url = 'https://osp-rs.stat.gov.lt/rest_xml/data/S3R168_M3010101_1'
+#     bucket_name = 'lithuania_statistics'
+#     filename = 'lithuania_monthly_population.csv'
+
+#     options = PipelineOptions()
+#     gcp_options = options.view_as(GoogleCloudOptions)
+#     gcp_options.project = 'vl-data-learn'
+#     gcp_options.job_name = 'lithuania-statistics-population'
+#     gcp_options.staging_location = 'gs://lithuania_statistics/staging'
+#     gcp_options.temp_location = 'gs://lithuania_statistics/temp'
+#     gcp_options.region = 'europe-west1'
+#     options.view_as(StandardOptions).runner = 'DataflowRunner'
+
+#     with beam.Pipeline(options=options) as p:
+#         data = (
+#             p
+#             | 'Create' >> beam.Create([None])
+#             | 'Download Data' >> beam.ParDo(download_data, url)
+#             | 'Parse Data' >> beam.Map(parse_data)
+#             | 'Save to GCS' >> beam.ParDo(save_data_to_gcs, bucket_name, filename)
+#         )
+
+
+# if __name__ == '__main__':
+#     logging.getLogger().setLevel(logging.INFO)
+#     run()
