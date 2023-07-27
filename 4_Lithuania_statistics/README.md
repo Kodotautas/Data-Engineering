@@ -17,5 +17,4 @@ pip install apache_beam[gcp]
 `python3 main.py -template_location gs://my-bucket/templates/my_template --setup_file /setup.py`
 
 --Next step: build dataflow pipeline
--- dataflow dont see / dont have requests library
--- finish parser 
+-- name 'requests' is not defined | something wrong in gcp 

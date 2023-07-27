@@ -4,12 +4,11 @@ from google.cloud import storage
 import pandas as pd
 import logging
 import re
-import requests
 import xml.etree.ElementTree as ET
+import requests
 
 
 # --------------------------------- FUNCTIONS -------------------------------- #
-
 def download_data(element, url):
     """A function that downloads data from a specified URL."""
     logging.info(f'Downloading data from {url}')
@@ -35,7 +34,6 @@ def parse_data(element):
         rows.append({'period': period, 'population': population})
     return rows
 
-
 def save_data_to_gcs(element, bucket_name, filename):
     """A function that saves data to a Google Cloud Storage bucket as a CSV file."""
     df = pd.DataFrame(element)
@@ -57,6 +55,8 @@ if __name__ == '__main__':
     options.view_as(GoogleCloudOptions).job_name = 'lithuania-statistics-population'
     options.view_as(GoogleCloudOptions).staging_location = 'gs://lithuania_statistics/staging'
     options.view_as(GoogleCloudOptions).temp_location = 'gs://lithuania_statistics/temp'
+
+    setup_file = 'gs://setup-dataflow/my_dataflow_pipeline-1.0.tar.gz'
 
     with beam.Pipeline(options=options) as pipeline:
         (pipeline
