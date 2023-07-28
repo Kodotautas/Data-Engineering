@@ -45,18 +45,16 @@ def save_data_to_gcs(element, bucket_name, filename):
 
 
 # # --------------------------------- PIPELINE --------------------------------- #
-if __name__ == '__main__':
+def run():
     logging.getLogger().setLevel(logging.INFO)
 
     options = PipelineOptions()
     options.view_as(StandardOptions).runner = 'DataflowRunner'
     options.view_as(GoogleCloudOptions).project = 'vl-data-learn'
-    options.view_as(GoogleCloudOptions).region = 'europe-west1'
+    options.view_as(GoogleCloudOptions).region = 'europe-central2'  # Correct the region here
     options.view_as(GoogleCloudOptions).job_name = 'lithuania-statistics-population'
     options.view_as(GoogleCloudOptions).staging_location = 'gs://lithuania_statistics/staging'
-    options.view_as(GoogleCloudOptions).temp_location = 'gs://lithuania_statistics/temp'
-
-    setup_file = 'gs://setup-dataflow/my_dataflow_pipeline-1.0.tar.gz'
+    options.view_as(GoogleCloudOptions).temp_location = 'gs://lithuania_statistics/temp'    
 
     with beam.Pipeline(options=options) as pipeline:
         (pipeline
@@ -66,4 +64,5 @@ if __name__ == '__main__':
             | 'Save to GCS' >> beam.ParDo(save_data_to_gcs, 'lithuania_statistics', 'lithuania_monthly_population.csv')
         )
 
-    pipeline.run()
+if __name__ == '__main__':
+    run()

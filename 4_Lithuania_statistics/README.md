@@ -14,7 +14,7 @@ https://osp.stat.gov.lt/web/guest/rdb-rest
 pip install apache_beam[gcp]
 
 # CLI to create Dataflow template:
-`python3 main.py -template_location gs://my-bucket/templates/my_template --setup_file /setup.py`
+`python3 main.py -template_location gs://my-bucket/templates/my_template --setup_file ./setup.py --region europe-central2 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --temp_location  gs://lithuania_statistics/temp/`
 
 --Next step: build dataflow pipeline
 -- name 'requests' is not defined | something wrong in gcp 
