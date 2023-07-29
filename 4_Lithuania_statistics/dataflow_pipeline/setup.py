@@ -46,7 +46,7 @@ class CustomCommands(setuptools.Command):
 
 
 REQUIRED_PACKAGES = [
-    'numpy', 'pandas', 'requests', 'xml.etree.ElementTree', 'logging', 're',
+    'numpy', 'pandas-gbq', 'google-cloud-bigquery', 'google-cloud-storage', 'requests' 
 ]
 
 setuptools.setup(

@@ -1,6 +1,5 @@
-logging
+google-cloud-bigquery
+google-cloud-storage
 numpy
-pandas
-re
+pandas-gbq
 requests
-xml.etree.ElementTree
