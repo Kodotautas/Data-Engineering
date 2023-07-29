@@ -11,7 +11,7 @@ Created simple data pipeline which:
 https://osp.stat.gov.lt/web/guest/rdb-rest
 
 # Don't forget install apache beam GCP:
-pip install apache_beam[gcp]
+`pip install apache_beam[gcp]`
 
 # CLI to create Dataflow template:
 `python3 main.py -template_location gs://my-bucket/templates/my_template --setup_file ./setup.py --region europe-central2 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --temp_location  gs://lithuania_statistics/temp/`
