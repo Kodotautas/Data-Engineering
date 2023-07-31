@@ -51,7 +51,7 @@ def run():
     options = PipelineOptions()
     options.view_as(StandardOptions).runner = 'DataflowRunner'
     options.view_as(GoogleCloudOptions).project = 'vl-data-learn'
-    options.view_as(GoogleCloudOptions).region = 'europe-central2'  # Correct the region here
+    options.view_as(GoogleCloudOptions).region = 'us-central1'
     options.view_as(GoogleCloudOptions).job_name = 'lithuania-statistics-population'
     options.view_as(GoogleCloudOptions).staging_location = 'gs://lithuania_statistics/staging'
     options.view_as(GoogleCloudOptions).temp_location = 'gs://lithuania_statistics/temp'    
@@ -61,7 +61,7 @@ def run():
             | 'Create' >> beam.Create([None])
             | 'Download Data' >> beam.ParDo(download_data, 'https://osp-rs.stat.gov.lt/rest_xml/data/S3R168_M3010101_1')
             | 'Parse Data' >> beam.Map(parse_data)
-            | 'Save to GCS' >> beam.ParDo(save_data_to_gcs, 'lithuania_statistics', 'lithuania_monthly_population.csv')
+        #     | 'Save to GCS' >> beam.ParDo(save_data_to_gcs, 'lithuania_statistics', 'lithuania_monthly_population.csv')
         )
 
 if __name__ == '__main__':

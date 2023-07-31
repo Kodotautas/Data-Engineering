@@ -2,7 +2,7 @@
 
 # About project:
 Created simple data pipeline which:
-- from Lithuania Statistics portal via API download population data
+- from Lithuania Statistics portal via API download population data of Lithuania (Monthly)
 - stores it in GCS Bucket
 - visualize data in Looker dashboard
 
@@ -17,4 +17,4 @@ https://osp.stat.gov.lt/web/guest/rdb-rest
 `python3 main.py -template_location gs://my-bucket/templates/my_template --setup_file ./setup.py --region europe-central2 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --temp_location  gs://lithuania_statistics/temp/`
 
 --Next step: build dataflow pipeline
--- name 'requests' is not defined | something wrong in gcp 
+-- error: no module 'src'
