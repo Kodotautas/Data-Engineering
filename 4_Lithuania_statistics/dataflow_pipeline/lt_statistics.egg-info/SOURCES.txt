@@ -6,3 +6,4 @@ lt_statistics.egg-info/requires.txt
 lt_statistics.egg-info/top_level.txt
 src/__init__.py
 src/pipeline.py
+src/pipeline_local.py
