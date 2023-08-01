@@ -2,8 +2,9 @@
 
 # About project:
 Created simple data pipeline which:
+- parse all valid ids for data
 - from Lithuania Statistics portal via API download population data of Lithuania (Monthly)
-- stores it in GCS Bucket
+- stores it in GCS Buckets
 - visualize data in Looker dashboard
 
 
@@ -16,5 +17,4 @@ https://osp.stat.gov.lt/web/guest/rdb-rest
 # CLI to create Dataflow template:
 `python3 main.py -template_location gs://my-bucket/templates/my_template --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --temp_location  gs://lithuania_statistics/temp/`
 
---Next step: build dataflow pipeline
--- error: no module 'src'
+--Next step: filter out not actual parsed ids from csv file.
