@@ -45,8 +45,7 @@ def run():
     with beam.Pipeline(options=options) as pipeline:
         (pipeline
             | 'Download data' >> beam.Create(['https://osp-rs.stat.gov.lt/rest_xml/data/S3R168_M3010101_1'])
-            | 'Parse data' >> beam.Map(download_data)
-            | 'Save data to GCS' >> beam.Map(save_data_to_gcs, 'lithuania_statistics', 'population.csv')
+            | 'Save data to GCS' >> beam.Map(save_data_to_gcs, 'lithuania_statistics', 'test.xml')
         )
 
 if __name__ == '__main__':

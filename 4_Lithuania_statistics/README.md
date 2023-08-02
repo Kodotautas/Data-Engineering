@@ -18,3 +18,4 @@ https://osp.stat.gov.lt/web/guest/rdb-rest
 `python3 main.py -template_location gs://my-bucket/templates/my_template --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --temp_location  gs://lithuania_statistics/temp/`
 
 --Next step: filter out not actual parsed ids from csv file.
+-- Store only updated files
