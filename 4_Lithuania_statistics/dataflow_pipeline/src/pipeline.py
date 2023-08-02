@@ -8,7 +8,7 @@ import xml.etree.ElementTree as ET
 import requests
 
 
-# --------------------------------- FUNCTIONS -------------------------------- #
+# --------------------------------- EXTRACTOR -------------------------------- #
 def download_data(url):
     """A function that downloads data from a specified URL."""
     logging.info(f'Downloading data from {url}')
@@ -17,29 +17,15 @@ def download_data(url):
     logging.info(f'Response status code: {response.status_code}')
     return response.text
 
-def parse_data(element):
-    """A function that parses XML data and extracts the relevant information."""
-    logging.info('Parsing XML data')
-    root = ET.fromstring(element)
-    namespaces = {'g': 'http://www.sdmx.org/resources/sdmxml/schemas/v2_1/data/generic'}
-    observations = root.findall('.//g:Obs', namespaces)
-    rows = []
-    for obs in observations:
-        period = obs.find('g:ObsKey/g:Value[@id="LAIKOTARPIS"]', namespaces).attrib['value']
-        population = obs.find('g:ObsValue', namespaces).attrib['value']
-
-        # Transform format from "2008M12" to "2008-12"
-        period = re.sub(r'M(\d+)$', r'-\1', period)
-
-        rows.append({'period': period, 'population': population})
-    return rows
+def get_file_name(url):
+    return url.split('/')[-1]
 
 def save_data_to_gcs(element, bucket_name, filename):
     """A function that saves data to a Google Cloud Storage bucket as a CSV file."""
     df = pd.DataFrame.from_records(element)
     logging.info(f'Saving data to gs://{bucket_name}/{filename}')
     bucket = storage.Client().bucket(bucket_name)
-    blob = bucket.blob(filename)
+    blob = bucket.blob(get_file_name(filename))
     blob.upload_from_string(df.to_csv(index=False), content_type='text/csv')
     logging.info(f'Data saved to gs://{bucket_name}/{filename}')
 
