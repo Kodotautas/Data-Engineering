@@ -5,4 +5,5 @@ lt_statistics.egg-info/dependency_links.txt
 lt_statistics.egg-info/requires.txt
 lt_statistics.egg-info/top_level.txt
 src/__init__.py
+src/id_parser.py
 src/pipeline.py

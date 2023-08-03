@@ -1,12 +1,10 @@
 # This project is about creating Lithuania market statistics ETP pipeline with GCP Dataflow.
 
-# About project:
-Created simple data pipeline which:
-- parse all valid ids for data
-- from Lithuania Statistics portal via API download population data of Lithuania (Monthly)
-- stores it in GCS Buckets
-- visualize data in Looker dashboard
-
+# About pipeline:
+- parse all valid ids for data from Lithuania Statistics department
+- filter out which are not updatable any more and leave later than 2022-01-01
+- from Lithuania Statistics via API download all data
+- stores .xml files in GCS Buckets by data group for futher use cases
 
 # API source / info:
 https://osp.stat.gov.lt/web/guest/rdb-rest
@@ -17,5 +15,5 @@ https://osp.stat.gov.lt/web/guest/rdb-rest
 # CLI to create Dataflow template:
 `python3 main.py -template_location gs://my-bucket/templates/my_template --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --temp_location  gs://lithuania_statistics/temp/`
 
---Next step: filter out not actual parsed ids from csv file.
--- Store only updated files
+--Next steps:
+create architecture to run full pipeline, before loop through id's

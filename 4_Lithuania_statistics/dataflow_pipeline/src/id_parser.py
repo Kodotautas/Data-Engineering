@@ -17,9 +17,6 @@ class IdParser:
             str: The downloaded data as a xml string.
         """
         response = requests.get(url)
-        # save xml file
-        # with open(f'{cwd}/4_Lithuania_statistics/dataflow_pipeline/mappings/all_ids.xml', 'wb') as file:
-            # file.write(response.content)
         print(f'Downloaded {len(response.content)} bytes.')
         return response.content
 
@@ -73,6 +70,9 @@ class IdParser:
         # leave rowrs with update date >= 2022-01-01
         df = df[df['update_date'] >= '2022-01-01']
         print(f'All df rows with update date >= 2022-01-01: {len(df)}')
+
+        # drop colums
+        df = df.drop(columns=['agencyID', 'isFinal', 'version', 'urn'])
         return df
 
 if __name__ == "__main__":
