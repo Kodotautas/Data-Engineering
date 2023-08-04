@@ -2,6 +2,7 @@ import os
 import xml.etree.ElementTree as ET
 import pandas as pd
 import requests
+from src.params import months
 
 cwd = os.getcwd()
 
@@ -52,7 +53,7 @@ class IdParser:
         print(f'Parsed {len(df)} rows.')
         return df
 
-    def df_transform(df):
+    def df_transform(df, months=1):
         """Transforms the parsed XML data.
         Args:
             df (pd.DataFrame): The parsed XML data as a Pandas DataFrame.
@@ -63,13 +64,16 @@ class IdParser:
         # fiter out column 'description' which has value 'Neatnaujinamas' use regex
         df = df[~df['description'].str.contains('Neatnaujinamas', regex=True)]
         
+        # replace /, \, *, ?, ", <, >, |, : with _
+        df['description'] = df['description'].str.replace(r'[/\\*?"<>|:]', '_')
+
         # extract date from column 'description' and create new column 'update_date' and drop null values
         df['update_date'] = df['description'].str.extract('Atnaujinta:\s+(\d{4}-\d{2}-\d{2})')
         df = df.dropna(subset=['update_date'])
         
-        # leave rowrs with update date >= 2022-01-01
-        df = df[df['update_date'] >= '2022-01-01']
-        print(f'All df rows with update date >= 2022-01-01: {len(df)}')
+        # filter rows by date later than previous month
+        df['update_date'] = pd.to_datetime(df['update_date'])
+        df = df[df['update_date'] > pd.to_datetime('today') - pd.offsets.MonthBegin(months)]
 
         # drop colums
         df = df.drop(columns=['agencyID', 'isFinal', 'version', 'urn'])
@@ -78,6 +82,6 @@ class IdParser:
 if __name__ == "__main__":
     xml_data = IdParser.download_data('https://osp-rs.stat.gov.lt/rest_xml/dataflow/')
     df = IdParser.parse_xml_to_dataframe(xml_data)
-    df = IdParser.df_transform(df)
+    df = IdParser.df_transform(df, months)
     df.to_csv(f'{cwd}/4_Lithuania_statistics/dataflow_pipeline/data/parsed_all_ids.csv', index=False)
     print(f'Parsed {len(df)} rows.')

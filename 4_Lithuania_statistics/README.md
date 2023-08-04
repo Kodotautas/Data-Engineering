@@ -5,6 +5,7 @@
 - filter out which are not updatable any more and leave later than 2022-01-01
 - from Lithuania Statistics via API download all data
 - stores .xml files in GCS Buckets by data group for futher use cases
+- final Dataflow pipeline updates once per month only newly updated LT statistics
 
 # API source / info:
 https://osp.stat.gov.lt/web/guest/rdb-rest
@@ -13,7 +14,7 @@ https://osp.stat.gov.lt/web/guest/rdb-rest
 `pip install apache_beam[gcp]`
 
 # CLI to create Dataflow template:
-`python3 main.py -template_location gs://my-bucket/templates/my_template --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --temp_location  gs://lithuania_statistics/temp/`
+`python3 main.py -template_location gs://lithuania_statistics/templates/my_template --template-file=lt_stats.py --metadata-file=lt_stats_pipeline.json --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --temp_location  gs://lithuania_statistics/temp/`
 
 --Next steps:
 create architecture to run full pipeline, before loop through id's
