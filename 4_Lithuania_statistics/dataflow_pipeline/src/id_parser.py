@@ -2,7 +2,6 @@ import os
 import xml.etree.ElementTree as ET
 import pandas as pd
 import requests
-from src.params import months
 
 cwd = os.getcwd()
 
@@ -53,7 +52,7 @@ class IdParser:
         print(f'Parsed {len(df)} rows.')
         return df
 
-    def df_transform(df, months=1):
+    def df_transform(df, months=12):
         """Transforms the parsed XML data.
         Args:
             df (pd.DataFrame): The parsed XML data as a Pandas DataFrame.

@@ -1,8 +1,6 @@
-import argparse
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions, GoogleCloudOptions, StandardOptions
 from google.cloud import storage
-import pandas as pd
 import logging
 import requests
 from src.id_parser import IdParser
@@ -14,7 +12,7 @@ base_url = 'https://osp-rs.stat.gov.lt/rest_xml/data/'
 
 # # -------------------------------- ID's parser ------------------------------- #
 df = IdParser.df_transform(IdParser.parse_xml_to_dataframe(IdParser.download_data('https://osp-rs.stat.gov.lt/rest_xml/dataflow/')))
-df = df.head(3)
+
 
 # # --------------------------------- EXTRACTOR -------------------------------- #
 def download_data(url):
@@ -37,6 +35,17 @@ def save_data_to_gcs(element, bucket_name, folder_name, filename):
     logging.info(f'Data saved to gs://{bucket_name}/{filename}')
 
 
+class ProcessData(beam.DoFn):
+    def process(self, element):
+        """A function that processes the data.
+        Args: element (tuple): A tuple containing the URL, index, folder name and file name.
+        Yields: tuple: A tuple containing the folder name, file name and data."""
+        url, idx, folder_name, file_name = element
+        logging.info(f'Processing {url}')
+        data = requests.get(url).text
+        yield (folder_name, file_name, data)
+
+
 def run(base_url=base_url,
         project='vl-data-learn',
         region='europe-west1',
@@ -56,19 +65,11 @@ def run(base_url=base_url,
     options.view_as(GoogleCloudOptions).temp_location = temp_location
 
     with beam.Pipeline(options=options) as pipeline:
-        # Loop through the DataFrame 'df' and process each row
-        for idx, row in df.iterrows():
-            url = base_url + row['id']
-            folder_name = row['name']
-            file_name = row['description']
-
-            logging.info(f'Processing {url}')
-
-            (pipeline
-                | f'Create URL {idx}' >> beam.Create([url])
-                | f'Download and process data {idx}' >> beam.Map(download_data)
-                | f'Save data to GCS {idx}' >> beam.Map(save_data_to_gcs, 'lithuania_statistics', folder_name, file_name)
-            )
+        (pipeline
+            | 'Create URL' >> beam.Create([(base_url + row['id'], idx, row['name'], row['description']) for idx, row in df.iterrows()])
+            | 'Process Data' >> beam.ParDo(ProcessData())
+            | 'Save data to GCS' >> beam.MapTuple(save_data_to_gcs, 'lithuania_statistics')
+        )
 
 
 # # --------------------------------- MAIN --------------------------------- #

@@ -1,4 +1,4 @@
-# This project is about creating Lithuania market statistics ETP pipeline with GCP Dataflow.
+# This project is about creating Lithuania market statistics pipeline with GCP Dataflow.
 
 # About pipeline:
 - parse all valid ids for data from Lithuania Statistics department
@@ -10,11 +10,16 @@
 # API source / info:
 https://osp.stat.gov.lt/web/guest/rdb-rest
 
-# Don't forget install apache beam GCP:
+## Don't forget install apache beam GCP:
 `pip install apache_beam[gcp]`
 
-# CLI to create Dataflow template:
-`python3 main.py -template_location gs://lithuania_statistics/templates/my_template --template-file=lt_stats.py --metadata-file=lt_stats_pipeline.json --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --temp_location  gs://lithuania_statistics/temp/`
+# Dataflow CLI:
+`python3 main.py --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --staging_location gs://vl-data-learn/dataflow/staging --temp_location  gs://lithuania_statistics/temp/ --template_location gs://lithuania_statistics/templates/lt-statistics-template`
+
+- run pipeline remove last part: template_location
+
 
 --Next steps:
-create architecture to run full pipeline, before loop through id's
+- add months param to cli
+- save template with month 1
+- create and schedule pipeline
