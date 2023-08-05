@@ -21,5 +21,6 @@ https://osp.stat.gov.lt/web/guest/rdb-rest
 
 --Next steps:
 - add months param to cli
-- save template with month 1
+- save template with month 1 param
 - create and schedule pipeline
+- write article
