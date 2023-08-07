@@ -14,13 +14,17 @@ https://osp.stat.gov.lt/web/guest/rdb-rest
 `pip install apache_beam[gcp]`
 
 # Dataflow CLI:
-`python3 main.py --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --staging_location gs://vl-data-learn/dataflow/staging --temp_location  gs://lithuania_statistics/temp/ --template_location gs://lithuania_statistics/templates/lt-statistics-template`
+### To create template:
+`python3 main.py --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --months 1 --staging_location gs://vl-data-learn/dataflow/staging --temp_location  gs://lithuania_statistics/temp/ --template_location gs://lithuania_statistics/templates/lt-statistics-template`
 
-- run pipeline remove last part: template_location
+## Run:
+`python3 main.py --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --staging_location gs://vl-data-learn/dataflow/staging --temp_location  gs://lithuania_statistics/temp/ --months 1`
+
+`--months` argument set how many month look back and send that ID's
 
 
 --Next steps:
-- add months param to cli
-- save template with month 1 param
-- create and schedule pipeline
-- write article
+- review whole project code / structure
+- create project diagram
+- add ir to github
+- write article in LInkedIn

@@ -1,10 +1,10 @@
 import os
+import argparse
 import xml.etree.ElementTree as ET
 import pandas as pd
 import requests
 
 cwd = os.getcwd()
-
 
 # -------------------------------- ID's parser ------------------------------- #
 class IdParser:
@@ -77,10 +77,18 @@ class IdParser:
         # drop colums
         df = df.drop(columns=['agencyID', 'isFinal', 'version', 'urn'])
         return df
+    
+    @classmethod
+    def parse_args(cls):
+        parser = argparse.ArgumentParser(description='ID Parser')
+        parser.add_argument('--months', type=int, default=12, help='Number of months to look back.')
+        args = parser.parse_args()
+        cls.months = args.months
 
 if __name__ == "__main__":
+    IdParser.parse_args()
     xml_data = IdParser.download_data('https://osp-rs.stat.gov.lt/rest_xml/dataflow/')
     df = IdParser.parse_xml_to_dataframe(xml_data)
-    df = IdParser.df_transform(df, months)
+    df = IdParser.df_transform(df, months=IdParser.months)
     df.to_csv(f'{cwd}/4_Lithuania_statistics/dataflow_pipeline/data/parsed_all_ids.csv', index=False)
     print(f'Parsed {len(df)} rows.')

@@ -1,3 +1,4 @@
+import argparse
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions, GoogleCloudOptions, StandardOptions
 import logging
@@ -11,7 +12,7 @@ base_url = 'https://osp-rs.stat.gov.lt/rest_xml/data/'
 
 # # -------------------------------- ID's parser ------------------------------- #
 df = IdParser.df_transform(IdParser.parse_xml_to_dataframe(IdParser.download_data('https://osp-rs.stat.gov.lt/rest_xml/dataflow/')))
-df = df.head(3)
+
 
 # # --------------------------------- EXTRACTOR -------------------------------- #
 def download_data(url):
@@ -47,6 +48,7 @@ class SaveDataToGCS(beam.DoFn):
 
 
 def run(base_url=base_url,
+        months=12,
         project='vl-data-learn',
         region='europe-west1',
         staging_location='gs://lithuania_statistics/staging',
@@ -75,4 +77,8 @@ def run(base_url=base_url,
 
 # # --------------------------------- MAIN --------------------------------- #
 if __name__ == '__main__':
-    run()
+    parser = argparse.ArgumentParser(description='Dataflow Pipeline')
+    parser.add_argument('--months', type=int, default=12, help='Number of months to consider')
+    args = parser.parse_args()
+
+    run(months=args.months)
