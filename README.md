@@ -9,4 +9,4 @@ There is data engineering projects / learnings completed on free time.
 
 3.1 - Data engineering with GCP (PostgreSQL, Spark, Data Catalog)
 
-4 - Lithuania statistics. Project to get data from Statistics of Lithuania and build pipelines. 
+4 - Lithuania statistics pipeline. Project to get data from Statistics Lithuania and store it in GCP Storage.
