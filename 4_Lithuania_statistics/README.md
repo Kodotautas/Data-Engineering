@@ -10,21 +10,17 @@
 # API source / info:
 https://osp.stat.gov.lt/web/guest/rdb-rest
 
-## Don't forget install apache beam GCP:
+## Install apache beam GCP:
 `pip install apache_beam[gcp]`
 
-# Dataflow CLI:
+# Dataflow:
 ### To create template:
 `python3 main.py --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --months 1 --staging_location gs://vl-data-learn/dataflow/staging --temp_location  gs://lithuania_statistics/temp/ --template_location gs://lithuania_statistics/templates/lt-statistics-template`
 
-## Run:
+## Run with CLI:
 `python3 main.py --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --staging_location gs://vl-data-learn/dataflow/staging --temp_location  gs://lithuania_statistics/temp/ --months 1`
 
 `--months` argument set how many month look back and send that ID's
 
-
---Next steps:
-- review whole project code / structure
-- create project diagram
-- add ir to github
-- write article in LInkedIn
+### Pipeline diagram:
+![Data Pipeline Diagram](./dataflow_pipeline/diagram/lt_statistics_pipeline.jpeg)
