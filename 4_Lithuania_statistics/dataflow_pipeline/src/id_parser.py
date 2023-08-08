@@ -51,7 +51,7 @@ class IdParser:
         df = pd.DataFrame(rows)
         print(f'Parsed {len(df)} rows.')
         return df
-
+    
     def df_transform(df, months=12):
         """Transforms the parsed XML data.
         Args:
@@ -84,6 +84,7 @@ class IdParser:
         parser.add_argument('--months', type=int, default=12, help='Number of months to look back.')
         args = parser.parse_args()
         cls.months = args.months
+
 
 if __name__ == "__main__":
     IdParser.parse_args()

@@ -1,6 +1,0 @@
-setup.py
-my_dataflow_pipeline.egg-info/PKG-INFO
-my_dataflow_pipeline.egg-info/SOURCES.txt
-my_dataflow_pipeline.egg-info/dependency_links.txt
-my_dataflow_pipeline.egg-info/requires.txt
-my_dataflow_pipeline.egg-info/top_level.txt
