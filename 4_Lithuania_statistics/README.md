@@ -1,10 +1,10 @@
 # This project is about creating Lithuania market statistics pipeline with GCP Dataflow.
 
 # About pipeline:
-- parse all valid ids for data from Lithuania Statistics department
-- filter out which are not updatable any more and leave later than 2022-01-01
-- from Lithuania Statistics via API download all data
-- stores .xml files in GCS Buckets by data group for futher use cases
+- parse all valid ID's for data from Lithuania Statistics department
+- filter out which are not updatable any more
+- from Lithuania Statistics via API download all data which we need
+- stores .xml files in GCS Buckets by data group subfolders for futher use cases
 - final Dataflow pipeline updates once per month only newly updated LT statistics
 
 # API source / info:
@@ -23,4 +23,4 @@ https://osp.stat.gov.lt/web/guest/rdb-rest
 `--months` argument set how many month look back and send that ID's
 
 ### Pipeline diagram:
-![Data Pipeline Diagram](./dataflow_pipeline/diagram/lt_statistics_pipeline.jpeg)
+<img src="./dataflow_pipeline/diagram/lt_statistics_pipeline.jpeg" alt="Data Pipeline Diagram" width="300">
