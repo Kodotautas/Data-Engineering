@@ -44,3 +44,8 @@ if __name__ == "__main__":
     folder_name = "companies_cars"
 
     DownloadData.download_and_store_zip_file(zip_file_url, bucket_name, folder_name)
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    main()

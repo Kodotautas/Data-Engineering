@@ -96,4 +96,4 @@ if __name__ == "__main__":
 
     uploader = UploadToBigQuery(config)
     data_frame = uploader.read_file_from_gcs()
-    # uploader.upload_file_to_bigquery(data_frame)
+    uploader.upload_file_to_bigquery(data_frame)
