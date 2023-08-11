@@ -5,6 +5,7 @@ import urllib.request
 from google.cloud import storage
 
 
+# --------------------------- DOWNLOAD & SAVE DATA --------------------------- #
 class DownloadData:
     def download_and_store_zip_file(zip_file_url, bucket_name, folder_name):
         """Downloads a .zip file from the given URL, unzips its contents, and stores them in a GCS bucket.
@@ -21,7 +22,6 @@ class DownloadData:
         with urllib.request.urlopen(zip_file_url) as response:
             with io.BytesIO(response.read()) as temp_file:
                 logging.info(f'Downloaded {zip_file_url}')
-                print(f'Downloaded {zip_file_url}')
                 
                 # Unzip the .zip file.
                 with zipfile.ZipFile(temp_file) as zip_file:
@@ -35,10 +35,10 @@ class DownloadData:
                         blob.upload_from_string(file_contents)
                         
                         logging.info(f'Uploaded {file_name} to {bucket_name}/{folder_name}')
-                        print(f'Uploaded {file_name} to {bucket_name}/{folder_name}')
 
+
+# ----------------------------------- MAIN ----------------------------------- #
 if __name__ == "__main__":
-    # Download the .zip file from the internet.
     zip_file_url = "https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip"
     bucket_name = "lithuania_statistics"
     folder_name = "companies_cars"
