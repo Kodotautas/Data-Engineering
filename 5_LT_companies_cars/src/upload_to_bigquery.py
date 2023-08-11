@@ -11,7 +11,7 @@ BUCKET_NAME = "lithuania_statistics"
 FOLDER_NAME = "companies_cars"
 FILE_NAME = "Atviri_JTP_parko_duomenys.csv"
 DATASET_NAME = "lithuania_statistics"
-TABLE_NAME = "companies_cars"
+TABLE_NAME = "companies_cars_raw"
 
 
 # --------------------------------- MODELS --------------------------------- #
