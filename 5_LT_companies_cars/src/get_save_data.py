@@ -5,7 +5,6 @@ import urllib.request
 from google.cloud import storage
 from contextlib import contextmanager
 
-
 # --------------------------------- DOWLOADER -------------------------------- #
 class DownloadData:
     @staticmethod
