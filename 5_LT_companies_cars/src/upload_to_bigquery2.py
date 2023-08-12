@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from typing import List
 
 # Parameters
-from src.get_save_data import file_configurations
+from mappings import file_configurations
 
 # --------------------------------- MODELS --------------------------------- #
 class TableSchema(BaseModel):
@@ -31,8 +31,8 @@ class UploadToBigQuery:
         self.storage_client = storage.Client()
         self.bigquery_client = bigquery.Client()
         self.transform_functions = {
-            "file1.csv": self.transform_data_file1,
-            "file2.csv": self.transform_data_file2,
+            "Atviri_JTP_parko_duomenys.csv": self.transform_data_file1,
+            "monthly-2023.csv": self.transform_data_file2,
         }
 
     def read_file_from_gcs(self) -> pd.DataFrame:
@@ -95,20 +95,22 @@ if __name__ == "__main__":
         transform_function = None
         
         if config_entry["table_name"] == "companies_cars_raw":
-            transform_function = transform_data_companies
+            transform_function = UploadToBigQuery.transform_data_companies
         elif config_entry["table_name"] == "employees_salaries_raw":
-            transform_function = transform_data_employees
+            transform_function = UploadToBigQuery.transform_data_employees
         
-        if transform_function is not None:
-            config = UploadConfig(
-                bucket_name="lithuania_statistics",
-                folder_name=config_entry["folder_name"],
-                file_name=config_entry["file_name"],
-                dataset_name="lithuania_statistics",
-                table_name=config_entry["table_name"],
-                table_schema=config_entry["table_schema"]
-            )
+        if transform_function is None:
+            logging.error(f"Could not find transform function for {config_entry['table_name']}")
+            continue
 
-            uploader = UploadToBigQuery(config, transform_function)
-            data_frame = uploader.read_file_from_gcs()
-            uploader.upload_file_to_bigquery(data_frame)
+        config = UploadConfig(
+            bucket_name="lithuania_statistics",
+            folder_name="companies_cars",
+            file_name=config_entry["file_name"],
+            dataset_name="lithuania_statistics",
+            table_name=config_entry["table_name"],
+            table_schema=config_entry["table_schema"]
+        )
+        uploader = UploadToBigQuery(config)
+        data_frame = uploader.read_file_from_gcs()
+        uploader.upload_file_to_bigquery(data_frame)
