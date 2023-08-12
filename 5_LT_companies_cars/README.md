@@ -15,6 +15,5 @@
 - optimize code as best as can
 - create pipeline with Dataflow
 - create looker studio dashboard
-- need to create dbt model or schedule bigquery table, how?
-- possible connect more data like companies employes number?
+- need to create dbt model or schedule bigquery table, how? scheduled queries
 - is there relationship between luxury cars and salary
