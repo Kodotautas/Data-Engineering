@@ -1,3 +1,4 @@
+# File downloads and saves (sodra, regitra) data to GCS bucket
 import logging
 import io
 import zipfile
@@ -39,6 +40,10 @@ class DownloadData:
                         for file_name in zip_file.namelist():
                             # Read the file contents from the .zip file.
                             file_contents = zip_file.read(file_name)
+
+                            # Set file name if url is atvira.sodra.lt
+                            if "atvira.sodra.lt" in zip_file_url:
+                                file_name = f"employees_salaries_raw.csv"
 
                             # Upload the file contents to the GCS bucket.
                             bucket = storage_client.bucket(bucket_name)
