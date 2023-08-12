@@ -4,6 +4,12 @@ import zipfile
 import urllib.request
 from google.cloud import storage
 from contextlib import contextmanager
+from datetime import date
+
+
+# ---------------------------------- PARAMS ---------------------------------- #
+# Get the current year.
+current_year = date.today().year
 
 # --------------------------------- DOWLOADER -------------------------------- #
 class DownloadData:
@@ -19,8 +25,12 @@ class DownloadData:
             # Initialize the GCS client.
             storage_client = storage.Client()
 
+            # Adding a User-Agent header to the request
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
+            request = urllib.request.Request(zip_file_url, headers=headers)
+
             # Download the .zip file to a temporary file.
-            with urllib.request.urlopen(zip_file_url) as response:
+            with urllib.request.urlopen(request) as response:
                 with io.BytesIO(response.read()) as temp_file:
                     logging.info(f'Downloaded {zip_file_url}')
 
@@ -36,13 +46,14 @@ class DownloadData:
                             blob.upload_from_string(file_contents)
 
                             logging.info(f'Uploaded {file_name} to {bucket_name}/{folder_name}')
+        except urllib.error.HTTPError as http_error:
+            logging.error(f"HTTP Error {http_error.code}: {http_error.reason}")
         except Exception as e:
             logging.error(f"An error occurred: {e}")
 
 
 # ----------------------------------- MAIN ----------------------------------- #
-def main():
-    zip_file_url = "https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip"
+def main(zip_file_url):
     bucket_name = "lithuania_statistics"
     folder_name = "companies_cars"
 
@@ -51,4 +62,7 @@ def main():
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-    main()
+    
+    # Add the new URLs here
+    main(f"https://atvira.sodra.lt/imones/downloads/{current_year}/monthly-{current_year}.csv.zip")
+    main("https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip")
