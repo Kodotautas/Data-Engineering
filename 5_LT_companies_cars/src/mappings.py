@@ -25,8 +25,15 @@ file_configurations = [
         "file_name": "monthly-2023.csv",
         "table_name": "employees_salaries_raw",
         "table_schema": [
-            TableSchema(name='SOME_FIELD', data_type='STRING'),
-            # ... (Different fields and their data types)
+            TableSchema(name='Juridinių asmenų registro kodas (jarCode)', data_type='STRING'),
+            TableSchema(name='Pavadinimas (name)', data_type='STRING'),
+            TableSchema(name='Savivaldybė, kurioje registruota(municipality)', data_type='STRING'),
+            TableSchema(name='Ekonominės veiklos rūšies kodas(ecoActCode)', data_type='STRING'),
+            TableSchema(name='Ekonominės veiklos rūšies pavadinimas(ecoActName)', data_type='STRING'),
+            TableSchema(name='Mėnuo(month)', data_type='STRING'),
+            TableSchema(name='Vidutinis darbo užmokestis (avgWage)', data_type='FLOAT'),
+            TableSchema(name='Apdraustųjų skaičius (numInsured)', data_type='FLOAT'),
+            TableSchema(name='periodas', data_type='DATE')
         ]
     }
 ]
