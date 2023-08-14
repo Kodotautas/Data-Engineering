@@ -31,19 +31,20 @@ class UploadToBigQuery:
         self.storage_client = storage.Client()
         self.bigquery_client = bigquery.Client()
         self.transform_functions = {
-            "Atviri_JTP_parko_duomenys.csv": self.transform_data_file1,
-            "monthly-2023.csv": self.transform_data_file2,
+            "Atviri_JTP_parko_duomenys.csv": self.transform_data_companies,
+            "employees_salaries_raw.csv": self.transform_data_employees
         }
 
     def read_file_from_gcs(self) -> pd.DataFrame:
         """Reads a .csv file row by row and if error skips the row and logs the error."""
         bucket = self.storage_client.bucket(self.config.bucket_name)
         blob = bucket.blob(f'{self.config.folder_name}/{self.config.file_name}')
-        blob_string = blob.download_as_string()
-        data_frame = pd.read_csv(io.BytesIO(blob_string))
-        return self.transform_data(data_frame)
+        blob_as_string = blob.download_as_string()
+        data_frame = pd.read_csv(io.BytesIO(blob_as_string), sep=';')
+        data_frame = self.transform_functions[self.config.file_name](data_frame)
+        return data_frame
     
-    # TRANSFORM FUNCTIONS
+    # -------------------------------- TRANSFORMS -------------------------------- #
     def transform_data_companies(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms the DataFrame by selecting columns and dropping missing values."""
         columns_to_keep = ['MARKE', 'KOMERCINIS_PAV', 'KATEGORIJA_KLASE', 'NUOSAVA_MASE', 'GALIA', 'GALIA_ELEKTR', 'DEGALAI', 'CO2_KIEKIS', 'CO2_KIEKIS__WLTP', 'TERSALU_LYGIS', 'GALIOS_MASES_SANT', 'PIRM_REG_DATA', 'PIRM_REG_DATA_LT', 'KODAS', 'PAVADINIMAS', 'SAVIVALDYBE', 'APSKRITIS']
@@ -53,11 +54,10 @@ class UploadToBigQuery:
     
     def transform_data_employees(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms the DataFrame by selecting columns and dropping missing values."""
-        columns_to_keep = ['Juridinių asmenų registro kodas (jarCode)', 'Pavadinimas (name)', 'Savivaldybė, kurioje registruota(municipality)', 'Ekonominės veiklos rūšies kodas(ecoActCode)', 'Ekonominės veiklos rūšies pavadinimas(ecoActName)', 'Mėnuo(month)', 'Vidutinis darbo užmokestis (avgWage)', 'Apdraustųjų skaičius (numInsured)']
+        columns_to_keep = ['Juridinių asmenų registro kodas (jarCode)', 'Pavadinimas (name)', 'Savivaldybė, kurioje registruota(municipality)', 'Ekonominės veiklos rūšies kodas(ecoActCode)', 'Ekonominės veiklos rūšies pavadinimas(ecoActName)', 'Mėnuo (month)', 'Vidutinis darbo užmokestis (avgWage)', 'Apdraustųjų skaičius (numInsured)']
         data_frame = data_frame[columns_to_keep]
-        # from column Mėnuo (month) extract year and month (there is format like 202301)
-        data_frame['year'] = data_frame['Mėnuo(month)'].str[:4]
-        data_frame['month'] = data_frame['Mėnuo(month)'].str[4:]
+        data_frame['year'] = data_frame['Mėnuo (month)'].astype(str).str[:4]
+        data_frame['month'] = data_frame['Mėnuo (month)'].astype(str).str[4:]
         data_frame['periodas'] = data_frame['year'] + '-' + data_frame['month']
         data_frame = data_frame.drop(columns=['Mėnuo(month)', 'year', 'month'])
         return data_frame
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     for config_entry in file_configurations:
         transform_function = None
         
-        if config_entry["table_name"] == "companies_cars_raw":
+        if config_entry["table_name"] == "Atviri_JTP_parko_duomenys":
             transform_function = UploadToBigQuery.transform_data_companies
         elif config_entry["table_name"] == "employees_salaries_raw":
             transform_function = UploadToBigQuery.transform_data_employees
