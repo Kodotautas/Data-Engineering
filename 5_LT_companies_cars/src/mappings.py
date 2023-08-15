@@ -1,7 +1,7 @@
 file_configurations = [
     {
         "file_name": "Atviri_JTP_parko_duomenys.csv",
-        "table_name": "companies_cars_raw",
+        "table_name": "Atviri_JTP_parko_duomenys",
         "table_schema": [
             {"name": 'MARKE', "data_type": 'STRING'},
             {"name": 'KOMERCINIS_PAV', "data_type": 'STRING'},
@@ -33,7 +33,7 @@ file_configurations = [
             {"name": 'veiklos_pavadinimas', "data_type": 'STRING'},
             {"name": 'vidutinis_darbo_uzmokestis', "data_type": 'FLOAT'},
             {"name": 'apdraustuju_skaicius', "data_type": 'FLOAT'},
-            # {"name": 'periodas', "data_type": 'DATE'}
+            {"name": 'periodas', "data_type": 'DATE'}
         ]
     }
 ]

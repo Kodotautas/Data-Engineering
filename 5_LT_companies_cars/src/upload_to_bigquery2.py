@@ -40,7 +40,7 @@ class UploadToBigQuery:
         bucket = self.storage_client.bucket(self.config.bucket_name)
         blob = bucket.blob(f'{self.config.folder_name}/{self.config.file_name}')
         blob_as_string = blob.download_as_string()
-        data_frame = pd.read_csv(io.BytesIO(blob_as_string), sep=';')
+        data_frame = pd.read_csv(io.BytesIO(blob_as_string), sep=';', on_bad_lines='skip')
         data_frame = self.transform_functions[self.config.file_name](data_frame)
         return data_frame
     
@@ -55,11 +55,14 @@ class UploadToBigQuery:
     def transform_data_employees(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms the DataFrame by selecting columns and dropping missing values."""
         columns_to_keep = ['Juridinių asmenų registro kodas (jarCode)', 'Pavadinimas (name)', 'Savivaldybė, kurioje registruota(municipality)', 'Ekonominės veiklos rūšies kodas(ecoActCode)', 'Ekonominės veiklos rūšies pavadinimas(ecoActName)', 'Mėnuo (month)', 'Vidutinis darbo užmokestis (avgWage)', 'Apdraustųjų skaičius (numInsured)']
-        data_frame = data_frame[columns_to_keep]
-        # from 202301 to 2023-01-01
-        # data_frame['periodas'] = pd.to_datetime(data_frame['Mėnuo (month)'], format='%Y%m').dt.strftime('%Y-%m-%d')
+        # Make a copy of the DataFrame
+        data_frame = data_frame[columns_to_keep].copy()
+        # convert month 202301 (int64) to 2023-01-01 (date)
+        data_frame['Mėnuo (month)'] = pd.to_datetime(data_frame['Mėnuo (month)'], format='%Y%m')
+        data_frame['periodas'] = data_frame['Mėnuo (month)'].dt.date
+        # drop month column
         data_frame = data_frame.drop(columns=['Mėnuo (month)'])
-        # rename columns with lithuanian alphabet
+        # rename columns without lithuanian alphabet
         data_frame = data_frame.rename(columns={
             "Juridinių asmenų registro kodas (jarCode)": "kodas",
             "Pavadinimas (name)": "pavadinimas",
