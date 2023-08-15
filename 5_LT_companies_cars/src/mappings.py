@@ -26,15 +26,14 @@ file_configurations = [
         "file_name": "employees_salaries_raw.csv",
         "table_name": "employees_salaries_raw",
         "table_schema": [
-            {"name": 'Juridinių asmenų registro kodas (jarCode)', "data_type": 'STRING'},
-            {"name": 'Pavadinimas (name)', "data_type": 'STRING'},
-            {"name": 'Savivaldybė, kurioje registruota(municipality)', "data_type": 'STRING'},
-            {"name": 'Ekonominės veiklos rūšies kodas(ecoActCode)', "data_type": 'STRING'},
-            {"name": 'Ekonominės veiklos rūšies pavadinimas(ecoActName)', "data_type": 'STRING'},
-            {"name": 'Mėnuo(month)', "data_type": 'STRING'},
-            {"name": 'Vidutinis darbo užmokestis (avgWage)', "data_type": 'FLOAT'},
-            {"name": 'Apdraustųjų skaičius (numInsured)', "data_type": 'FLOAT'},
-            {"name": 'periodas', "data_type": 'DATE'}
+            {"name": 'kodas', "data_type": 'STRING'},
+            {"name": 'pavadinimas', "data_type": 'STRING'},
+            {"name": 'savivaldybe', "data_type": 'STRING'},
+            {"name": 'veiklos_kodas', "data_type": 'STRING'},
+            {"name": 'veiklos_pavadinimas', "data_type": 'STRING'},
+            {"name": 'vidutinis_darbo_uzmokestis', "data_type": 'FLOAT'},
+            {"name": 'apdraustuju_skaicius', "data_type": 'FLOAT'},
+            # {"name": 'periodas', "data_type": 'DATE'}
         ]
     }
 ]

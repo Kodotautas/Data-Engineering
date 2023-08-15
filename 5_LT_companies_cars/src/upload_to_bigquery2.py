@@ -36,7 +36,7 @@ class UploadToBigQuery:
         }
 
     def read_file_from_gcs(self) -> pd.DataFrame:
-        """Reads a .csv file row by row and if error skips the row and logs the error."""
+        """Reads a .csv file row by row and if error skips the row, logs the error."""
         bucket = self.storage_client.bucket(self.config.bucket_name)
         blob = bucket.blob(f'{self.config.folder_name}/{self.config.file_name}')
         blob_as_string = blob.download_as_string()
@@ -56,10 +56,19 @@ class UploadToBigQuery:
         """Transforms the DataFrame by selecting columns and dropping missing values."""
         columns_to_keep = ['Juridinių asmenų registro kodas (jarCode)', 'Pavadinimas (name)', 'Savivaldybė, kurioje registruota(municipality)', 'Ekonominės veiklos rūšies kodas(ecoActCode)', 'Ekonominės veiklos rūšies pavadinimas(ecoActName)', 'Mėnuo (month)', 'Vidutinis darbo užmokestis (avgWage)', 'Apdraustųjų skaičius (numInsured)']
         data_frame = data_frame[columns_to_keep]
-        data_frame['year'] = data_frame['Mėnuo (month)'].astype(str).str[:4]
-        data_frame['month'] = data_frame['Mėnuo (month)'].astype(str).str[4:]
-        data_frame['periodas'] = data_frame['year'] + '-' + data_frame['month']
-        data_frame = data_frame.drop(columns=['Mėnuo(month)', 'year', 'month'])
+        # from 202301 to 2023-01-01
+        # data_frame['periodas'] = pd.to_datetime(data_frame['Mėnuo (month)'], format='%Y%m').dt.strftime('%Y-%m-%d')
+        data_frame = data_frame.drop(columns=['Mėnuo (month)'])
+        # rename columns with lithuanian alphabet
+        data_frame = data_frame.rename(columns={
+            "Juridinių asmenų registro kodas (jarCode)": "kodas",
+            "Pavadinimas (name)": "pavadinimas",
+            "Savivaldybė, kurioje registruota(municipality)": "savivaldybe",
+            "Ekonominės veiklos rūšies kodas(ecoActCode)": "veiklos_kodas",
+            "Ekonominės veiklos rūšies pavadinimas(ecoActName)": "veiklos_pavadinimas",
+            "Vidutinis darbo užmokestis (avgWage)": "vidutinis_darbo_uzmokestis",
+            "Apdraustųjų skaičius (numInsured)": "apdraustuju_skaicius"
+        })
         return data_frame
 
     def upload_file_to_bigquery(self, data_frame: pd.DataFrame):
