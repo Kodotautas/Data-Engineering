@@ -68,6 +68,6 @@ def main(zip_file_url):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     
-    # Add the new URLs here
+    # urls
     main(f"https://atvira.sodra.lt/imones/downloads/{current_year}/monthly-{current_year}.csv.zip")
     main("https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip")
