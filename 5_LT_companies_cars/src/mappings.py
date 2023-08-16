@@ -2,7 +2,7 @@ file_configurations = [
     {
         "file_name": "Atviri_JTP_parko_duomenys.csv",
         "table_name": "Atviri_JTP_parko_duomenys",
-        "delimeter": ",",
+        "delimiter": ",",
         "table_schema": [
             {"name": 'KODAS', "data_type": 'STRING'},
             {"name": 'MARKE', "data_type": 'STRING'},
@@ -26,7 +26,7 @@ file_configurations = [
     {
         "file_name": "employees_salaries_raw.csv",
         "table_name": "employees_salaries_raw",
-        "delimeter": ";",
+        "delimiter": ";",
         "table_schema": [
             {"name": 'kodas', "data_type": 'STRING'},
             {"name": 'pavadinimas', "data_type": 'STRING'},

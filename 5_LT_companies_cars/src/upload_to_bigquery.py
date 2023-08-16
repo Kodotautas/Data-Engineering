@@ -14,7 +14,6 @@ class TableSchema(BaseModel):
     name: str
     data_type: str
 
-
 class UploadConfig(BaseModel):
     bucket_name: str
     folder_name: str
@@ -22,7 +21,6 @@ class UploadConfig(BaseModel):
     dataset_name: str
     table_name: str
     table_schema: List[TableSchema]
-
 
 # --------------------------------- UPLOADER --------------------------------- #
 class UploadToBigQuery:
@@ -48,20 +46,21 @@ class UploadToBigQuery:
         return data_frame
     
     def get_delimiter(self) -> str:
-        """Returns a delimiter based on the file name."""
-        delimiters = {
-            "Atviri_JTP_parko_duomenys.csv": ",",
-            "employees_salaries_raw.csv": ";"
-        }
-        return delimiters.get(self.config.file_name, ",")
+        """get delimiter based on file name from mappings.py"""
+        for file_configuration in file_configurations:
+            if file_configuration["file_name"] == self.config.file_name:
+                return file_configuration["delimiter"]
+        logging.error(f"Could not find delimiter for {self.config.file_name}")
+        return None
 
-    
     # -------------------------------- TRANSFORMS -------------------------------- #
     def transform_data_companies(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms the DataFrame by selecting columns and dropping missing values."""
         columns_to_keep = ['MARKE', 'KOMERCINIS_PAV', 'KATEGORIJA_KLASE', 'NUOSAVA_MASE', 'GALIA', 'GALIA_ELEKTR', 'DEGALAI', 'CO2_KIEKIS', 'CO2_KIEKIS__WLTP', 'TERSALU_LYGIS', 'GALIOS_MASES_SANT', 'PIRM_REG_DATA', 'PIRM_REG_DATA_LT', 'KODAS', 'PAVADINIMAS', 'SAVIVALDYBE', 'APSKRITIS']
         data_frame = data_frame[columns_to_keep]
         data_frame = data_frame.dropna(subset=['KOMERCINIS_PAV'])
+        # make column KODAS as first column
+        data_frame = data_frame[['KODAS'] + [col for col in data_frame.columns if col != 'KODAS']]
         return data_frame
     
     def transform_data_employees(self, data_frame: pd.DataFrame) -> pd.DataFrame:
