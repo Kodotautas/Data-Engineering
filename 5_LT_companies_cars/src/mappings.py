@@ -3,6 +3,7 @@ file_configurations = [
         "file_name": "Atviri_JTP_parko_duomenys.csv",
         "table_name": "Atviri_JTP_parko_duomenys",
         "delimiter": ",",
+        "url": "https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip",
         "table_schema": [
             {"name": 'KODAS', "data_type": 'STRING'},
             {"name": 'MARKE', "data_type": 'STRING'},
@@ -27,6 +28,7 @@ file_configurations = [
         "file_name": "employees_salaries_raw.csv",
         "table_name": "employees_salaries_raw",
         "delimiter": ";",
+        "url": f"https://atvira.sodra.lt/imones/downloads/{current_year}/monthly-{current_year}.csv.zip",
         "table_schema": [
             {"name": 'kodas', "data_type": 'STRING'},
             {"name": 'pavadinimas', "data_type": 'STRING'},

@@ -1,73 +1,65 @@
-# File downloads and saves (sodra, regitra) data to GCS bucket
 import logging
 import io
 import zipfile
 import urllib.request
 from google.cloud import storage
-from contextlib import contextmanager
 from datetime import date
 
-
-# ---------------------------------- PARAMS ---------------------------------- #
-# Get the current year.
+# Configuration
 current_year = date.today().year
+BUCKET_NAME = "lithuania_statistics"
+FOLDER_NAME = "companies_cars"
+ZIP_URL_SODRA = f"https://atvira.sodra.lt/imones/downloads/{current_year}/monthly-{current_year}.csv.zip"
+ZIP_URL_REGITRA = "https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip"
 
-# --------------------------------- DOWLOADER -------------------------------- #
-class DownloadData:
+
+# ------------------------------- GCS UPLOADER ------------------------------- #
+class GCSUploader:
     @staticmethod
-    def download_and_store_zip_file(zip_file_url, bucket_name, folder_name):
-        """Downloads a .zip file from the given URL, unzips its contents, and stores them in a GCS bucket.
-        Args:
-            zip_file_url (str): The URL of the .zip file to download.
-            bucket_name (str): The name of the GCS bucket to store the files in.
-            folder_name (str): The name of the folder within the bucket to store the files.
-        """
+    def upload_file_to_bucket(file_contents, file_name):
+        storage_client = storage.Client()
+        bucket = storage_client.bucket(BUCKET_NAME)
+        blob = bucket.blob(f'{FOLDER_NAME}/{file_name}')
+        blob.upload_from_string(file_contents)
+        logging.info(f'Uploaded {file_name} to {BUCKET_NAME}/{FOLDER_NAME}')
+
+
+# -------------------------------- DOWNLOADER -------------------------------- #
+class Downloader:
+    @staticmethod
+    def download_zip_file(zip_file_url):
         try:
-            # Initialize the GCS client.
-            storage_client = storage.Client()
-
-            # Adding a User-Agent header to the request
-            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
+            headers = {'User-Agent': 'Your-User-Agent-String'}
             request = urllib.request.Request(zip_file_url, headers=headers)
-
-            # Download the .zip file to a temporary file.
             with urllib.request.urlopen(request) as response:
-                with io.BytesIO(response.read()) as temp_file:
-                    logging.info(f'Downloaded {zip_file_url}')
-
-                    # Unzip the .zip file.
-                    with zipfile.ZipFile(temp_file) as zip_file:
-                        for file_name in zip_file.namelist():
-                            # Read the file contents from the .zip file.
-                            file_contents = zip_file.read(file_name)
-
-                            # Set file name if url is atvira.sodra.lt
-                            if "atvira.sodra.lt" in zip_file_url:
-                                file_name = f"employees_salaries_raw.csv"
-
-                            # Upload the file contents to the GCS bucket.
-                            bucket = storage_client.bucket(bucket_name)
-                            blob = bucket.blob(f'{folder_name}/{file_name}')
-                            blob.upload_from_string(file_contents)
-
-                            logging.info(f'Uploaded {file_name} to {bucket_name}/{folder_name}')
+                return response.read()
         except urllib.error.HTTPError as http_error:
             logging.error(f"HTTP Error {http_error.code}: {http_error.reason}")
+            return None
         except Exception as e:
             logging.error(f"An error occurred: {e}")
+            return None
 
-
-# ----------------------------------- MAIN ----------------------------------- #
-def main(zip_file_url):
-    bucket_name = "lithuania_statistics"
-    folder_name = "companies_cars"
-
-    DownloadData.download_and_store_zip_file(zip_file_url, bucket_name, folder_name)
-
+    @staticmethod
+    def extract_zip_contents(zip_file_bytes):
+        with io.BytesIO(zip_file_bytes) as temp_file:
+            with zipfile.ZipFile(temp_file) as zip_file:
+                extracted_files = {}
+                for file_name in zip_file.namelist():
+                    file_contents = zip_file.read(file_name)
+                    extracted_files[file_name] = file_contents
+                return extracted_files
+    
+class FinalUploader:
+    def main(zip_file_url):
+        zip_file_bytes = Downloader.download_zip_file(zip_file_url)
+        if zip_file_bytes:
+            extracted_files = Downloader.extract_zip_contents(zip_file_bytes)
+            for file_name, file_contents in extracted_files.items():
+                GCSUploader.upload_file_to_bucket(file_contents, file_name)
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
     
-    # urls
-    main(f"https://atvira.sodra.lt/imones/downloads/{current_year}/monthly-{current_year}.csv.zip")
-    main("https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip")
+    FinalUploader.main(ZIP_URL_SODRA)
+    FinalUploader.main(ZIP_URL_REGITRA)

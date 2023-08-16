@@ -111,36 +111,35 @@ class UploadToBigQuery:
             table_schema.append(bigquery.SchemaField(field.name, field.data_type))
         return table_schema
 
+    def main():
+        # Initialize the GCS client.
+        storage_client = storage.Client()
 
-def main():
-    # Initialize the GCS client.
-    storage_client = storage.Client()
+        # Initialize the BigQuery client.
+        bigquery_client = bigquery.Client()
 
-    # Initialize the BigQuery client.
-    bigquery_client = bigquery.Client()
+        # Iterate over the file configurations.
+        for file_configuration in file_configurations:
+            # Get the file configuration.
+            upload_config = UploadConfig(
+                bucket_name = "lithuania_statistics",
+                folder_name = "companies_cars",
+                file_name = file_configuration["file_name"],
+                dataset_name = "lithuania_statistics",
+                table_name = file_configuration["table_name"],
+                table_schema = file_configuration["table_schema"]
+            )
 
-    # Iterate over the file configurations.
-    for file_configuration in file_configurations:
-        # Get the file configuration.
-        upload_config = UploadConfig(
-            bucket_name = "lithuania_statistics",
-            folder_name = "companies_cars",
-            file_name = file_configuration["file_name"],
-            dataset_name = "lithuania_statistics",
-            table_name = file_configuration["table_name"],
-            table_schema = file_configuration["table_schema"]
-        )
+            # Initialize the uploader.
+            uploader = UploadToBigQuery(upload_config)
 
-        # Initialize the uploader.
-        uploader = UploadToBigQuery(upload_config)
+            # Read the file from GCS.
+            data_frame = uploader.read_file_from_gcs()
 
-        # Read the file from GCS.
-        data_frame = uploader.read_file_from_gcs()
-
-        # Upload the file to BigQuery.
-        uploader.upload_file_to_bigquery(data_frame)
+            # Upload the file to BigQuery.
+            uploader.upload_file_to_bigquery(data_frame)
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-    main()
+    UploadToBigQuery.main()
