@@ -12,8 +12,8 @@
 <img src="./dataflow_pipeline/diagram/lt_statistics_pipeline.jpeg" alt="Data Pipeline Diagram" width="300">
 
 - to do:
-- optimize code as best as can
 - create pipeline with Dataflow
 - create looker studio dashboard
 - need to create dbt model or schedule bigquery table, how? scheduled queries
 - is there relationship between luxury cars and salary
+ - other analysis insights
