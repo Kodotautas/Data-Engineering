@@ -2,7 +2,9 @@ file_configurations = [
     {
         "file_name": "Atviri_JTP_parko_duomenys.csv",
         "table_name": "Atviri_JTP_parko_duomenys",
+        "delimeter": ",",
         "table_schema": [
+            {"name": 'KODAS', "data_type": 'STRING'},
             {"name": 'MARKE', "data_type": 'STRING'},
             {"name": 'KOMERCINIS_PAV', "data_type": 'STRING'},
             {"name": 'KATEGORIJA_KLASE', "data_type": 'STRING'},
@@ -16,7 +18,6 @@ file_configurations = [
             {"name": 'GALIOS_MASES_SANT', "data_type": 'FLOAT'},
             {"name": 'PIRM_REG_DATA', "data_type": 'DATE'},
             {"name": 'PIRM_REG_DATA_LT', "data_type": 'DATE'},
-            {"name": 'KODAS', "data_type": 'STRING'},
             {"name": 'PAVADINIMAS', "data_type": 'STRING'},
             {"name": 'SAVIVALDYBE', "data_type": 'STRING'},
             {"name": 'APSKRITIS', "data_type": 'STRING'}
@@ -25,6 +26,7 @@ file_configurations = [
     {
         "file_name": "employees_salaries_raw.csv",
         "table_name": "employees_salaries_raw",
+        "delimeter": ";",
         "table_schema": [
             {"name": 'kodas', "data_type": 'STRING'},
             {"name": 'pavadinimas', "data_type": 'STRING'},
