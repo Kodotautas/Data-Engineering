@@ -1,3 +1,5 @@
+current_year = '2000'
+
 file_configurations = [
     {
         "file_name": "Atviri_JTP_parko_duomenys.csv",
