@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from typing import List
 
 # Parameters
-from mappings import file_configurations
+from src.mappings import file_configurations
 
 # --------------------------------- MODELS --------------------------------- #
 class TableSchema(BaseModel):

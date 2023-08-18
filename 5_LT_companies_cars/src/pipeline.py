@@ -2,15 +2,19 @@
 import datetime as dt
 import logging
 import apache_beam as beam
-from apache_beam.options.pipeline_options import PipelineOptions
+from apache_beam.options.pipeline_options import PipelineOptions, StandardOptions, GoogleCloudOptions
 from apache_beam.options.pipeline_options import SetupOptions
 
-from mappings import file_configurations
-from get_save_data import FinalUploader
-from upload_to_bigquery import UploadToBigQuery
+from src.mappings import file_configurations
+from src.get_save_data import FinalUploader
+from src.upload_to_bigquery import UploadToBigQuery
 
 # Configuration
 current_year = dt.date.today().year
+project = "lithuania-statistics"
+region = "europe-west1"
+staging_location = f"gs://{project}/staging"
+temp_location = f"gs://{project}/temp"
 
 # --------------------------------- PIPELINE --------------------------------- #
 class DownloadSaveData(beam.DoFn):
@@ -21,7 +25,12 @@ class DownloadSaveData(beam.DoFn):
 def run():
     # Set the pipeline options.
     options = PipelineOptions()
-    options.view_as(SetupOptions).save_main_session = True
+    options.view_as(StandardOptions).runner = 'DataflowRunner'
+    options.view_as(GoogleCloudOptions).project = project
+    options.view_as(GoogleCloudOptions).region = region
+    options.view_as(GoogleCloudOptions).job_name = 'lithuania-statistics-population'
+    options.view_as(GoogleCloudOptions).staging_location = staging_location
+    options.view_as(GoogleCloudOptions).temp_location = temp_location
 
     # Initialize the pipeline.
     with beam.Pipeline(options=options) as pipeline:
