@@ -12,17 +12,18 @@ FOLDER_NAME = "companies_cars"
 ZIP_URL_SODRA = f"https://atvira.sodra.lt/imones/downloads/{current_year}/monthly-{current_year}.csv.zip"
 ZIP_URL_REGITRA = "https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip"
 
-
 # ------------------------------- GCS UPLOADER ------------------------------- #
 class GCSUploader:
     @staticmethod
     def upload_file_to_bucket(file_contents, file_name):
         storage_client = storage.Client()
         bucket = storage_client.bucket(BUCKET_NAME)
+        # if file name contains monthly, then save as employees_salaries_raw.csv
+        if "monthly" in file_name:
+            file_name = "employees_salaries_raw.csv"
         blob = bucket.blob(f'{FOLDER_NAME}/{file_name}')
-        blob.upload_from_string(file_contents)
-        logging.info(f'Uploaded {file_name} to {BUCKET_NAME}/{FOLDER_NAME}')
-
+        blob.upload_from_string(file_contents, content_type='text/csv')
+        logging.info(f"File {file_name} uploaded to {BUCKET_NAME} bucket.")
 
 # -------------------------------- DOWNLOADER -------------------------------- #
 class Downloader:

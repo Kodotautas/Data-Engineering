@@ -51,7 +51,7 @@ REQUIRED_PACKAGES = [
 setuptools.setup(
     name='lt_statistics',
     version='0.0.1',
-    description='Statistics of Lithuania',
+    description='Statistics of Lithuania, cars dashboard',
     install_requires=REQUIRED_PACKAGES,
     packages=setuptools.find_packages(),
     cmdclass={
