@@ -7,7 +7,7 @@ from pydantic import BaseModel
 from typing import List
 
 # Parameters
-from mappings import file_configurations #!!!!add src.mappings
+from src.mappings import file_configurations #!!!!add src.mappings
 
 # --------------------------------- MODELS --------------------------------- #
 class TableSchema(BaseModel):
@@ -112,12 +112,6 @@ class UploadToBigQuery:
         return table_schema
 
     def main():
-        # Initialize the GCS client.
-        storage_client = storage.Client()
-
-        # Initialize the BigQuery client.
-        bigquery_client = bigquery.Client()
-
         # Iterate over the file configurations.
         for file_configuration in file_configurations:
             # Get the file configuration.
