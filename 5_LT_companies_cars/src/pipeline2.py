@@ -3,7 +3,7 @@ import datetime as dt
 import logging
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions, StandardOptions, GoogleCloudOptions
-
+from apache_beam import DoFn
 from mappings import file_configurations #!!!add src.mappings
 from get_save_data import FinalUploader #!!!add src.get_save_data
 from upload_to_bigquery import UploadConfig, UploadToBigQuery #!!!add src.upload_to_bigquery
@@ -18,7 +18,7 @@ temp_location = f"gs://{bucket_name}/temp"
 
 
 # --------------------------------- PIPELINE --------------------------------- #
-class DownloadSaveUpload:
+class DownloadSaveUpload(DoFn):
     def process(self, element):
         FinalUploader.main(element)
         UploadToBigQuery.main(element)
@@ -44,13 +44,7 @@ def run():
             if file_name == "employees_salaries_raw.csv":
                 file_url = f"https://atvira.sodra.lt/imones/downloads/{current_year}/monthly-{current_year}.csv.zip"
 
-            # Download, save and upload the files
-            (pipeline
-                | f"Download {file_name}" >> beam.Create([file_url])
-                | f"Upload {file_name}" >> beam.ParDo(FinalUploader())
-            )
-
-            # Get the file configuration.
+            # Get the file configuration for BigQuery.
             upload_config = UploadConfig(
                 bucket_name = bucket_name,
                 folder_name = "companies_cars",
@@ -60,16 +54,13 @@ def run():
                 table_schema = file_configuration["table_schema"]
             )
 
-            # Initialize the uploader.
-            uploader = UploadToBigQuery(upload_config)
-
-            # Read the file from GCS.
-            data_frame = uploader.read_file_from_gcs()
-
-            # Upload the file to BigQuery.
-            uploader.upload_file_to_bigquery(data_frame)
+            # Download, save and upload the files
+            (pipeline
+                | f"Download {file_name}" >> beam.Create([file_url])
+                | f"Process {file_name}" >> beam.ParDo(DownloadSaveUpload())
+            )
 
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
-    FinalUploader.run()
+    run()
