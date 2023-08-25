@@ -1,4 +1,3 @@
-# pipeline with gcp dataflow to download, save and upload data to bigquery
 import datetime as dt
 import logging
 import apache_beam as beam
@@ -6,7 +5,8 @@ from apache_beam.options.pipeline_options import PipelineOptions, StandardOption
 from apache_beam import DoFn
 from mappings import file_configurations #!!!add src.mappings
 from get_save_data import FinalUploader #!!!add src.get_save_data
-from upload_to_bigquery import UploadConfig, UploadToBigQuery #!!!add src.upload_to_bigquery
+from bigquery_uploader import UploadConfig, UploadToBigQuery #!!!add src.upload_to_bigquery
+
 
 # Configuration
 current_year = dt.date.today().year
@@ -18,10 +18,16 @@ temp_location = f"gs://{bucket_name}/temp"
 
 
 # --------------------------------- PIPELINE --------------------------------- #
-class DownloadSaveUpload(DoFn):
+class DownloadSave(DoFn):
+    """Download and save data to GCS."""
     def process(self, element):
-        FinalUploader.main(element)
-        UploadToBigQuery.main(element)
+        FinalUploader.main(f"https://atvira.sodra.lt/imones/downloads/{current_year}/monthly-{current_year}.csv.zip")
+        FinalUploader.main("https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip")
+
+class BigQueryUploader(DoFn):
+    """Upload data to BigQuery."""
+    def process(self, element):
+        UploadToBigQuery.main()
 
 
 def run():
@@ -36,30 +42,19 @@ def run():
 
     # Initialize the pipeline.
     with beam.Pipeline(options=options) as pipeline:
-        # Iterate over the file configurations.
-        for file_configuration in file_configurations:
-            # Get the file configuration.
-            file_name = file_configuration["file_name"]
-            file_url = file_configuration["url"]
-            if file_name == "employees_salaries_raw.csv":
-                file_url = f"https://atvira.sodra.lt/imones/downloads/{current_year}/monthly-{current_year}.csv.zip"
+        # Download and save data to GCS.
+        download_save = (
+            pipeline
+            | "Download and save data to GCS" >> beam.Create([None])
+            | beam.ParDo(DownloadSave())
+        )
 
-            # Get the file configuration for BigQuery.
-            upload_config = UploadConfig(
-                bucket_name = bucket_name,
-                folder_name = "companies_cars",
-                file_name = file_name,
-                dataset_name = "lithuania_statistics",
-                table_name = file_configuration["table_name"],
-                table_schema = file_configuration["table_schema"]
-            )
-
-            # Download, save and upload the files
-            (pipeline
-                | f"Download {file_name}" >> beam.Create([file_url])
-                | f"Process {file_name}" >> beam.ParDo(DownloadSaveUpload())
-            )
-
+        # Upload data to BigQuery.
+        upload = (
+            pipeline
+            | "Upload data to BigQuery" >> beam.Create([None])
+            | beam.ParDo(BigQueryUploader())
+        )
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
