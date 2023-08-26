@@ -18,6 +18,10 @@
 <img src="./dataflow_pipeline/diagram/lt_statistics_pipeline.jpeg" alt="Data Pipeline Diagram" width="300">
 
 - to do:
+
+NameError: name 'UploadToBigQuery' is not defined [while running 'ParDo(BigQueryUploader)-ptransform-27']
+
+
 - create pipeline with Dataflow
 - create looker studio dashboard
 - need to create dbt model or schedule bigquery table, how? scheduled queries

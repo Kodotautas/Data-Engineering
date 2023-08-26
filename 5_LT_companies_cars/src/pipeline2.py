@@ -5,8 +5,7 @@ from apache_beam.options.pipeline_options import PipelineOptions, StandardOption
 from apache_beam import DoFn
 from mappings import file_configurations #!!!add src.mappings
 from get_save_data import FinalUploader #!!!add src.get_save_data
-from bigquery_uploader import UploadConfig, UploadToBigQuery #!!!add src.upload_to_bigquery
-
+from bigquery_uploader import UploadToBigQuery #!!!add src.bigquery_uploader
 
 # Configuration
 current_year = dt.date.today().year
@@ -40,13 +39,13 @@ def run():
     options.view_as(GoogleCloudOptions).temp_location = temp_location
     options.view_as(GoogleCloudOptions).job_name = f"lithuania-statistics-cars"
 
-    # Initialize the pipeline.
     with beam.Pipeline(options=options) as pipeline:
-        # Download and save data to GCS.
-        download_save = (
+        # run the pipeline
+        (
             pipeline
-            | "Download and save data to GCS" >> beam.Create([None])
-            | beam.ParDo(DownloadSave())
+            | "Create a dummy element" >> beam.Create([1])
+            | "Download and save data to GCS" >> beam.ParDo(DownloadSave())
+            | "Upload data to BigQuery" >> beam.ParDo(BigQueryUploader())
         )
 
 
