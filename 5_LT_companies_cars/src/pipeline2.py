@@ -49,12 +49,6 @@ def run():
             | beam.ParDo(DownloadSave())
         )
 
-        # Upload data to BigQuery.
-        upload = (
-            pipeline
-            | "Upload data to BigQuery" >> beam.Create([None])
-            | beam.ParDo(BigQueryUploader())
-        )
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
