@@ -21,24 +21,22 @@ region = "europe-west1"
 staging_location = f"gs://{bucket_name}/staging"
 temp_location = f"gs://{bucket_name}/temp"
 
-BUCKET_NAME = "lithuania_statistics"
-FOLDER_NAME = "companies_cars"
 ZIP_URL_SODRA = f"https://atvira.sodra.lt/imones/downloads/{current_year}/monthly-{current_year}.csv.zip"
 ZIP_URL_REGITRA = "https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip"
 
 
-# ------------------------------- DOWNLOAD&SAVE ------------------------------ #
+# ------------------------------- Download&Save ------------------------------ #
 class DownloadSave(beam.DoFn):
     @staticmethod
     def upload_file_to_bucket(file_contents, file_name):
         storage_client = storage.Client()
-        bucket = storage_client.bucket(BUCKET_NAME)
+        bucket = storage_client.bucket(bucket_name)
         # if file name contains monthly, then save as employees_salaries_raw.csv
         if "monthly" in file_name:
             file_name = "employees_salaries_raw.csv"
-        blob = bucket.blob(f'{FOLDER_NAME}/{file_name}')
+        blob = bucket.blob(f'companies_cars/{file_name}')
         blob.upload_from_string(file_contents, content_type='text/csv')
-        logging.info(f"File {file_name} uploaded to {BUCKET_NAME} bucket.")
+        logging.info(f"File {file_name} uploaded to {bucket_name} bucket.")
 
     @staticmethod
     def download_zip_file(zip_file_url):
@@ -76,7 +74,7 @@ class DownloadSave(beam.DoFn):
     @staticmethod
     def process(element):
         DownloadSave.steps(ZIP_URL_SODRA)
-        # DownloadSave.steps(ZIP_URL_REGITRA)
+        DownloadSave.steps(ZIP_URL_REGITRA)
 
 # ---------------------------------- UPLOAD ---------------------------------- #
 class TableSchema(BaseModel):
@@ -213,23 +211,23 @@ class UploadToBigQuery(beam.DoFn):
 # --------------------------------- PIPELINE --------------------------------- #
 def run():
     # Set the pipeline options.
-    options = PipelineOptions()
-    options.view_as(StandardOptions).runner = "DataflowRunner"
-    options.view_as(GoogleCloudOptions).project = project
-    options.view_as(GoogleCloudOptions).region = region
-    options.view_as(GoogleCloudOptions).staging_location = staging_location
-    options.view_as(GoogleCloudOptions).temp_location = temp_location
-    options.view_as(GoogleCloudOptions).job_name = f"lithuania-statistics-cars"
+    pipeline_options = PipelineOptions()
+    pipeline_options.view_as(StandardOptions).runner = 'DirectRunner'
+    pipeline_options.view_as(GoogleCloudOptions).project = project
+    pipeline_options.view_as(GoogleCloudOptions).region = region
+    pipeline_options.view_as(GoogleCloudOptions).staging_location = staging_location
+    pipeline_options.view_as(GoogleCloudOptions).temp_location = temp_location
 
-    with beam.Pipeline(options=options) as pipeline:
-        (
+    # Create the Pipeline with the specified options.
+    with beam.Pipeline(options=pipeline_options) as pipeline:
+        # Download and save files to GCS
+        download_save = (
             pipeline
-            | "Create dummy" >> beam.Create([1])
-            | "Download and save" >> beam.ParDo(DownloadSave())
-            # | "Upload to BigQuery" >> beam.ParDo(UploadToBigQuery())
+            | 'Create' >> beam.Create([None])
+            | 'Download and save' >> beam.ParDo(DownloadSave())
         )
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
     run()
