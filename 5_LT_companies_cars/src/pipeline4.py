@@ -11,72 +11,19 @@ from google.cloud import storage, bigquery
 from pydantic import BaseModel
 from typing import List
 
+from requests import request
+
 from mappings import file_configurations #!!!add src.mappings
 
 # Configuration
 current_year = dt.date.today().year
-project = "vl-data-learn"
 bucket_name = "lithuania_statistics"
-region = "europe-west1"
 staging_location = f"gs://{bucket_name}/staging"
 temp_location = f"gs://{bucket_name}/temp"
 
 ZIP_URL_SODRA = f"https://atvira.sodra.lt/imones/downloads/{current_year}/monthly-{current_year}.csv.zip"
 ZIP_URL_REGITRA = "https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip"
 
-
-# ------------------------------- Download&Save ------------------------------ #
-class DownloadSave(beam.DoFn):
-    @staticmethod
-    def upload_file_to_bucket(file_contents, file_name):
-        storage_client = storage.Client()
-        bucket = storage_client.bucket(bucket_name)
-        # if file name contains monthly, then save as employees_salaries_raw.csv
-        if "monthly" in file_name:
-            file_name = "employees_salaries_raw.csv"
-        blob = bucket.blob(f'companies_cars/{file_name}')
-        blob.upload_from_string(file_contents, content_type='text/csv')
-        logging.info(f"File {file_name} uploaded to {bucket_name} bucket.")
-
-    @staticmethod
-    def download_zip_file(zip_file_url):
-        try:
-            headers = {'User-Agent': 'Your-User-Agent-String'}
-            request = urllib.request.Request(zip_file_url, headers=headers)
-            with urllib.request.urlopen(request) as response:
-                return response.read()
-        except urllib.error.HTTPError as http_error:
-            logging.error(f"HTTP Error {http_error.code}: {http_error.reason}")
-            return None
-        except Exception as e:
-            logging.error(f"An error occurred: {e}")
-            return None
-
-    @staticmethod
-    def extract_zip_contents(zip_file_bytes):
-        with io.BytesIO(zip_file_bytes) as temp_file:
-            with zipfile.ZipFile(temp_file) as zip_file:
-                extracted_files = {}
-                for file_name in zip_file.namelist():
-                    file_contents = zip_file.read(file_name)
-                    extracted_files[file_name] = file_contents
-                return extracted_files
-    
-    @staticmethod
-    def steps(zip_file_url):
-        zip_file_bytes = DownloadSave.download_zip_file(zip_file_url)
-        if zip_file_bytes:
-            extracted_files = DownloadSave.extract_zip_contents(zip_file_bytes)
-            for file_name, file_contents in extracted_files.items():
-                DownloadSave.upload_file_to_bucket(file_contents, file_name)
-
-
-    @staticmethod
-    def process(element):
-        DownloadSave.steps(ZIP_URL_SODRA)
-        DownloadSave.steps(ZIP_URL_REGITRA)
-
-# ---------------------------------- UPLOAD ---------------------------------- #
 class TableSchema(BaseModel):
     name: str
     data_type: str
@@ -89,39 +36,86 @@ class UploadConfig(BaseModel):
     table_name: str
     table_schema: List[TableSchema]
 
+class DownloadSave(beam.DoFn):
+    def process(self, element):
+        self.download_and_save(ZIP_URL_SODRA)
+        self.download_and_save(ZIP_URL_REGITRA)
+        
+    def download_and_save(self, zip_file_url):
+        zip_file_bytes = self.download_zip_file(zip_file_url)
+        if zip_file_bytes:
+            extracted_files = self.extract_zip_contents(zip_file_bytes)
+            self.upload_files_to_bucket(extracted_files)
+        
+    def download_zip_file(self, zip_file_url):
+        try:
+            headers = {'User-Agent': 'Your-User-Agent-String'}
+            request = urllib.request.Request(zip_file_url, headers=headers)
+            with urllib.request.urlopen(request) as response:
+                return response.read()
+        except urllib.error.HTTPError as http_error:
+            logging.error(f"HTTP Error {http_error.code}: {http_error.reason}")
+            return None
+        except Exception as e:
+            logging.error(f"An error occurred: {e}")
+            return None
+    
+    def extract_zip_contents(self, zip_file_bytes):
+        with io.BytesIO(zip_file_bytes) as temp_file:
+            with zipfile.ZipFile(temp_file) as zip_file:
+                extracted_files = {}
+                for file_name in zip_file.namelist():
+                    file_contents = zip_file.read(file_name)
+                    extracted_files[file_name] = file_contents
+                return extracted_files
+    
+    def upload_files_to_bucket(self, extracted_files):
+        storage_client = storage.Client()
+        bucket = storage_client.bucket(bucket_name)
+        for file_name, file_contents in extracted_files.items():
+            if "monthly" in file_name:
+                file_name = "employees_salaries_raw.csv"
+            blob = bucket.blob(f'companies_cars/{file_name}')
+            blob.upload_from_string(file_contents, content_type='text/csv')
+            logging.info(f"File {file_name} uploaded to {bucket_name} bucket.")
+
+
 class UploadToBigQuery(beam.DoFn):
     def __init__(self, config):
         self.config = config
         self.storage_client = storage.Client()
         self.bigquery_client = bigquery.Client()
-        self.transform_functions = {
-            "monthly-2021.csv": self.transform_data_employees,
-            "Atviri_JTP_parko_duomenys.csv": self.transform_data_companies
-        }
 
-    @staticmethod
-    def read_file_from_gcs(self) -> pd.DataFrame:
-        """Reads a .csv file row by row and if error skips the row, logs the error."""
+    def process(self, element):
+        for file_configuration in file_configurations:
+            upload_config = UploadConfig(
+                bucket_name="lithuania_statistics",
+                folder_name="companies_cars",
+                file_name=file_configuration["file_name"],
+                dataset_name="lithuania_statistics",
+                table_name=file_configuration["table_name"],
+                table_schema=file_configuration["table_schema"]
+            )
+            uploader = UploadToBigQuery(upload_config)
+            data_frame = uploader.read_file_from_gcs()
+            uploader.upload_file_to_bigquery(data_frame)
+
+    def read_file_from_gcs(self):
         bucket = self.storage_client.bucket(self.config.bucket_name)
         blob = bucket.blob(f'{self.config.folder_name}/{self.config.file_name}')
         blob_as_string = blob.download_as_string()
         delimiter = self.get_delimiter()
-        data_frame = pd.read_csv(io.BytesIO(blob_as_string), sep=delimiter, on_bad_lines='skip', encoding='utf-8')
-        # Get the transform function based on the table name
+        data_frame = pd.read_csv(io.BytesIO(blob_as_string), sep=delimiter, encoding='utf-8')
         transform_function = self.transform_functions[self.config.file_name]
-        data_frame = transform_function(data_frame)
-        return data_frame
+        return transform_function(data_frame)
     
-    @staticmethod
-    def get_delimiter(self) -> str:
-        """get delimiter based on file name from mappings.py"""
+    def get_delimiter(self):
         for file_configuration in file_configurations:
             if file_configuration["file_name"] == self.config.file_name:
                 return file_configuration["delimiter"]
         logging.error(f"Could not find delimiter for {self.config.file_name}")
         return None
-
-    # -------------------------------- TRANSFORMS -------------------------------- #
+    
     @staticmethod
     def transform_data_companies(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms the DataFrame by selecting columns and dropping missing values."""
@@ -132,7 +126,6 @@ class UploadToBigQuery(beam.DoFn):
         data_frame = data_frame[['KODAS'] + [col for col in data_frame.columns if col != 'KODAS']]
         return data_frame
     
-    @staticmethod
     def transform_data_employees(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms the DataFrame by selecting columns and dropping missing values."""
         columns_to_keep = ['Juridinių asmenų registro kodas (jarCode)', 'Pavadinimas (name)', 'Savivaldybė, kurioje registruota(municipality)', 'Ekonominės veiklos rūšies kodas(ecoActCode)', 'Ekonominės veiklos rūšies pavadinimas(ecoActName)', 'Mėnuo (month)', 'Vidutinis darbo užmokestis (avgWage)', 'Apdraustųjų skaičius (numInsured)']
@@ -155,7 +148,6 @@ class UploadToBigQuery(beam.DoFn):
         })
         return data_frame
 
-    @staticmethod
     def upload_file_to_bigquery(self, data_frame: pd.DataFrame):
         """Upload data to a BigQuery table."""
         dataset = self.bigquery_client.dataset(self.config.dataset_name)
@@ -165,7 +157,6 @@ class UploadToBigQuery(beam.DoFn):
         job.result()
         logging.info(f'Uploaded {self.config.file_name} to {self.config.dataset_name}.{self.config.table_name}')
 
-    @staticmethod
     def get_job_config(self) -> bigquery.LoadJobConfig:
         """Returns a LoadJobConfig for BigQuery table loading."""
         job_config = bigquery.LoadJobConfig()
@@ -176,7 +167,6 @@ class UploadToBigQuery(beam.DoFn):
         job_config.write_disposition = bigquery.WriteDisposition().WRITE_TRUNCATE
         return job_config
 
-    @staticmethod
     def get_table_schema(self) -> List[bigquery.SchemaField]:
         """Returns a list of BigQuery table schema fields."""
         table_schema = []
@@ -184,7 +174,6 @@ class UploadToBigQuery(beam.DoFn):
             table_schema.append(bigquery.SchemaField(field.name, field.data_type))
         return table_schema
 
-    @staticmethod
     def process(self, element):
         # Iterate over the file configurations.
         for file_configuration in file_configurations:
@@ -206,29 +195,21 @@ class UploadToBigQuery(beam.DoFn):
 
             # Upload the file to BigQuery.
             uploader.upload_file_to_bigquery(data_frame)
-
-
-# --------------------------------- PIPELINE --------------------------------- #
+    
 def run():
-    # Set the pipeline options.
     pipeline_options = PipelineOptions()
-    pipeline_options.view_as(StandardOptions).runner = 'DirectRunner'
-    pipeline_options.view_as(GoogleCloudOptions).project = project
-    pipeline_options.view_as(GoogleCloudOptions).region = region
+    pipeline_options.view_as(GoogleCloudOptions).project = "vl-data-learn"
     pipeline_options.view_as(GoogleCloudOptions).staging_location = staging_location
     pipeline_options.view_as(GoogleCloudOptions).temp_location = temp_location
 
-    # Create the Pipeline with the specified options.
     with beam.Pipeline(options=pipeline_options) as pipeline:
-        # Download and save files to GCS
         download_save = (
             pipeline
             | 'Create' >> beam.Create([None])
             | 'Download and save' >> beam.ParDo(DownloadSave())
         )
-
-        # Upload files to BigQuery wit argument config
         
+
 
 if __name__ == '__main__':
     logging.getLogger().setLevel(logging.INFO)
