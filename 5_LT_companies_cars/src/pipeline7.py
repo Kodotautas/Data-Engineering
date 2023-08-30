@@ -11,7 +11,7 @@ from google.cloud import storage, bigquery
 from pydantic import BaseModel
 from typing import List
 
-from mappings import file_configurations #!!!add src.mappings
+from src.mappings import file_configurations #!!!add src.mappings
 
 # Configuration
 bucket_name = "lithuania_statistics"
