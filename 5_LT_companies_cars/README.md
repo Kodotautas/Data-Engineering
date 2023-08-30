@@ -19,9 +19,7 @@
 
 - to do:
 
-NameError: name 'UploadToBigQuery' is not defined [while running 'ParDo(BigQueryUploader)-ptransform-27']
-
-
+- not save sodra file
 - create pipeline with Dataflow
 - create looker studio dashboard
 - need to create dbt model or schedule bigquery table, how? scheduled queries

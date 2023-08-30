@@ -11,8 +11,7 @@ from google.cloud import storage, bigquery
 from pydantic import BaseModel
 from typing import List
 
-from src.mappings import file_configurations #!!!add src.mappings
-
+from src.mappings import file_configurations 
 # Configuration
 bucket_name = "lithuania_statistics"
 staging_location = f"gs://{bucket_name}/staging"
@@ -32,7 +31,7 @@ class UploadConfig(BaseModel):
 
 class DownloadSave(beam.DoFn):
     def __init__(self):
-        self.current_year = dt.date.today().year
+        self.current_year = str(dt.date.today().year)
         self.ZIP_URL_SODRA = f"https://atvira.sodra.lt/imones/downloads/{self.current_year}/monthly-{self.current_year}.csv.zip"
         self.ZIP_URL_REGITRA = "https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip"
 
@@ -40,7 +39,8 @@ class DownloadSave(beam.DoFn):
         zip_file_bytes = self.download_zip_file(zip_file_url)
         if zip_file_bytes:
             extracted_files = self.extract_zip_contents(zip_file_bytes)
-            self.upload_files_to_bucket(extracted_files)
+            return extracted_files
+        return {}
         
     def download_zip_file(self, zip_file_url):
         try:
@@ -75,10 +75,11 @@ class DownloadSave(beam.DoFn):
             logging.info(f"File {file_name} uploaded to {bucket_name} bucket.")
 
     def process(self, element):
-        self.download_and_save(self.ZIP_URL_SODRA)
-        self.download_and_save(self.ZIP_URL_REGITRA)
-        
-
+        extracted_files = self.download_and_save(self.ZIP_URL_REGITRA)
+        self.upload_files_to_bucket(extracted_files)
+        extracted_files = self.download_and_save(self.ZIP_URL_SODRA)
+        self.upload_files_to_bucket(extracted_files)
+            
 class UploadToBigQuery(beam.DoFn):
     def __init__(self, config: UploadConfig = None):
         self.config = config
@@ -196,8 +197,9 @@ def run():
             pipeline
             | "Create" >> beam.Create([None])
             | "Download and save" >> beam.ParDo(DownloadSave())
-            # | "Upload to BigQuery" >> beam.ParDo(UploadToBigQuery().process(None))
+            # | "Upload to BigQuery" >> beam.ParDo(UploadToBigQuery())
         )
+
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)

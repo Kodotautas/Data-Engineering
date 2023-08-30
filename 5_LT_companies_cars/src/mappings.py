@@ -1,4 +1,5 @@
-current_year = '2000'
+from datetime import date
+current_year = str(date.today().year)
 
 file_configurations = [
     {
