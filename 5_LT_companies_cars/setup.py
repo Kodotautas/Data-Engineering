@@ -45,7 +45,7 @@ class CustomCommands(setuptools.Command):
 
 
 REQUIRED_PACKAGES = [
-    'src', 'numpy', 'pandas-gbq', 'google-cloud-bigquery', 'google-cloud-storage', 'requests', 'pydantic', 'urlib3', 'urlib' 
+    'src', 'numpy', 'pandas-gbq', 'google-cloud-bigquery', 'google-cloud-storage', 'requests', 'pydantic', 'urlib' 
 ]
 
 setuptools.setup(
