@@ -11,18 +11,12 @@ from google.cloud import storage, bigquery
 from pydantic import BaseModel
 from typing import List
 
-from requests import request
-
 from mappings import file_configurations #!!!add src.mappings
 
 # Configuration
-current_year = dt.date.today().year
 bucket_name = "lithuania_statistics"
 staging_location = f"gs://{bucket_name}/staging"
 temp_location = f"gs://{bucket_name}/temp"
-
-ZIP_URL_SODRA = f"https://atvira.sodra.lt/imones/downloads/{current_year}/monthly-{current_year}.csv.zip"
-ZIP_URL_REGITRA = "https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip"
 
 class TableSchema(BaseModel):
     name: str
@@ -37,10 +31,11 @@ class UploadConfig(BaseModel):
     table_schema: List[TableSchema]
 
 class DownloadSave(beam.DoFn):
-    def process(self, element):
-        self.download_and_save(ZIP_URL_SODRA)
-        self.download_and_save(ZIP_URL_REGITRA)
-        
+    def __init__(self):
+        self.current_year = dt.date.today().year
+        self.ZIP_URL_SODRA = f"https://atvira.sodra.lt/imones/downloads/{self.current_year}/monthly-{self.current_year}.csv.zip"
+        self.ZIP_URL_REGITRA = "https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip"
+
     def download_and_save(self, zip_file_url):
         zip_file_bytes = self.download_zip_file(zip_file_url)
         if zip_file_bytes:
@@ -79,26 +74,20 @@ class DownloadSave(beam.DoFn):
             blob.upload_from_string(file_contents, content_type='text/csv')
             logging.info(f"File {file_name} uploaded to {bucket_name} bucket.")
 
+    def process(self, element):
+        self.download_and_save(self.ZIP_URL_SODRA)
+        self.download_and_save(self.ZIP_URL_REGITRA)
+        
 
 class UploadToBigQuery(beam.DoFn):
-    def __init__(self, config):
+    def __init__(self, config: UploadConfig = None):
         self.config = config
         self.storage_client = storage.Client()
         self.bigquery_client = bigquery.Client()
-
-    def process(self, element):
-        for file_configuration in file_configurations:
-            upload_config = UploadConfig(
-                bucket_name="lithuania_statistics",
-                folder_name="companies_cars",
-                file_name=file_configuration["file_name"],
-                dataset_name="lithuania_statistics",
-                table_name=file_configuration["table_name"],
-                table_schema=file_configuration["table_schema"]
-            )
-            uploader = UploadToBigQuery(upload_config)
-            data_frame = uploader.read_file_from_gcs()
-            uploader.upload_file_to_bigquery(data_frame)
+        self.transform_functions = {
+            "Atviri_JTP_parko_duomenys.csv": self.transform_data_companies,
+            "employees_salaries_raw.csv": self.transform_data_employees
+        }
 
     def read_file_from_gcs(self):
         bucket = self.storage_client.bucket(self.config.bucket_name)
@@ -116,7 +105,6 @@ class UploadToBigQuery(beam.DoFn):
         logging.error(f"Could not find delimiter for {self.config.file_name}")
         return None
     
-    @staticmethod
     def transform_data_companies(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms the DataFrame by selecting columns and dropping missing values."""
         columns_to_keep = ['MARKE', 'KOMERCINIS_PAV', 'KATEGORIJA_KLASE', 'NUOSAVA_MASE', 'GALIA', 'GALIA_ELEKTR', 'DEGALAI', 'CO2_KIEKIS', 'CO2_KIEKIS__WLTP', 'TERSALU_LYGIS', 'GALIOS_MASES_SANT', 'PIRM_REG_DATA', 'PIRM_REG_DATA_LT', 'KODAS', 'PAVADINIMAS', 'SAVIVALDYBE', 'APSKRITIS']
@@ -186,30 +174,31 @@ class UploadToBigQuery(beam.DoFn):
                 table_name = file_configuration["table_name"],
                 table_schema = file_configuration["table_schema"]
             )
-
-            # Initialize the uploader.
             uploader = UploadToBigQuery(upload_config)
-
-            # Read the file from GCS.
             data_frame = uploader.read_file_from_gcs()
-
-            # Upload the file to BigQuery.
             uploader.upload_file_to_bigquery(data_frame)
     
+
+# DownloadSave().process(None)
+# UploadToBigQuery().process(None)
+
+
 def run():
     pipeline_options = PipelineOptions()
+    pipeline_options.view_as(StandardOptions).runner = "DataflowRunner"
     pipeline_options.view_as(GoogleCloudOptions).project = "vl-data-learn"
+    pipeline_options.view_as(GoogleCloudOptions).region = "europe-west1"
     pipeline_options.view_as(GoogleCloudOptions).staging_location = staging_location
     pipeline_options.view_as(GoogleCloudOptions).temp_location = temp_location
 
     with beam.Pipeline(options=pipeline_options) as pipeline:
-        download_save = (
+        (
             pipeline
-            | 'Create' >> beam.Create([None])
-            | 'Download and save' >> beam.ParDo(DownloadSave())
+            | "Create" >> beam.Create([None])
+            | "Download and save" >> beam.ParDo(DownloadSave())
+            # | "Upload to BigQuery" >> beam.ParDo(UploadToBigQuery().process(None))
         )
-        
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
     run()

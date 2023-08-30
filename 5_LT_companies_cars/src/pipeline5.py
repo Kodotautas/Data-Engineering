@@ -86,20 +86,6 @@ class UploadToBigQuery(beam.DoFn):
         self.storage_client = storage.Client()
         self.bigquery_client = bigquery.Client()
 
-    def process(self, element):
-        for file_configuration in file_configurations:
-            upload_config = UploadConfig(
-                bucket_name="lithuania_statistics",
-                folder_name="companies_cars",
-                file_name=file_configuration["file_name"],
-                dataset_name="lithuania_statistics",
-                table_name=file_configuration["table_name"],
-                table_schema=file_configuration["table_schema"]
-            )
-            uploader = UploadToBigQuery(upload_config)
-            data_frame = uploader.read_file_from_gcs()
-            uploader.upload_file_to_bigquery(data_frame)
-
     def read_file_from_gcs(self):
         bucket = self.storage_client.bucket(self.config.bucket_name)
         blob = bucket.blob(f'{self.config.folder_name}/{self.config.file_name}')
@@ -186,14 +172,8 @@ class UploadToBigQuery(beam.DoFn):
                 table_name = file_configuration["table_name"],
                 table_schema = file_configuration["table_schema"]
             )
-
-            # Initialize the uploader.
             uploader = UploadToBigQuery(upload_config)
-
-            # Read the file from GCS.
             data_frame = uploader.read_file_from_gcs()
-
-            # Upload the file to BigQuery.
             uploader.upload_file_to_bigquery(data_frame)
     
 def run():
@@ -207,6 +187,7 @@ def run():
             pipeline
             | 'Create' >> beam.Create([None])
             | 'Download and save' >> beam.ParDo(DownloadSave())
+            # | 'Upload to BigQuery' >> beam.ParDo(UploadToBigQuery())
         )
         
 
