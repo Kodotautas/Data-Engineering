@@ -1,5 +1,5 @@
 from datetime import date
-current_year = str(date.today().year)
+current_year = date.today().year
 
 file_configurations = [
     {

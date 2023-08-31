@@ -31,7 +31,7 @@ class UploadConfig(BaseModel):
 
 class DownloadSave(beam.DoFn):
     def __init__(self):
-        self.current_year = str(dt.date.today().year)
+        self.current_year = dt.date.today().year
         self.ZIP_URL_SODRA = f"https://atvira.sodra.lt/imones/downloads/{self.current_year}/monthly-{self.current_year}.csv.zip"
         self.ZIP_URL_REGITRA = "https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip"
 
@@ -75,10 +75,15 @@ class DownloadSave(beam.DoFn):
             logging.info(f"File {file_name} uploaded to {bucket_name} bucket.")
 
     def process(self, element):
-        extracted_files = self.download_and_save(self.ZIP_URL_REGITRA)
-        self.upload_files_to_bucket(extracted_files)
-        extracted_files = self.download_and_save(self.ZIP_URL_SODRA)
-        self.upload_files_to_bucket(extracted_files)
+        # Get the URL for the Regitra file.
+        extracted_files_regitra = self.download_and_save(self.ZIP_URL_REGITRA)
+        self.upload_files_to_bucket(extracted_files_regitra)
+
+        # Get the URL for the Sodra file.
+        employees_salaries_url = [config["url"] for config in file_configurations if config["file_name"] == "employees_salaries_raw.csv"][0]
+        extracted_files_salaries = self.download_and_save(employees_salaries_url)
+        self.upload_files_to_bucket(extracted_files_salaries)
+            
             
 class UploadToBigQuery(beam.DoFn):
     def __init__(self, config: UploadConfig = None):
@@ -197,7 +202,7 @@ def run():
             pipeline
             | "Create" >> beam.Create([None])
             | "Download and save" >> beam.ParDo(DownloadSave())
-            # | "Upload to BigQuery" >> beam.ParDo(UploadToBigQuery())
+            # | "Upload to BigQuery" >> beam.ParDo(UploadToBigQuery()
         )
 
 
