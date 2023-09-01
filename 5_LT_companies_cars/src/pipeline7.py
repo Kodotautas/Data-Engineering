@@ -44,9 +44,10 @@ class DownloadSave(beam.DoFn):
         
     def download_zip_file(self, zip_file_url):
         try:
-            headers = {'User-Agent': 'Your-User-Agent-String'}
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
             request = urllib.request.Request(zip_file_url, headers=headers)
             with urllib.request.urlopen(request) as response:
+                logging.info(f"Downloaded: {zip_file_url}")
                 return response.read()
         except urllib.error.HTTPError as http_error:
             logging.error(f"HTTP Error {http_error.code}: {http_error.reason}")
@@ -80,9 +81,8 @@ class DownloadSave(beam.DoFn):
         self.upload_files_to_bucket(extracted_files_regitra)
 
         # Get the URL for the Sodra file.
-        employees_salaries_url = [config["url"] for config in file_configurations if config["file_name"] == "employees_salaries_raw.csv"][0]
-        extracted_files_salaries = self.download_and_save(employees_salaries_url)
-        self.upload_files_to_bucket(extracted_files_salaries)
+        extracted_files_sodra = self.download_and_save(self.ZIP_URL_SODRA)
+        self.upload_files_to_bucket(extracted_files_sodra)
             
             
 class UploadToBigQuery(beam.DoFn):
