@@ -6,7 +6,7 @@ import zipfile
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions, StandardOptions, GoogleCloudOptions
 from apache_beam import DoFn
-import urllib.request
+import requests
 from google.cloud import storage, bigquery
 from pydantic import BaseModel
 from typing import List
@@ -43,18 +43,12 @@ class DownloadSave(beam.DoFn):
         return {}
         
     def download_zip_file(self, zip_file_url):
-        try:
-            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
-            request = urllib.request.Request(zip_file_url, headers=headers)
-            with urllib.request.urlopen(request) as response:
-                logging.info(f"Downloaded: {zip_file_url}")
-                return response.read()
-        except urllib.error.HTTPError as http_error:
-            logging.error(f"HTTP Error {http_error.code}: {http_error.reason}")
-            return None
-        except Exception as e:
-            logging.error(f"An error occurred: {e}")
-            return None
+        with requests.get(zip_file_url) as r:
+            if r.status_code == 200:
+                return r.content
+            else:
+                logging.error(f"Could not download file from {zip_file_url}.")
+                return None
     
     def extract_zip_contents(self, zip_file_bytes):
         with io.BytesIO(zip_file_bytes) as temp_file:
