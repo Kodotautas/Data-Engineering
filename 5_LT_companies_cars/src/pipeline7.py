@@ -1,4 +1,5 @@
 import datetime as dt
+import random
 import pandas as pd
 import io
 import logging
@@ -43,12 +44,35 @@ class DownloadSave(beam.DoFn):
         return {}
         
     def download_zip_file(self, zip_file_url):
-        with requests.get(zip_file_url) as r:
-            if r.status_code == 200:
-                return r.content
-            else:
-                logging.error(f"Could not download file from {zip_file_url}.")
-                return None
+        proxies = [
+                'http://176.97.73.212:3128',
+                'http://161.35.37.92:3128',
+                'http://198.244.175.232:8080',
+                'http://81.134.57.82:3128',
+        ]
+
+        # Choose a random proxy
+        proxy = random.choice(proxies)
+
+        header = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Accept-Encoding": "gzip, deflate",
+        "Connection": "keep-alive",
+        "Upgrade-Insecure-Requests": "1",
+        "Sec-Fetch-Dest": "document",
+        "Sec-Fetch-Mode": "navigate",
+        "Sec-Fetch-Site": "none",
+        "Sec-Fetch-User": "?1",
+        "Cache-Control": "max-age=0",
+    }
+        response = requests.get(zip_file_url, headers=header, proxies={"http": proxy, "https": proxy})
+        if response.status_code == 200:
+            logging.info(f"Downloaded: {zip_file_url}")
+            return response.content
+        logging.error(f"Could not download: {zip_file_url}, status code {response.status_code}")
+        return None
     
     def extract_zip_contents(self, zip_file_bytes):
         with io.BytesIO(zip_file_bytes) as temp_file:
