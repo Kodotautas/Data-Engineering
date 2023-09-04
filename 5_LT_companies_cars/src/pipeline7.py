@@ -62,9 +62,12 @@ class DownloadSave(beam.DoFn):
     def extract_zip_contents(self, zip_file_bytes):
         # Extract the zip file contents
         extracted_files = {}
-        with zipfile.ZipFile(zip_file_bytes, "r") as zip_ref:
-            for file_name in zip_ref.namelist():
-                extracted_files[file_name] = zip_ref.read(file_name)
+        try:
+            with zipfile.ZipFile(zip_file_bytes, "r") as zip_ref:
+                for file_name in zip_ref.namelist():
+                    extracted_files[file_name] = zip_ref.read(file_name)
+        except zipfile.BadZipFile:
+            logging.error("File is not a valid ZIP file.")
         return extracted_files
     
     def download_and_extract(self, zip_file_url):
@@ -91,8 +94,9 @@ class DownloadSave(beam.DoFn):
             # Get the file configuration.
             file_name = file_configuration["file_name"]
             url = file_configuration["url"]
-            # Download the file.
-            extracted_files = self.download_and_extract(url)
+            # Download and extract the file if it is a zip file.
+            if url.endswith(".zip"):
+                extracted_files = self.download_and_extract(url)
             # Upload the file to the bucket.
             self.upload_files_to_bucket(extracted_files)
             yield file_name
