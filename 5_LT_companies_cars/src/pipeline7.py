@@ -76,14 +76,14 @@ class DownloadSave(beam.DoFn):
                 extracted_files = self.extract_zip_contents(f)
 
     def upload_files_to_bucket(self, extracted_files):
-        # Upload the extracted files to the bucket.
+        # Upload the files to the bucket.
         client = storage.Client()
         bucket = client.get_bucket(bucket_name)
         for file_name, file_contents in extracted_files.items():
             blob = bucket.blob(f'{self.current_year}/{file_name}')
             blob.upload_from_string(file_contents)
             logging.info(f"File {file_name} uploaded to bucket")
-
+            
     def process(self, element):
         # Iterate over the file configurations.
         for file_configuration in self.file_configurations:
