@@ -74,7 +74,8 @@ class DownloadSave(beam.DoFn):
         if local_filename.endswith(".zip"):
             with open(local_filename, "rb") as f:
                 extracted_files = self.extract_zip_contents(f)
-
+        return extracted_files
+    
     def upload_files_to_bucket(self, extracted_files):
         # Upload the files to the bucket.
         client = storage.Client()
@@ -83,7 +84,7 @@ class DownloadSave(beam.DoFn):
             blob = bucket.blob(f'{self.current_year}/{file_name}')
             blob.upload_from_string(file_contents)
             logging.info(f"File {file_name} uploaded to bucket")
-            
+
     def process(self, element):
         # Iterate over the file configurations.
         for file_configuration in self.file_configurations:
