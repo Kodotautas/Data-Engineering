@@ -33,8 +33,6 @@ class UploadConfig(BaseModel):
 class DownloadSave(beam.DoFn):
     def __init__(self):
         self.current_year = dt.date.today().year
-        self.ZIP_URL_SODRA = f"https://atvira.sodra.lt/imones/downloads/{self.current_year}/monthly-{self.current_year}.csv.zip"
-        self.ZIP_URL_REGITRA = "https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip"
         self.file_configurations = file_configurations
 
     def download_file(self, zip_file_url):
@@ -59,15 +57,13 @@ class DownloadSave(beam.DoFn):
                 logging.info(f"File {local_filename} downloaded")
         return local_filename
     
-    def extract_zip_contents(self, zip_file_bytes):
-        # Extract the zip file contents
+    def extract_zip_contents(self, zip_file):
+        # Extract the contents of the zip file.
         extracted_files = {}
-        try:
-            with zipfile.ZipFile(zip_file_bytes, "r") as zip_ref:
-                for file_name in zip_ref.namelist():
-                    extracted_files[file_name] = zip_ref.read(file_name)
-        except zipfile.BadZipFile:
-            logging.error("File is not a valid ZIP file.")
+        with zipfile.ZipFile(zip_file, "r") as zip_ref:
+            for file_name in zip_ref.namelist():
+                with zip_ref.open(file_name) as f:
+                    extracted_files[file_name] = f.read()
         return extracted_files
     
     def download_and_extract(self, zip_file_url):
@@ -84,7 +80,7 @@ class DownloadSave(beam.DoFn):
         client = storage.Client()
         bucket = client.get_bucket(bucket_name)
         for file_name, file_contents in extracted_files.items():
-            blob = bucket.blob(f'{self.current_year}/{file_name}')
+            blob = bucket.blob(bucket_name/{file_name})
             blob.upload_from_string(file_contents)
             logging.info(f"File {file_name} uploaded to bucket")
 

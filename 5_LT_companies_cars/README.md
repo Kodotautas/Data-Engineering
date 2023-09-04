@@ -19,7 +19,7 @@
 
 - to do:
 
-- not save sodra file
+- not valid .zip file
 - create pipeline with Dataflow
 - create looker studio dashboard
 - need to create dbt model or schedule bigquery table, how? scheduled queries
