@@ -51,29 +51,29 @@ class DownloadSave(beam.DoFn):
         "Sec-Fetch-User": "?1",
         "Cache-Control": "max-age=0",
     }
-        response = requests.get(zip_file_url, headers=header)
-        if response.status_code == 200:
-            logging.info(f"Downloaded: {zip_file_url}")
-            return response.content
-        logging.error(f"Could not download: {zip_file_url}, status code {response.status_code}")
-        return None
+        url = zip_file_url
+        local_filename = url.split('/')[-1]
+        with requests.get(url, headers=header) as r:
+            with open(local_filename, 'wb') as f:
+                f.write(r.content)
+                logging.info(f"File {local_filename} downloaded")
+        return local_filename
     
     def extract_zip_contents(self, zip_file_bytes):
-        with io.BytesIO(zip_file_bytes) as file_bytes:
-            with zipfile.ZipFile(file_bytes) as zip_file:
-                extracted_files = {}
-                for file_name in zip_file.namelist():
-                    with zip_file.open(file_name) as file:
-                        extracted_files[file_name] = file.read().decode("utf-8")
-                return extracted_files
+        # Extract the zip file contents.
+        extracted_files = {}
+        with zipfile.ZipFile(zip_file_bytes, "r") as zip_ref:
+            for file_name in zip_ref.namelist():
+                extracted_files[file_name] = zip_ref.read(file_name)
+        return extracted_files
     
     def download_and_extract(self, zip_file_url):
         # Download the and extract if the file is zip.
-        zip_file_bytes = self.download_file(zip_file_url)
-        if zip_file_bytes:
-            extracted_files = self.extract_zip_contents(zip_file_bytes)
-            return extracted_files
-        return None
+        extracted_files = {}
+        local_filename = self.download_file(zip_file_url)
+        if local_filename.endswith(".zip"):
+            with open(local_filename, "rb") as f:
+                extracted_files = self.extract_zip_contents(f)
 
     def upload_files_to_bucket(self, extracted_files):
         # Upload the extracted files to the bucket.
@@ -82,20 +82,20 @@ class DownloadSave(beam.DoFn):
         for file_name, file_contents in extracted_files.items():
             blob = bucket.blob(f'{self.current_year}/{file_name}')
             blob.upload_from_string(file_contents)
-            logging.info(f"Uploaded {file_name} to bucket")
+            logging.info(f"File {file_name} uploaded to bucket")
 
     def process(self, element):
         # Iterate over the file configurations.
         for file_configuration in self.file_configurations:
             # Get the file configuration.
-            zip_file_url = file_configuration["url"]
-            extracted_files = self.download_and_extract(zip_file_url)
-            if extracted_files:
-                self.upload_files_to_bucket(extracted_files)
-            else:
-                logging.error(f"Could not download and extract {zip_file_url}")
-            
-            
+            file_name = file_configuration["file_name"]
+            url = file_configuration["url"]
+            # Download the file.
+            extracted_files = self.download_and_extract(url)
+            # Upload the file to the bucket.
+            self.upload_files_to_bucket(extracted_files)
+            yield file_name
+
 class UploadToBigQuery(beam.DoFn):
     def __init__(self, config: UploadConfig = None):
         self.config = config
