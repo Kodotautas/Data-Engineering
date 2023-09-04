@@ -35,25 +35,9 @@ class DownloadSave(beam.DoFn):
         self.current_year = dt.date.today().year
         self.ZIP_URL_SODRA = f"https://atvira.sodra.lt/imones/downloads/{self.current_year}/monthly-{self.current_year}.csv.zip"
         self.ZIP_URL_REGITRA = "https://www.regitra.lt/atvduom/Atviri_JTP_parko_duomenys.zip"
+        self.file_configurations = file_configurations
 
-    def download_and_save(self, zip_file_url):
-        zip_file_bytes = self.download_zip_file(zip_file_url)
-        if zip_file_bytes:
-            extracted_files = self.extract_zip_contents(zip_file_bytes)
-            return extracted_files
-        return {}
-        
-    def download_zip_file(self, zip_file_url):
-        proxies = [
-                'http://176.97.73.212:3128',
-                'http://161.35.37.92:3128',
-                'http://198.244.175.232:8080',
-                'http://81.134.57.82:3128',
-        ]
-
-        # Choose a random proxy
-        proxy = random.choice(proxies)
-
+    def download_file(self, zip_file_url):
         header = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -67,7 +51,7 @@ class DownloadSave(beam.DoFn):
         "Sec-Fetch-User": "?1",
         "Cache-Control": "max-age=0",
     }
-        response = requests.get(zip_file_url, headers=header, proxies={"http": proxy, "https": proxy})
+        response = requests.get(zip_file_url, headers=header)
         if response.status_code == 200:
             logging.info(f"Downloaded: {zip_file_url}")
             return response.content
@@ -75,32 +59,41 @@ class DownloadSave(beam.DoFn):
         return None
     
     def extract_zip_contents(self, zip_file_bytes):
-        with io.BytesIO(zip_file_bytes) as temp_file:
-            with zipfile.ZipFile(temp_file) as zip_file:
+        with io.BytesIO(zip_file_bytes) as file_bytes:
+            with zipfile.ZipFile(file_bytes) as zip_file:
                 extracted_files = {}
                 for file_name in zip_file.namelist():
-                    file_contents = zip_file.read(file_name)
-                    extracted_files[file_name] = file_contents
+                    with zip_file.open(file_name) as file:
+                        extracted_files[file_name] = file.read().decode("utf-8")
                 return extracted_files
     
+    def download_and_extract(self, zip_file_url):
+        # Download the and extract if the file is zip.
+        zip_file_bytes = self.download_file(zip_file_url)
+        if zip_file_bytes:
+            extracted_files = self.extract_zip_contents(zip_file_bytes)
+            return extracted_files
+        return None
+
     def upload_files_to_bucket(self, extracted_files):
-        storage_client = storage.Client()
-        bucket = storage_client.bucket(bucket_name)
+        # Upload the extracted files to the bucket.
+        client = storage.Client()
+        bucket = client.get_bucket(bucket_name)
         for file_name, file_contents in extracted_files.items():
-            if "monthly" in file_name:
-                file_name = "employees_salaries_raw.csv"
-            blob = bucket.blob(f'companies_cars/{file_name}')
-            blob.upload_from_string(file_contents, content_type='text/csv')
-            logging.info(f"File {file_name} uploaded to {bucket_name} bucket.")
+            blob = bucket.blob(f'{self.current_year}/{file_name}')
+            blob.upload_from_string(file_contents)
+            logging.info(f"Uploaded {file_name} to bucket")
 
     def process(self, element):
-        # Get the URL for the Regitra file.
-        extracted_files_regitra = self.download_and_save(self.ZIP_URL_REGITRA)
-        self.upload_files_to_bucket(extracted_files_regitra)
-
-        # Get the URL for the Sodra file.
-        extracted_files_sodra = self.download_and_save(self.ZIP_URL_SODRA)
-        self.upload_files_to_bucket(extracted_files_sodra)
+        # Iterate over the file configurations.
+        for file_configuration in self.file_configurations:
+            # Get the file configuration.
+            zip_file_url = file_configuration["url"]
+            extracted_files = self.download_and_extract(zip_file_url)
+            if extracted_files:
+                self.upload_files_to_bucket(extracted_files)
+            else:
+                logging.error(f"Could not download and extract {zip_file_url}")
             
             
 class UploadToBigQuery(beam.DoFn):
@@ -108,6 +101,7 @@ class UploadToBigQuery(beam.DoFn):
         self.config = config
         self.storage_client = storage.Client()
         self.bigquery_client = bigquery.Client()
+        self.file_configurations = file_configurations
         self.transform_functions = {
             "Atviri_JTP_parko_duomenys.csv": self.transform_data_companies,
             "employees_salaries_raw.csv": self.transform_data_employees
@@ -188,7 +182,7 @@ class UploadToBigQuery(beam.DoFn):
 
     def process(self, element):
         # Iterate over the file configurations.
-        for file_configuration in file_configurations:
+        for file_configuration in self.file_configurations:
             # Get the file configuration.
             upload_config = UploadConfig(
                 bucket_name = "lithuania_statistics",
