@@ -60,7 +60,7 @@ class DownloadSave(beam.DoFn):
         return local_filename
     
     def extract_zip_contents(self, zip_file_bytes):
-        # Extract the zip file contents.
+        # Extract the zip file contents
         extracted_files = {}
         with zipfile.ZipFile(zip_file_bytes, "r") as zip_ref:
             for file_name in zip_ref.namelist():
