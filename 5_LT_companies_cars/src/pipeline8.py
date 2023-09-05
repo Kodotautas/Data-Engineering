@@ -49,33 +49,29 @@ class DownloadSave(beam.DoFn):
         "Sec-Fetch-User": "?1",
         "Cache-Control": "max-age=0",
     }
-        local_filename = url.split('/')[-1]
+        local_filename = url.split('/')[-1].replace("-", "_")
         with requests.get(url, headers=header) as r:
             with open(local_filename, 'wb') as f:
                 f.write(r.content)
                 logging.info(f"File {local_filename} downloaded")
         return local_filename
     
-    def upload_files_to_bucket(self, extracted_files):
-        # Upload the files to the bucket.
-        client = storage.Client()
-        bucket = client.bucket(bucket_name)
-        for file in extracted_files:
-            blob = bucket.blob(f'{bucket_name}/{file}')
-            blob.upload_from_filename(file)
-            logging.info(f"File {file} uploaded to bucket {bucket_name}")
-            
     def process(self, element):
         for file_configuration in self.file_configurations:
             # Download the file.
             local_filename = self.download_file(file_configuration["url"])
-            # Save the file to the bucket.
-            client = storage.Client()
-            bucket = client.bucket(bucket_name)
-            blob = bucket.blob(f'{bucket_name}/{local_filename}')
+            # Unzip the file and store it in the bucket.
+            with zipfile.ZipFile(local_filename, 'r') as zip_ref:
+                zip_ref.extractall()
+                logging.info(f"File {local_filename} unzipped")
+            # Upload the file to the bucket.
+            file_name = file_configuration["file_name"]
+            blob_name = f"{bucket_name}/{file_name}"
+            blob = storage.Client().bucket(bucket_name).blob(blob_name)
             blob.upload_from_filename(local_filename)
-            logging.info(f"File {local_filename} uploaded to bucket {bucket_name}")
-
+            logging.info(f"File {local_filename} uploaded to {bucket_name}/{blob_name}")
+            
+            
 class UploadToBigQuery(beam.DoFn):
     def __init__(self, config: UploadConfig = None):
         self.config = config
