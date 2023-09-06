@@ -51,27 +51,36 @@ class DownloadSave(beam.DoFn):
     }
         local_filename = url.split('/')[-1].replace("-", "_")
         with requests.get(url, headers=header) as r:
-            with open(local_filename, 'wb') as f:
-                f.write(r.content)
-                logging.info(f"File {local_filename} downloaded")
+            if r.headers.get("content-type") == "application/zip":
+                with open(local_filename, 'wb') as f:
+                    f.write(r.content)
+                    logging.info(f"File {local_filename} downloaded")
+            else:
+                logging.error(f"File {url} is not a zip file (Content-Type: {r.headers.get('content-type')})")
         return local_filename
     
     def process(self, element):
         for file_configuration in self.file_configurations:
             # Download the file.
             local_filename = self.download_file(file_configuration["url"])
-            # Unzip the file and store it in the bucket.
-            with zipfile.ZipFile(local_filename, 'r') as zip_ref:
-                zip_ref.extractall()
-                logging.info(f"File {local_filename} unzipped")
-            # Upload the file to the bucket.
-            file_name = file_configuration["file_name"]
-            blob_name = f"{bucket_name}/{file_name}"
-            blob = storage.Client().bucket(bucket_name).blob(blob_name)
-            blob.upload_from_filename(local_filename)
-            logging.info(f"File {local_filename} uploaded to {bucket_name}/{blob_name}")
-            
-            
+            # Unzip and upload the file to the bucket.
+            try:
+                # close file if it is open
+                if zipfile.is_zipfile(local_filename):
+                    zipfile.ZipFile(local_filename).close()
+                with zipfile.ZipFile(local_filename, 'r') as zip_ref:
+                    zip_ref.extractall()
+                    logging.info(f"File {local_filename} unzipped")
+                # Upload the file to the bucket.
+                file_name = file_configuration["file_name"]
+                blob_name = f"{bucket_name}/{file_name}"
+                blob = storage.Client().bucket(bucket_name).blob(blob_name)
+                blob.upload_from_filename(local_filename)
+                logging.info(f"File {local_filename} uploaded to {bucket_name}/{blob_name}")
+            except Exception as e:
+                logging.error(f"Could not unzip {local_filename}: {e}")
+                
+                
 class UploadToBigQuery(beam.DoFn):
     def __init__(self, config: UploadConfig = None):
         self.config = config
@@ -175,7 +184,6 @@ class UploadToBigQuery(beam.DoFn):
 
 # DownloadSave().process(None)
 # UploadToBigQuery().process(None)
-
 
 def run():
     pipeline_options = PipelineOptions()
