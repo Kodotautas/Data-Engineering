@@ -1,4 +1,5 @@
 import datetime as dt
+import os
 import random
 import pandas as pd
 import io
@@ -59,28 +60,35 @@ class DownloadSave(beam.DoFn):
                 logging.error(f"File {url} is not a zip file (Content-Type: {r.headers.get('content-type')})")
         return local_filename
     
+    def extract_zip_contents(self, zip_file):
+        try:
+            extracted_files = {}
+            with zipfile.ZipFile(zip_file, "r") as zip_ref:
+                for file_name in zip_ref.namelist():
+                    print(f"Extracting {file_name}")
+                    with zip_ref.open(file_name) as f:
+                        extracted_files[file_name] = f.read()
+            return extracted_files
+        except Exception as e:
+            print(f"Error extracting zip file: {str(e)}")
+            return {}
+
     def process(self, element):
         for file_configuration in self.file_configurations:
-            # Download the file.
-            local_filename = self.download_file(file_configuration["url"])
-            # Unzip and upload the file to the bucket.
-            try:
-                # close file if it is open
-                if zipfile.is_zipfile(local_filename):
-                    zipfile.ZipFile(local_filename).close()
-                with zipfile.ZipFile(local_filename, 'r') as zip_ref:
-                    zip_ref.extractall()
-                    logging.info(f"File {local_filename} unzipped")
-                # Upload the file to the bucket.
-                file_name = file_configuration["file_name"]
-                blob_name = f"{bucket_name}/{file_name}"
-                blob = storage.Client().bucket(bucket_name).blob(blob_name)
-                blob.upload_from_filename(local_filename)
-                logging.info(f"File {local_filename} uploaded to {bucket_name}/{blob_name}")
-            except Exception as e:
-                logging.error(f"Could not unzip {local_filename}: {e}")
-                
-                
+            # Get the file configuration.
+            url = file_configuration["url"]
+            local_filename = self.download_file(url)
+            extracted_files = self.extract_zip_contents(local_filename)
+            for file_name, file_contents in extracted_files.items():
+                # Upload the file to GCS.
+                bucket = storage.Client().bucket(bucket_name)
+                blob = bucket.blob(f'{bucket_name}/{file_configuration["file_name"]}')
+                blob.upload_from_string(file_contents, content_type='text/csv')
+                logging.info(f'Uploaded {file_name} to {bucket_name}/{file_configuration["file_name"]}')
+                # Delete the local file.
+                os.remove(local_filename)
+
+
 class UploadToBigQuery(beam.DoFn):
     def __init__(self, config: UploadConfig = None):
         self.config = config
