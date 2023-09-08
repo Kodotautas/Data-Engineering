@@ -52,25 +52,28 @@ class DownloadSave(beam.DoFn):
     }
         local_filename = url.split('/')[-1].replace("-", "_")
         with requests.get(url, headers=header) as r:
-            if r.headers.get("content-type") == "application/zip":
+            try:
                 with open(local_filename, 'wb') as f:
                     f.write(r.content)
-                    logging.info(f"File {local_filename} downloaded")
-            else:
-                logging.error(f"File {url} is not a zip file (Content-Type: {r.headers.get('content-type')})")
-        return local_filename
+                    logging.info(f'Downloaded {url} to {local_filename}, size in mb: {round(os.path.getsize(local_filename) / 1024 / 1024, 2)}')
+                return local_filename
+            except Exception as e:
+                logging.error(f"Error downloading file: {str(e)}")
+                return None
     
     def extract_zip_contents(self, zip_file):
         try:
             extracted_files = {}
-            with zipfile.ZipFile(zip_file, "r") as zip_ref:
-                for file_name in zip_ref.namelist():
-                    print(f"Extracting {file_name}")
-                    with zip_ref.open(file_name) as f:
-                        extracted_files[file_name] = f.read()
+            with open(zip_file, "rb") as zip_file_obj:
+                with zipfile.ZipFile(zip_file_obj) as zip_ref:
+                    for file_info in zip_ref.infolist():
+                        file_name = file_info.filename
+                        extracted_files[file_name] = zip_ref.read(file_info)
+                        logging.info(f'Extracted {file_name}')
+
             return extracted_files
         except Exception as e:
-            print(f"Error extracting zip file: {str(e)}")
+            logging.error(f"Error extracting zip file, name: {zip_file}, error: {str(e)}")
             return {}
 
     def process(self, element):
