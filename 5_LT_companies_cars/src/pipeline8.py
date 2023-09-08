@@ -70,7 +70,6 @@ class DownloadSave(beam.DoFn):
                         file_name = file_info.filename
                         extracted_files[file_name] = zip_ref.read(file_info)
                         logging.info(f'Extracted {file_name}')
-
             return extracted_files
         except Exception as e:
             logging.error(f"Error extracting zip file, name: {zip_file}, error: {str(e)}")
