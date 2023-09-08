@@ -48,14 +48,14 @@ class DownloadSave(beam.DoFn):
         "Sec-Fetch-Mode": "navigate",
         "Sec-Fetch-Site": "none",
         "Sec-Fetch-User": "?1",
-        "Cache-Control": "max-age=0",
+        "Cache-Control": "max-age=0"
     }
         local_filename = url.split('/')[-1].replace("-", "_")
         with requests.get(url, headers=header) as r:
             try:
                 with open(local_filename, 'wb') as f:
                     f.write(r.content)
-                    logging.info(f'Downloaded {url} to {local_filename}, size in mb: {round(os.path.getsize(local_filename) / 1024 / 1024, 2)}')
+                    logging.info(f'Downloaded {url} to {local_filename}, size in MB: {round(os.path.getsize(local_filename) / 1024 / 1024, 2)}')
                 return local_filename
             except Exception as e:
                 logging.error(f"Error downloading file: {str(e)}")
