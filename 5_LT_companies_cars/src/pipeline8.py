@@ -37,6 +37,11 @@ class DownloadSave(beam.DoFn):
         self.file_configurations = file_configurations
 
     def download_file(self, url):
+        # Check if 'sodra' is present in the URL
+        if 'sodra' in url:
+            logging.info(f'Skipping download for URL containing "sodra": {url}')
+            return None
+
         header = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -76,6 +81,7 @@ class DownloadSave(beam.DoFn):
             return {}
 
     def process(self, element):
+        # Iterate over the file configurations.
         for file_configuration in self.file_configurations:
             # Get the file configuration.
             url = file_configuration["url"]
@@ -90,6 +96,26 @@ class DownloadSave(beam.DoFn):
                 # Delete the local file.
                 os.remove(local_filename)
 
+        #unzip all files in bucket endind with .zip
+        for blob in storage.Client().list_blobs(bucket_name):
+            if blob.name.endswith(".zip"):
+                blob.download_to_filename("/tmp/temp.zip")
+                with zipfile.ZipFile("/tmp/temp.zip", 'r') as zip_ref:
+                    zip_ref.extractall("/tmp/")
+                for file in os.listdir("/tmp/"):
+                    if file.endswith(".csv"):
+                        blob = bucket.blob(f'{bucket_name}/{file}')
+                        blob.upload_from_filename(f"/tmp/{file}")
+                        logging.info(f'Uploaded {file} to {bucket_name}/{file}')
+                        os.remove(f"/tmp/{file}")
+                os.remove("/tmp/temp.zip")
+                
+        #rename in bucket Sodra file
+        for blob in storage.Client().list_blobs(bucket_name):
+            if 'monthly' in blob.name and blob.name.endswith(".csv"):
+                new_name = file_configuration["file_name"]
+                new_blob = bucket.rename_blob(blob, f'{bucket_name}/{new_name}')
+                logging.info(f'File {blob.name} has been renamed to {new_blob.name}')
 
 class UploadToBigQuery(beam.DoFn):
     def __init__(self, config: UploadConfig = None):
@@ -191,9 +217,6 @@ class UploadToBigQuery(beam.DoFn):
             data_frame = uploader.read_file_from_gcs()
             uploader.upload_file_to_bigquery(data_frame)
     
-
-# DownloadSave().process(None)
-# UploadToBigQuery().process(None)
 
 def run():
     pipeline_options = PipelineOptions()

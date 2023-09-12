@@ -31,7 +31,7 @@ file_configurations = [
         "file_name": "employees_salaries_raw.csv",
         "table_name": "employees_salaries_raw",
         "delimiter": ";",
-        "url": f"https://atvira.sodra.lt/imones/downloads/{current_year}/monthly-{current_year}.csv.zip",
+        "url": "https://atvira.sodra.lt/imones/downloads/2023/monthly-2023.csv.zip",        
         "table_schema": [
             {"name": 'kodas', "data_type": 'STRING'},
             {"name": 'pavadinimas', "data_type": 'STRING'},
