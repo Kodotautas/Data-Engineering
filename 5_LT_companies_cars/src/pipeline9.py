@@ -117,6 +117,7 @@ class DownloadSave(beam.DoFn):
                 new_blob = bucket.rename_blob(blob, f'{bucket_name}/{new_name}')
                 logging.info(f'File {blob.name} has been renamed to {new_blob.name}')
 
+        
 class UploadToBigQuery(beam.DoFn):
     def __init__(self):
         self.transform_functions = {
@@ -125,13 +126,13 @@ class UploadToBigQuery(beam.DoFn):
         }
         self.file_configurations = file_configurations
 
-    def read_file_from_gcs(self):
-        bucket = self.storage_client.bucket(self.config.bucket_name)
-        blob = bucket.blob(f'{self.config.folder_name}/{self.config.file_name}')
+    def read_file_from_gcs(self, config):
+        bucket = storage.Client().bucket(config.bucket_name)
+        blob = bucket.blob(f'{config.folder_name}/{config.file_name}')
         file_bytes = blob.download_as_bytes()
-        data_frame = pd.read_csv(io.BytesIO(file_bytes), sep=self.config.delimiter)
-        logging.info(f'Read {self.config.file_name} from GCS')
-        return self.transform_functions[self.config.file_name](data_frame)
+        data_frame = pd.read_csv(io.BytesIO(file_bytes), sep=config.delimiter)
+        logging.info(f'Read {config.file_name} from GCS')
+        return self.transform_functions[config.file_name](data_frame)
     
     def get_delimiter(self):
         for file_configuration in file_configurations:
@@ -193,24 +194,28 @@ class UploadToBigQuery(beam.DoFn):
         logging.info(f'Got table schema for {self.config.file_name}')
         return table_schema
 
-    def upload_file_to_bigquery(self, data_frame: pd.DataFrame):
+    def upload_file_to_bigquery(self, config, data_frame, bigquery_client):
         """Upload data to a BigQuery table."""
-        dataset = self.bigquery_client.dataset(self.config.dataset_name)
-        table = dataset.table(self.config.table_name)
-        job_config = self.get_job_config()
-        job = self.bigquery_client.load_table_from_dataframe(data_frame, table, job_config=job_config)
+        dataset = bigquery_client.dataset(config.dataset_name)
+        table = dataset.table(config.table_name)
+        job_config = self.get_job_config(config)
+        job = bigquery_client.load_table_from_dataframe(data_frame, table, job_config=job_config)
         job.result()
-        logging.info(f'Uploaded {self.config.file_name} to {self.config.dataset_name}.{self.config.table_name}')
+        logging.info(f'Uploaded {config.file_name} to {config.dataset_name}.{config.table_name}')
 
     def process(self, element):
+        logging.info('Boooooom')
+        print('Boooooom')
         # Iterate over the file configurations.
         for file_configuration in self.file_configurations:
             # Get the file configuration.
-            self.config = UploadConfig(**file_configuration)
+            config = UploadConfig(**file_configuration)
+            # Create the BigQuery client object here.
+            bigquery_client = bigquery.Client()
             # Read the file from GCS.
-            data_frame = self.read_file_from_gcs()
+            data_frame = self.read_file_from_gcs(config)
             # Upload the file to BigQuery.
-            self.upload_file_to_bigquery(data_frame)
+            self.upload_file_to_bigquery(config, data_frame, bigquery_client)
 
 def run():
     pipeline_options = PipelineOptions()
