@@ -119,10 +119,10 @@ class DownloadSave(beam.DoFn):
 
 class UploadToBigQuery(beam.DoFn):
     def __init__(self):
-        # self.transform_functions = {
-        #     "companies_cars.csv": self.transform_data_companies,
-        #     "employees.csv": self.transform_data_employees
-        # }
+        self.transform_functions = {
+            "Atviri_JTP_parko_duomenys.csv": self.transform_data_companies,
+            "employees_salaries_raw.csv": self.transform_data_employees
+        }
         self.file_configurations = file_configurations
 
     def read_file_from_gcs(self):
@@ -133,21 +133,88 @@ class UploadToBigQuery(beam.DoFn):
         logging.info(f'Read {self.config.file_name} from GCS')
         return self.transform_functions[self.config.file_name](data_frame)
     
+    def get_delimiter(self):
+        for file_configuration in file_configurations:
+            if file_configuration["file_name"] == self.config.file_name:
+                logging.info(f'Got delimiter for {self.config.file_name}')
+                return file_configuration["delimiter"]
+        logging.error(f"Could not find delimiter for {self.config.file_name}")
+        return None
+    
+    def transform_data_companies(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Transforms the DataFrame by selecting columns and dropping missing values."""
+        columns_to_keep = ['MARKE', 'KOMERCINIS_PAV', 'KATEGORIJA_KLASE', 'NUOSAVA_MASE', 'GALIA', 'GALIA_ELEKTR', 'DEGALAI', 'CO2_KIEKIS', 'CO2_KIEKIS__WLTP', 'TERSALU_LYGIS', 'GALIOS_MASES_SANT', 'PIRM_REG_DATA', 'PIRM_REG_DATA_LT', 'KODAS', 'PAVADINIMAS', 'SAVIVALDYBE', 'APSKRITIS']
+        data_frame = data_frame[columns_to_keep]
+        data_frame = data_frame.dropna(subset=['KOMERCINIS_PAV'])
+        # make column KODAS as first column
+        data_frame = data_frame[['KODAS'] + [col for col in data_frame.columns if col != 'KODAS']]
+        logging.info(f'Transformed {self.config.file_name}')
+        return data_frame
+    
+    def transform_data_employees(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Transforms the DataFrame by selecting columns and dropping missing values."""
+        columns_to_keep = ['Juridinių asmenų registro kodas (jarCode)', 'Pavadinimas (name)', 'Savivaldybė, kurioje registruota(municipality)', 'Ekonominės veiklos rūšies kodas(ecoActCode)', 'Ekonominės veiklos rūšies pavadinimas(ecoActName)', 'Mėnuo (month)', 'Vidutinis darbo užmokestis (avgWage)', 'Apdraustųjų skaičius (numInsured)']
+        # Make a copy of the DataFrame
+        data_frame = data_frame[columns_to_keep].copy()
+        # convert month 202301 (int64) to 2023-01-01 (date)
+        data_frame['Mėnuo (month)'] = pd.to_datetime(data_frame['Mėnuo (month)'], format='%Y%m')
+        data_frame['periodas'] = data_frame['Mėnuo (month)'].dt.date
+        # drop month column
+        data_frame = data_frame.drop(columns=['Mėnuo (month)'])
+        # rename columns without lithuanian alphabet
+        data_frame = data_frame.rename(columns={
+            "Juridinių asmenų registro kodas (jarCode)": "kodas",
+            "Pavadinimas (name)": "pavadinimas",
+            "Savivaldybė, kurioje registruota(municipality)": "savivaldybe",
+            "Ekonominės veiklos rūšies kodas(ecoActCode)": "veiklos_kodas",
+            "Ekonominės veiklos rūšies pavadinimas(ecoActName)": "veiklos_pavadinimas",
+            "Vidutinis darbo užmokestis (avgWage)": "vidutinis_darbo_uzmokestis",
+            "Apdraustųjų skaičius (numInsured)": "apdraustuju_skaicius"
+        })
+        logging.info(f'Transformed {self.config.file_name}')
+        return data_frame
+
+    def get_job_config(self) -> bigquery.LoadJobConfig:
+        """Returns a LoadJobConfig for BigQuery table loading."""
+        job_config = bigquery.LoadJobConfig()
+        job_config.source_format = bigquery.SourceFormat.CSV
+        job_config.skip_leading_rows = 1
+        job_config.autodetect = True
+        job_config.schema = self.get_table_schema()
+        job_config.write_disposition = bigquery.WriteDisposition().WRITE_TRUNCATE
+        logging.info(f'Got job config for {self.config.file_name}')
+        return job_config
+
+    def get_table_schema(self) -> List[bigquery.SchemaField]:
+        """Returns a list of BigQuery table schema fields."""
+        table_schema = []
+        for field in self.config.table_schema:
+            table_schema.append(bigquery.SchemaField(field.name, field.data_type))
+        logging.info(f'Got table schema for {self.config.file_name}')
+        return table_schema
+
+    def upload_file_to_bigquery(self, data_frame: pd.DataFrame):
+        """Upload data to a BigQuery table."""
+        dataset = self.bigquery_client.dataset(self.config.dataset_name)
+        table = dataset.table(self.config.table_name)
+        job_config = self.get_job_config()
+        job = self.bigquery_client.load_table_from_dataframe(data_frame, table, job_config=job_config)
+        job.result()
+        logging.info(f'Uploaded {self.config.file_name} to {self.config.dataset_name}.{self.config.table_name}')
+
     def process(self, element):
-        # Initialize the clients.
-        self.storage_client = storage.Client()
-        self.bigquery_client = bigquery.Client()
         # Iterate over the file configurations.
         for file_configuration in self.file_configurations:
             # Get the file configuration.
             self.config = UploadConfig(**file_configuration)
             # Read the file from GCS.
             data_frame = self.read_file_from_gcs()
-            logging.info(f'File {data_frame} has been read from GCS')
+            # Upload the file to BigQuery.
+            self.upload_file_to_bigquery(data_frame)
 
 def run():
     pipeline_options = PipelineOptions()
-    pipeline_options.view_as(StandardOptions).runner = "DataflowRunner"
+    pipeline_options.view_as(StandardOptions).runner = "DirectRunner"
     pipeline_options.view_as(GoogleCloudOptions).project = "vl-data-learn"
     pipeline_options.view_as(GoogleCloudOptions).region = "europe-west1"
     pipeline_options.view_as(GoogleCloudOptions).staging_location = staging_location
