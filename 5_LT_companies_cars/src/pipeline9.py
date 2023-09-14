@@ -25,9 +25,7 @@ class TableSchema(BaseModel):
 
 class UploadConfig(BaseModel):
     bucket_name: str
-    folder_name: str
     file_name: str
-    dataset_name: str
     table_name: str
     table_schema: List[TableSchema]
 
@@ -37,6 +35,7 @@ class DownloadSave(beam.DoFn):
         self.file_configurations = file_configurations
 
     def download_file(self, url):
+        """Download a file from the web and save it to GCS."""
         # Check if 'sodra' is present in the URL
         if 'sodra' in url:
             logging.info(f'Skipping download for URL containing "sodra": {url}')
@@ -67,6 +66,7 @@ class DownloadSave(beam.DoFn):
                 return None
     
     def extract_zip_contents(self, zip_file):
+        """Extract the contents of a zip file."""
         try:
             extracted_files = {}
             with open(zip_file, "rb") as zip_file_obj:
@@ -120,21 +120,23 @@ class DownloadSave(beam.DoFn):
         
 class UploadToBigQuery(beam.DoFn):
     def __init__(self):
+        self.file_configurations = file_configurations
         self.transform_functions = {
             "Atviri_JTP_parko_duomenys.csv": self.transform_data_companies,
             "employees_salaries_raw.csv": self.transform_data_employees
         }
-        self.file_configurations = file_configurations
 
     def read_file_from_gcs(self, config):
+        """Reads a file from GCS and returns a DataFrame."""
         bucket = storage.Client().bucket(config.bucket_name)
-        blob = bucket.blob(f'{config.folder_name}/{config.file_name}')
+        blob = bucket.blob(f'{config.bucket_name}/{config.file_name}')
         file_bytes = blob.download_as_bytes()
-        data_frame = pd.read_csv(io.BytesIO(file_bytes), sep=config.delimiter)
+        data_frame = pd.read_csv(io.BytesIO(file_bytes), sep=self.get_delimiter())
         logging.info(f'Read {config.file_name} from GCS')
         return self.transform_functions[config.file_name](data_frame)
     
     def get_delimiter(self):
+        """Returns a delimiter for a file."""
         for file_configuration in file_configurations:
             if file_configuration["file_name"] == self.config.file_name:
                 logging.info(f'Got delimiter for {self.config.file_name}')
@@ -196,42 +198,48 @@ class UploadToBigQuery(beam.DoFn):
 
     def upload_file_to_bigquery(self, config, data_frame, bigquery_client):
         """Upload data to a BigQuery table."""
-        dataset = bigquery_client.dataset(config.dataset_name)
-        table = dataset.table(config.table_name)
-        job_config = self.get_job_config(config)
+        table = f'{bucket_name}.{config.table_name}'
+        job_config = self.get_job_config()
         job = bigquery_client.load_table_from_dataframe(data_frame, table, job_config=job_config)
         job.result()
-        logging.info(f'Uploaded {config.file_name} to {config.dataset_name}.{config.table_name}')
+        logging.info(f'Uploaded {config.file_name} to {bucket_name}.{config.table_name}')
 
     def process(self, element):
-        logging.info('Boooooom')
-        print('Boooooom')
-        # Iterate over the file configurations.
         for file_configuration in self.file_configurations:
-            # Get the file configuration.
-            config = UploadConfig(**file_configuration)
-            # Create the BigQuery client object here.
-            bigquery_client = bigquery.Client()
-            # Read the file from GCS.
+            config = UploadConfig(
+                bucket_name=bucket_name,
+                file_name=file_configuration["file_name"],
+                table_name=file_configuration["table_name"],
+                table_schema=file_configuration["table_schema"]
+            )
+            self.config = config
             data_frame = self.read_file_from_gcs(config)
-            # Upload the file to BigQuery.
+            bigquery_client = bigquery.Client()
             self.upload_file_to_bigquery(config, data_frame, bigquery_client)
 
 def run():
     pipeline_options = PipelineOptions()
-    pipeline_options.view_as(StandardOptions).runner = "DirectRunner"
+    pipeline_options.view_as(StandardOptions).runner = "DataflowRunner"
     pipeline_options.view_as(GoogleCloudOptions).project = "vl-data-learn"
     pipeline_options.view_as(GoogleCloudOptions).region = "europe-west1"
     pipeline_options.view_as(GoogleCloudOptions).staging_location = staging_location
     pipeline_options.view_as(GoogleCloudOptions).temp_location = temp_location
 
-    with beam.Pipeline(options=pipeline_options) as pipeline:
-        (
-            pipeline
-            | "Create" >> beam.Create([None])
-            | "Download and save" >> beam.ParDo(DownloadSave())
-            | "Upload to BigQuery" >> beam.ParDo(UploadToBigQuery())
+    # Create the Pipeline with the specified options.
+    with beam.Pipeline(options=pipeline_options) as p:
+        # Download and save files from the web to GCS.
+        download_save = (
+            p
+            | 'Create' >> beam.Create([None])
+            | 'Download and save' >> beam.ParDo(DownloadSave())
         )
+        # Upload files from GCS to BigQuery.
+        upload_to_bigquery = (
+            p
+            | 'Create again' >> beam.Create([None])
+            | 'Upload to BigQuery' >> beam.ParDo(UploadToBigQuery())
+        )
+
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
