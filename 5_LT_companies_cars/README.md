@@ -19,7 +19,6 @@
 
 - to do:
 
-- create pipeline with Dataflow (monthly schedule)
 - what dashboard should vizualize?
 -- All data (almost raw)
 -- TOP 100 companies who owns mosts powerful cars and which cars it has
