@@ -19,8 +19,12 @@
 
 - to do:
 
-- create pipeline with Dataflow
+- create pipeline with Dataflow (monthly schedule)
+- what dashboard should vizualize?
+-- All data (almost raw)
+-- TOP 100 companies who owns mosts powerful cars and which cars it has
+-- TOP 100 cleanest companies where are only hybrids / electric cars
+-- is there relationship between luxury (powerful) cars and salary (compare who owns luxury cars and who not, what average salary it pays)
+
+- need to create scheduled queries
 - create looker studio dashboard
-- need to create dbt model or schedule bigquery table, how? scheduled queries
-- is there relationship between luxury cars and salary
- - other analysis insights
