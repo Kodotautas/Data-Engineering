@@ -10,3 +10,5 @@ There is data engineering projects / learnings completed on free time.
 3.1 - Data engineering with GCP (PostgreSQL, Spark, Data Catalog)
 
 4 - Lithuania statistics pipeline. Project to get data from Statistics Lithuania and store it in GCP Storage.
+
+5 - Dashboard about Lithuania companies which own luxury cars, build using GCP (Dataflow, Storage, Bigquery, Looker)
