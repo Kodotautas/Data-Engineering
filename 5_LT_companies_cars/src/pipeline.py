@@ -221,7 +221,7 @@ class UploadToBigQuery(beam.DoFn):
 
 def run():
     pipeline_options = PipelineOptions()
-    pipeline_options.view_as(StandardOptions).runner = "DataflowRunner"
+    pipeline_options.view_as(StandardOptions).runner = "DirectRunner"
     pipeline_options.view_as(GoogleCloudOptions).project = "vl-data-learn"
     pipeline_options.view_as(GoogleCloudOptions).region = "europe-west1"
     pipeline_options.view_as(GoogleCloudOptions).staging_location = staging_location
@@ -235,11 +235,11 @@ def run():
             | 'Download and save' >> beam.ParDo(DownloadSave())
         )
         # Upload files from GCS to BigQuery.
-        # upload_to_bigquery = (
-        #     p
-        #     | 'Create again' >> beam.Create([None])
-        #     | 'Upload to BigQuery' >> beam.ParDo(UploadToBigQuery())
-        # )
+        upload_to_bigquery = (
+            p
+            | 'Create again' >> beam.Create([None])
+            | 'Upload to BigQuery' >> beam.ParDo(UploadToBigQuery())
+        )
 
 
 if __name__ == "__main__":

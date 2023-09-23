@@ -19,3 +19,5 @@
 
 ### Dashboard link:
 https://lookerstudio.google.com/s/uMGgaIay7bA
+
+-- check where it stucks with DirectRunner
