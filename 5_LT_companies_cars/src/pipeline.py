@@ -113,6 +113,7 @@ class UploadToBigQuery(beam.DoFn):
         self.file_configurations = file_configurations
         self.transform_functions = {
             "Atviri_JTP_parko_duomenys.csv": self.transform_data_companies,
+            "Atviri_TP_parko_duomenys.csv": self.transform_data_individuals,
             "employees_salaries_raw.csv": self.transform_data_employees
         }
 
@@ -141,6 +142,17 @@ class UploadToBigQuery(beam.DoFn):
         data_frame = data_frame.dropna(subset=['KOMERCINIS_PAV'])
         # make column KODAS as first column
         data_frame = data_frame[['KODAS'] + [col for col in data_frame.columns if col != 'KODAS']]
+        logging.info(f'Transformed {self.config.file_name}')
+        return data_frame
+    
+    def transform_data_individuals(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Transforms the DataFrame by selecting columns and dropping missing values."""
+        columns_to_keep = ['MARKE', 'KOMERCINIS_PAV', 'KATEGORIJA_KLASE', 'NUOSAVA_MASE', 'DARBINIS_TURIS', 'GALIA', 'GALIA_ELEKTR', 'DEGALAI', 'CO2_KIEKIS', 'CO2_KIEKIS__WLTP', 'RIDA', 'PIRM_REG_DATA', 'PIRM_REG_DATA_LT', 'VALD_TIPAS', 'SAVIVALDYBE', 'APSKRITIS']
+        data_frame = data_frame[columns_to_keep]
+        data_frame = data_frame.dropna(subset=['KOMERCINIS_PAV'])
+        # Remove rows with MARKE = Nuasmeninta and KATEGORIJA_KLASE = M1
+        data_frame = data_frame[data_frame.MARKE != 'Nuasmeninta']
+        data_frame = data_frame[data_frame.KATEGORIJA_KLASE == 'M1']
         logging.info(f'Transformed {self.config.file_name}')
         return data_frame
     
@@ -223,11 +235,11 @@ def run():
             | 'Download and save' >> beam.ParDo(DownloadSave())
         )
         # Upload files from GCS to BigQuery.
-        upload_to_bigquery = (
-            p
-            | 'Create again' >> beam.Create([None])
-            | 'Upload to BigQuery' >> beam.ParDo(UploadToBigQuery())
-        )
+        # upload_to_bigquery = (
+        #     p
+        #     | 'Create again' >> beam.Create([None])
+        #     | 'Upload to BigQuery' >> beam.ParDo(UploadToBigQuery())
+        # )
 
 
 if __name__ == "__main__":
