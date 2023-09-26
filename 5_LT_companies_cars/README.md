@@ -17,7 +17,9 @@
 ### Architecture:
 <img src="./diagram/lt_cars_dashboard.jpeg" alt="Data Pipeline Diagram" width="300">
 
-### Dashboard link:
-https://lookerstudio.google.com/s/uMGgaIay7bA
+##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
--- check where it stucks with DirectRunner
+- test dataflow process
+- save new pipeline with dataflow to run it month.10 day
+- add individuals cars data, question: what dashboard?
+- implement model via dataform?

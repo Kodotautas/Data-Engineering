@@ -147,7 +147,7 @@ class UploadToBigQuery(beam.DoFn):
     
     def transform_data_individuals(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         """Transforms the DataFrame by selecting columns and dropping missing values."""
-        columns_to_keep = ['MARKE', 'KOMERCINIS_PAV', 'KATEGORIJA_KLASE', 'NUOSAVA_MASE', 'DARBINIS_TURIS', 'GALIA', 'GALIA_ELEKTR', 'DEGALAI', 'CO2_KIEKIS', 'CO2_KIEKIS__WLTP', 'RIDA', 'PIRM_REG_DATA', 'PIRM_REG_DATA_LT', 'VALD_TIPAS', 'SAVIVALDYBE', 'APSKRITIS']
+        columns_to_keep = ['MARKE', 'KOMERCINIS_PAV', 'KATEGORIJA_KLASE', 'NUOSAVA_MASE', 'DARBINIS_TURIS', 'GALIA', 'GALIA_ELEKTR', 'DEGALAI', 'CO2_KIEKIS', 'CO2_KIEKIS_WLTP', 'RIDA', 'PIRM_REG_DATA', 'PIRM_REG_DATA_LT', 'VALD_TIPAS', 'SAVIVALDYBE', 'APSKRITIS']
         data_frame = data_frame[columns_to_keep]
         data_frame = data_frame.dropna(subset=['KOMERCINIS_PAV'])
         # Remove rows with MARKE = Nuasmeninta and KATEGORIJA_KLASE = M1
