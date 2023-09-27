@@ -1,6 +1,3 @@
-from datetime import date
-current_year = date.today().year
-
 file_configurations = [
     {
         "file_name": "Atviri_JTP_parko_duomenys.csv",

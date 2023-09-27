@@ -19,7 +19,8 @@
 
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
-- test dataflow process
+- choose vm for smooth operation: --worker_machine_type=n1-highmem-8
+
 - save new pipeline with dataflow to run it month.10 day
 - add individuals cars data, question: what dashboard?
 - implement model via dataform?
