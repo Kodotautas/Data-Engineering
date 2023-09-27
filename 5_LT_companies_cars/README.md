@@ -9,18 +9,18 @@
 
 ### Dataflow:
 #### Create template:
-`python3 main.py --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --staging_location gs://vl-data-learn/dataflow/staging --temp_location  gs://lithuania_statistics/temp/ --template_location gs://lithuania_statistics/templates/lt-cars-dashboard-template`
+`python3 main.py --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --staging_location gs://vl-data-learn/dataflow/staging --worker_machine_type=e2-standard-2 --temp_location  gs://lithuania_statistics/temp/ --template_location gs://lithuania_statistics/templates/lt-cars-dashboard-template-2`
 
 ### Run:
-`python3 main.py --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --staging_location gs://vl-data-learn/dataflow/staging --temp_location  gs://lithuania_statistics/temp/`
+`python3 main.py --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --staging_location gs://vl-data-learn/dataflow/staging --temp_location  gs://lithuania_statistics/temp/ --worker_machine_type=e2-standard-2`
 
 ### Architecture:
 <img src="./diagram/lt_cars_dashboard.jpeg" alt="Data Pipeline Diagram" width="300">
 
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
-- choose vm for smooth operation: --worker_machine_type=n1-highmem-8
 
-- save new pipeline with dataflow to run it month.10 day
 - add individuals cars data, question: what dashboard?
+should be interesting to see
+
 - implement model via dataform?
