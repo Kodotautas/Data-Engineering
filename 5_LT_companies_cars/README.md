@@ -20,7 +20,14 @@
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
 
+- setup Dataform and transfer all models there
 - add individuals cars data, question: what dashboard?
-should be interesting to see
+should be interesting to see:
+total cars
+average car age in every municipality
+average power in every city
+average engine capacity
 
-- implement model via dataform?
+
+- create v2 dashboard
+- inform about technical & fundamental changes
