@@ -19,8 +19,9 @@
 
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
-
+- Top cars models
 - what add more to dashboard?
+- cars info by municipality
 
 - create v2 dashboard
 - inform about technical & fundamental changes
