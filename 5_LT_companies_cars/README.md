@@ -21,7 +21,7 @@
 
 - Top cars models
 - what add more to dashboard?
-- cars info by municipality
+- add individuals electric cars by year-month, accumulated sum
 
 - create v2 dashboard
 - inform about technical & fundamental changes
