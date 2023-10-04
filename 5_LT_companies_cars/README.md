@@ -21,7 +21,7 @@
 
 - Top cars models
 - what add more to dashboard?
-- add individuals electric cars by year-month, accumulated sum
+- each month most powerfull and oldest cars
 
 - create v2 dashboard
 - inform about technical & fundamental changes
