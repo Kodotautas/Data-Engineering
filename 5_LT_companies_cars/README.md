@@ -21,7 +21,7 @@
 
 - Top cars models
 - what add more to dashboard?
-- each month most powerfull and oldest cars
+- chart with relationship between year & distance (do sellers do mileage tricks)
 
 - create v2 dashboard
 - inform about technical & fundamental changes
