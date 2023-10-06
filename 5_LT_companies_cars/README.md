@@ -19,10 +19,8 @@
 
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
-- Top cars models
 - what add more to dashboard?
 - buy me coffe account and link
 
 
-- create v2 dashboard
 - inform about technical & fundamental changes
