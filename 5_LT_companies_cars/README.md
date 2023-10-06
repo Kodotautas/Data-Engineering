@@ -21,8 +21,8 @@
 
 - Top cars models
 - what add more to dashboard?
-- chart with relationship between year & distance (do sellers do mileage tricks)
-- cars avegrage distance every years
+- buy me coffe account and link
+
 
 - create v2 dashboard
 - inform about technical & fundamental changes
