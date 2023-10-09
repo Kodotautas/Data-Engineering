@@ -20,7 +20,6 @@
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
 - what add more to dashboard?
-- buy me coffe account and link
-
+- add buymecoffee link to stage dashboard
 
 - inform about technical & fundamental changes
