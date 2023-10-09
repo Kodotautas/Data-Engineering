@@ -20,6 +20,6 @@
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
 - what add more to dashboard?
-- add pages description in Info page
+- need more ideas because release is after two weeks
 
 - inform about technical & fundamental changes
