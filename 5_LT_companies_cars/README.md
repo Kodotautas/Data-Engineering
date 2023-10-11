@@ -21,7 +21,7 @@
 
 - what add more to dashboard?
 
-- add motorcycles data
+- add motorcycles data for companies
 - add monhtly registered electric cars (compared to non-electric (% distribution))
 - lithuania section (bonus to companies, individuals), where able to see monthly registrations by fuel type etc.
 - connect JADIS(?) to get sales revenue
