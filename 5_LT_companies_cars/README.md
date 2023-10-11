@@ -20,6 +20,11 @@
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
 - what add more to dashboard?
-- need more ideas because release is after two weeks
 
-- inform about technical & fundamental changes
+- add motorcycles data
+- add monhtly registered electric cars (compared to non-electric (% distribution))
+- lithuania section (bonus to companies, individuals), where able to see monthly registrations by fuel type etc.
+- connect JADIS(?) to get sales revenue
+
+
+- inform about technical & fundamental changes in last Friday of the month 
