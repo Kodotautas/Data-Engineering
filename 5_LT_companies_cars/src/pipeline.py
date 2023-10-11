@@ -150,8 +150,8 @@ class UploadToBigQuery(beam.DoFn):
         columns_to_keep = ['MARKE', 'KOMERCINIS_PAV', 'KATEGORIJA_KLASE', 'NUOSAVA_MASE', 'DARBINIS_TURIS', 'GALIA', 'GALIA_ELEKTR', 'DEGALAI', 'CO2_KIEKIS', 'CO2_KIEKIS_WLTP', 'RIDA', 'PIRM_REG_DATA', 'PIRM_REG_DATA_LT', 'VALD_TIPAS', 'SAVIVALDYBE', 'APSKRITIS']
         data_frame = data_frame[columns_to_keep]
         data_frame = data_frame.dropna(subset=['KOMERCINIS_PAV'])
-        # Filter rows where KATEGORIJA_KLASE is 'M1' and VALD_TIPAS is 'Fizinis'
-        data_frame = data_frame[(data_frame['KATEGORIJA_KLASE'] == 'M1') & (data_frame['VALD_TIPAS'] == 'Fizinis')]
+        # Filter rows where VALD_TIPAS is 'Fizinis'
+        data_frame = data_frame[data_frame['VALD_TIPAS'] == 'Fizinis']
         logging.info(f'Transformed {self.config.file_name}')
         return data_frame
     
