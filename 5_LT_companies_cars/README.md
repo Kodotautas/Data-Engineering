@@ -20,11 +20,13 @@
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
 - what add more to dashboard?
-
-- add motorcycles data for companies
-- add monhtly registered electric cars (compared to non-electric (% distribution))
-- lithuania section (bonus to companies, individuals), where able to see monthly registrations by fuel type etc.
+- ??????
 - connect JADIS(?) to get sales revenue
+- where get electric cars / fuel type data because rigitra is bad
 
-
+- set powerful cars >= 300 kW (set before launching)
 - inform about technical & fundamental changes in last Friday of the month 
+
+- tractors list:
+https://data.gov.lt/dataset/lietuvos-zemes-ukio-subjektu-iregistruotu-ratiniu-traktoriu-skaicius-pagal-gamintoja
+- transport meters data
