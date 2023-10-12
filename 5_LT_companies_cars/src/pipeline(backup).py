@@ -218,62 +218,9 @@ class UploadToBigQuery(beam.DoFn):
             bigquery_client = bigquery.Client()
             self.upload_file_to_bigquery(config, data_frame, bigquery_client)
 
-class DownloadUploadTractors(beam.DoFn):
-    def __init__(self, *unused_args, **unused_kwargs):
-        super().__init__(*unused_args, **unused_kwargs)
-        self.current_year_month = dt.date.today().strftime("%Y-%m-01")
-
-    def generate_url(self):
-        """Generate a URL for a given year and month."""
-        return f'https://data.gov.lt/dataset/278/download/13577/Ratiniai_traktoriai%20{self.current_year_month}%2008.00.00.csv'
-
-    def download_and_upload(self, url):
-        """Download a file from the web and upload directly to BigQuery."""
-        header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
-        logging.info(f'Downloading {url}')
-        with requests.get(url, headers=header) as r:
-            logging.info(f'Downloaded {url}, size in MB: {round(len(r.content) / 1024 / 1024, 2)}')
-            try:
-                data_frame = pd.read_csv(io.BytesIO(r.content), sep=';')
-                # rename columns and select only needed columns
-                data_frame = data_frame.rename(columns={
-                    "Markė": "make",
-                    " Komercinis pavadinimas (modelis)": "model",
-                    " Galia kW": "power_kW",
-                    " Gamybos metai": "reg_date",
-                    " Pirmoji reg.data.LT": "reg_date_lt",
-                    " Rajonas": "municipality",
-                })
-                data_frame = data_frame[['make', 'model', 'power_kW', 'reg_date', 'reg_date_lt', 'municipality']]
-                
-                # upload to BigQuery
-                table = f'{bucket_name}.tractors'
-                job_config = bigquery.LoadJobConfig()
-                job_config.schema = [
-                    bigquery.SchemaField("make", "STRING"),
-                    bigquery.SchemaField("model", "STRING"),
-                    bigquery.SchemaField("power_kW", "FLOAT"),
-                    bigquery.SchemaField("reg_date", "DATE"),
-                    bigquery.SchemaField("reg_date_lt", "DATE"),
-                    bigquery.SchemaField("municipality", "STRING")
-                ]
-                job_config.source_format = bigquery.SourceFormat.CSV
-                job_config.autodetect = True
-                job_config.write_disposition = bigquery.WriteDisposition().WRITE_TRUNCATE
-                job = bigquery.Client().load_table_from_dataframe(data_frame, table, job_config=job_config)
-                job.result()
-                logging.info(f'Uploaded tractors to {table}')
-            except Exception as e:
-                logging.error(f"Error downloading and uploading tractors: {str(e)}")
-                return None
-            
-    def process(self, element):
-        url = self.generate_url()
-        self.download_and_upload(url)
-
 def run():
     pipeline_options = PipelineOptions()
-    pipeline_options.view_as(StandardOptions).runner = "DirectRunner"
+    pipeline_options.view_as(StandardOptions).runner = "DataflowRunner"
     pipeline_options.view_as(GoogleCloudOptions).project = "vl-data-learn"
     pipeline_options.view_as(GoogleCloudOptions).region = "europe-west1"
     pipeline_options.view_as(GoogleCloudOptions).staging_location = staging_location
@@ -292,13 +239,6 @@ def run():
             p
             | 'Create 2' >> beam.Create([None])
             | 'Upload to BigQuery' >> beam.ParDo(UploadToBigQuery())
-        )
-
-        # Download and upload Tractors data.
-        download_upload_tractors = (
-            p
-            | 'Create 3' >> beam.Create([None])
-            | 'Download and upload tractors' >> beam.ParDo(DownloadUploadTractors())
         )
 
 if __name__ == "__main__":

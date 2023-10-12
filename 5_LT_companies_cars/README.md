@@ -20,13 +20,13 @@
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
 - what add more to dashboard?
-- ??????
+- tractors pipeline, test, save, clean pipeline
+- individuals cars need to have m1 model and for bikes probably another
+- ships
 - connect JADIS(?) to get sales revenue
 - where get electric cars / fuel type data because rigitra is bad
 
 - set powerful cars >= 300 kW (set before launching)
 - inform about technical & fundamental changes in last Friday of the month 
 
-- tractors list:
-https://data.gov.lt/dataset/lietuvos-zemes-ukio-subjektu-iregistruotu-ratiniu-traktoriu-skaicius-pagal-gamintoja
 - transport meters data
