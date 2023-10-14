@@ -20,7 +20,7 @@
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
 - what add more to dashboard?
-- individuals cars need to have m1 model and for bikes probably another
+- tractor need special web scraper
 - investigate why looker filter out some tractors and other vehicles
 - update project architecture
 - ships

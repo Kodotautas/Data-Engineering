@@ -245,7 +245,8 @@ class DownloadUploadTractors(beam.DoFn):
                     " Rajonas": "municipality",
                 })
                 data_frame = data_frame[['make', 'model', 'power_kW', 'reg_date', 'reg_date_lt', 'municipality']]
-                
+                data_frame['year_month'] = self.current_year_month
+
                 # upload to BigQuery
                 table = f'{bucket_name}.tractors'
                 job_config = bigquery.LoadJobConfig()
@@ -255,11 +256,12 @@ class DownloadUploadTractors(beam.DoFn):
                     bigquery.SchemaField("power_kW", "FLOAT"),
                     bigquery.SchemaField("reg_date", "DATE"),
                     bigquery.SchemaField("reg_date_lt", "DATE"),
-                    bigquery.SchemaField("municipality", "STRING")
+                    bigquery.SchemaField("municipality", "STRING"),
+                    bigquery.SchemaField("year_month", "DATE")
                 ]
                 job_config.source_format = bigquery.SourceFormat.CSV
                 job_config.autodetect = True
-                job_config.write_disposition = bigquery.WriteDisposition().WRITE_TRUNCATE
+                job_config.write_disposition = bigquery.WriteDisposition().WRITE_APPEND
                 job = bigquery.Client().load_table_from_dataframe(data_frame, table, job_config=job_config)
                 job.result()
                 logging.info(f'Uploaded tractors to {table}')
