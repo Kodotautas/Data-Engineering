@@ -21,6 +21,7 @@
 
 - what add more to dashboard?
 - tractor need special web scraper to load later monthly files
+- update info page
 - investigate why looker filter out some tractors and other vehicles
 - update project architecture
 - ships
