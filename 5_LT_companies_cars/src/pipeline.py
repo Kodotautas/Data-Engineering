@@ -240,7 +240,7 @@ class DownloadUploadTractors(beam.DoFn):
         with requests.get(url, headers=header) as r:
             logging.info(f'Downloaded {url}, size in MB: {round(len(r.content) / 1024 / 1024, 2)}')
             try:
-                data_frame = pd.read_csv(io.BytesIO(r.content), sep=';', on_bad_lines='skip')
+                data_frame = pd.read_csv(io.BytesIO(r.content), sep=';', on_bad_lines='warn')
                 # rename columns and select only needed columns
                 data_frame = data_frame.rename(columns={
                     "Markė": "make",
