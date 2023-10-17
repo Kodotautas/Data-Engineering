@@ -1,13 +1,8 @@
-# script find all urls which contains .csv files with tractors data
-
 import requests
 from bs4 import BeautifulSoup
 import re
-import pandas as pd
-import os
-import time
-import random
-import sys
+
+tractor_url = 'https://data.gov.lt/datasets/278/'
 
 # function to get all urls with .csv files
 def get_urls(url):
@@ -22,6 +17,3 @@ def get_urls(url):
     for url in urls:
         urls_list.append('https://data.gov.lt' + url['href'])
     return urls_list
-
-urls = get_urls('https://data.gov.lt/dataset/lietuvos-zemes-ukio-subjektu-iregistruotu-ratiniu-traktoriu-skaicius-pagal-gamintoja')
-print(urls)
