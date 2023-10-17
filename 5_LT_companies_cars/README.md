@@ -20,7 +20,7 @@
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
 - what add more to dashboard?
-- tractor need special web scraper to load later monthly files
+- finish pipeline
 - update dataflow pipeline
 - update info page
 - investigate why looker filter out some tractors and other vehicles
