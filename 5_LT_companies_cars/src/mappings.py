@@ -63,5 +63,30 @@ file_configurations = [
             {"name": 'apdraustuju_skaicius', "data_type": 'FLOAT'},
             {"name": 'periodas', "data_type": 'DATE'}
         ]
+    },
+    {
+        "file_name": "VidausVandenuLaivas.csv",
+        "table_name": "ships_raw",
+        "delimiter": ",",
+        "url": "https://get.data.gov.lt/datasets/gov/ltsa/vidaus_vandenu_laivai/VidausVandenuLaivas/:format/csv",        
+        "table_schema": [
+            {"name": 'ship_call_sign', "data_type": 'STRING'},
+            {"name": 'own_le', "data_type": 'STRING'},
+            {"name": 'shipyard_location', "data_type": 'STRING'},
+            {"name": 'ship_constructed', "data_type": 'DATE'},
+            {"name": 'ship_freeboard', "data_type": 'FLOAT'},
+            {"name": 'ship_height', "data_type": 'FLOAT'},
+            {"name": 'ship_hull_material', "data_type": 'STRING'},
+            {"name": 'ship_length', "data_type": 'FLOAT'},
+            {"name": 'ship_max_drght', "data_type": 'FLOAT'},
+            {"name": 'ship_net_tg', "data_type": 'FLOAT'},
+            {"name": 'ship_max_psg', "data_type": 'STRING'},
+            {"name": 'ship_brand', "data_type": 'STRING'},
+            {"name": 'ship_type', "data_type": 'STRING'},
+            {"name": 'ship_use', "data_type": 'STRING'},
+            {"name": 'shipyard_title', "data_type": 'STRING'},
+            {"name": 'ship_id', "data_type": 'STRING'},
+            {"name": 'ship_width', "data_type": 'FLOAT'},
+        ]
     }
 ]

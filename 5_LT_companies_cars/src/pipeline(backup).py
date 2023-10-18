@@ -13,6 +13,7 @@ from pydantic import BaseModel
 from typing import List
 
 from src.mappings import file_configurations
+from src.helpers.tractors_urls import get_urls, tractor_url
 
 
 # Configuration
