@@ -20,11 +20,6 @@
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
 - what add more to dashboard?
-- finish pipeline
-- update dataflow pipeline
-- update info page
-- investigate why looker filter out some tractors and other vehicles
-- update project architecture
 - ships
 - connect JADIS(?) to get sales revenue
 - where get electric cars / fuel type data because rigitra is bad
