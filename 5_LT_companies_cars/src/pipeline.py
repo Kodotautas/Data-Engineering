@@ -116,7 +116,8 @@ class UploadToBigQuery(beam.DoFn):
         self.transform_functions = {
             "Atviri_JTP_parko_duomenys.csv": self.transform_data_companies,
             "Atviri_TP_parko_duomenys.csv": self.transform_data_individuals,
-            "employees_salaries_raw.csv": self.transform_data_employees
+            "employees_salaries_raw.csv": self.transform_data_employees,
+            "VidausVandenuLaivas.csv": self.transform_ships_data
         }
 
     def read_file_from_gcs(self, config):
@@ -180,6 +181,10 @@ class UploadToBigQuery(beam.DoFn):
         logging.info(f'Transformed {self.config.file_name}')
         return data_frame
 
+    def transform_ships_data(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        logging.info(f'Transformed {self.config.file_name}')
+        pass
+
     def get_job_config(self) -> bigquery.LoadJobConfig:
         """Returns a LoadJobConfig for BigQuery table loading."""
         job_config = bigquery.LoadJobConfig()
@@ -222,7 +227,7 @@ class UploadToBigQuery(beam.DoFn):
 
 def run():
     pipeline_options = PipelineOptions()
-    pipeline_options.view_as(StandardOptions).runner = "DataflowRunner"
+    pipeline_options.view_as(StandardOptions).runner = "DirectRunner"
     pipeline_options.view_as(GoogleCloudOptions).project = "vl-data-learn"
     pipeline_options.view_as(GoogleCloudOptions).region = "europe-west1"
     pipeline_options.view_as(GoogleCloudOptions).staging_location = staging_location
