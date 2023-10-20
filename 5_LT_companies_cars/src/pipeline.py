@@ -38,7 +38,7 @@ class DownloadSave(beam.DoFn):
         self.current_year = dt.date.today().year
         self.file_configurations = file_configurations
 
-    def download_file(self, url):
+    def download_file(self, url, file_name):
         """Download a file from the web and save it to GCS."""
         # Check if 'sodra' is present in the URL
         if 'sodra' in url:
@@ -46,7 +46,7 @@ class DownloadSave(beam.DoFn):
             return None
 
         header = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'}
-        local_filename = url.split('/')[-1].replace("-", "_")
+        local_filename = file_name.replace("-", "_")
         with requests.get(url, headers=header) as r:
             try:
                 with open(local_filename, 'wb') as f:
@@ -77,38 +77,37 @@ class DownloadSave(beam.DoFn):
         for file_configuration in self.file_configurations:
             # Get the file configuration.
             url = file_configuration["url"]
-            local_filename = self.download_file(url)
-            extracted_files = self.extract_zip_contents(local_filename)
-            for file_name, file_contents in extracted_files.items():
-                # Upload the file to GCS.
-                bucket = storage.Client().bucket(bucket_name)
-                blob = bucket.blob(f'{bucket_name}/{file_configuration["file_name"]}')
-                blob.upload_from_string(file_contents, content_type='text/csv')
-                logging.info(f'Uploaded {file_name} to {bucket_name}/{file_configuration["file_name"]}')
-                # Delete the local file.
-                os.remove(local_filename)
+            local_filename = self.download_file(url, file_configuration["file_name"])
+            if local_filename:
+                # extract if zip file
+                if url.endswith(".zip"):
+                    extracted_files = self.extract_zip_contents(local_filename)
+                    for file_name, file_contents in extracted_files.items():
+                        # Upload the file to GCS.
+                        bucket = storage.Client().bucket(bucket_name)
+                        blob = bucket.blob(f'{bucket_name}/{file_name}')
+                        blob.upload_from_string(file_contents, content_type='text/csv')
+                        logging.info(f'Uploaded {file_name} to {bucket_name}/{file_name}')
+                    # Delete the local file.
+                    os.remove(local_filename)
+                else:
+                    # Upload the file to GCS.
+                    bucket = storage.Client().bucket(bucket_name)
+                    blob = bucket.blob(f'{bucket_name}/{file_configuration["file_name"]}')
+                    blob.upload_from_filename(local_filename)
+                    logging.info(f'Uploaded {local_filename} to {bucket_name}/{file_configuration["file_name"]}')
+                    # Delete the local file.
+                    os.remove(local_filename)
 
-        #unzip all files in bucket endind with .zip
-        for blob in storage.Client().list_blobs(bucket_name):
-            if blob.name.endswith(".zip"):
-                blob.download_to_filename("/tmp/temp.zip")
-                with zipfile.ZipFile("/tmp/temp.zip", 'r') as zip_ref:
-                    zip_ref.extractall("/tmp/")
-                for file in os.listdir("/tmp/"):
-                    if file.endswith(".csv"):
-                        blob = bucket.blob(f'{bucket_name}/{file}')
-                        blob.upload_from_filename(f"/tmp/{file}")
-                        logging.info(f'Uploaded {file} to {bucket_name}/{file}')
-                        os.remove(f"/tmp/{file}")
-                os.remove("/tmp/temp.zip")
-                
-        #rename in bucket Sodra file
+        # Rename files in the bucket with 'monthly' in the name
         for blob in storage.Client().list_blobs(bucket_name):
             if 'monthly' in blob.name and blob.name.endswith(".csv"):
-                new_name = file_configuration["file_name"]
-                new_blob = bucket.rename_blob(blob, f'{bucket_name}/{new_name}')
-                logging.info(f'File {blob.name} has been renamed to {new_blob.name}')
-
+                matching_config = next((config for config in self.file_configurations if config["file_name"] == blob.name), None)
+                if matching_config:
+                    new_name = matching_config["file_name"]
+                    new_blob = bucket.rename_blob(blob, f'{bucket_name}/{new_name}')
+                    logging.info(f'File {blob.name} has been renamed to {new_blob.name}')
+        
         
 class UploadToBigQuery(beam.DoFn):
     def __init__(self):
@@ -125,7 +124,7 @@ class UploadToBigQuery(beam.DoFn):
         bucket = storage.Client().bucket(config.bucket_name)
         blob = bucket.blob(f'{config.bucket_name}/{config.file_name}')
         file_bytes = blob.download_as_bytes()
-        data_frame = pd.read_csv(io.BytesIO(file_bytes), sep=self.get_delimiter())
+        data_frame = pd.read_csv(io.BytesIO(file_bytes), sep=self.get_delimiter(), on_bad_lines='warn')
         logging.info(f'Read {config.file_name} from GCS')
         return self.transform_functions[config.file_name](data_frame)
     
@@ -183,7 +182,10 @@ class UploadToBigQuery(beam.DoFn):
 
     def transform_ships_data(self, data_frame: pd.DataFrame) -> pd.DataFrame:
         logging.info(f'Transformed {self.config.file_name}')
-        pass
+        columns_to_keep = ['ship_call_sign', 'own_le', 'shipyard_location', 'ship_constructed', 'ship_freeboard', 'ship_height',
+                           'ship_hull_material', 'ship_length', 'ship_max_drght', 'ship_net_tg', 'ship_max_psg', 'ship_brand',
+                            'ship_type', 'ship_use', 'shipyard_title', 'ship_id', 'ship_width']
+        return data_frame[columns_to_keep]
 
     def get_job_config(self) -> bigquery.LoadJobConfig:
         """Returns a LoadJobConfig for BigQuery table loading."""
@@ -241,11 +243,11 @@ def run():
             | 'Download and save' >> beam.ParDo(DownloadSave())
         )
         # Upload car files from GCS to BigQuery.
-        upload_to_bigquery = (
-            p
-            | 'Create 2' >> beam.Create([None])
-            | 'Upload to BigQuery' >> beam.ParDo(UploadToBigQuery())
-        )
+        # upload_to_bigquery = (
+        #     p
+        #     | 'Create 2' >> beam.Create([None])
+        #     | 'Upload to BigQuery' >> beam.ParDo(UploadToBigQuery())
+        # )
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
