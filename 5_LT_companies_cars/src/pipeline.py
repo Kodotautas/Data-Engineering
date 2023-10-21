@@ -181,10 +181,10 @@ class UploadToBigQuery(beam.DoFn):
         return data_frame
 
     def transform_ships_data(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        columns_to_keep = ['own_le', 'shipyard_location', 'ship_constructed']
+                            # 'ship_freeboard', 'ship_height', 'ship_hull_material', 'ship_length', 'ship_max_drght', 'ship_net_tg', 'ship_max_psg', 'ship_brand', 'shipyard_title', 'ship_id', 'ship_width']
+        data_frame = data_frame.dropna(subset=['ship_constructed'])
         logging.info(f'Transformed {self.config.file_name}')
-        columns_to_keep = ['ship_call_sign', 'own_le', 'shipyard_location', 'ship_constructed', 'ship_freeboard', 'ship_height',
-                           'ship_hull_material', 'ship_length', 'ship_max_drght', 'ship_net_tg', 'ship_max_psg', 'ship_brand',
-                            'ship_type', 'ship_use', 'shipyard_title', 'ship_id', 'ship_width']
         return data_frame[columns_to_keep]
 
     def get_job_config(self) -> bigquery.LoadJobConfig:
@@ -207,12 +207,18 @@ class UploadToBigQuery(beam.DoFn):
         return table_schema
 
     def upload_file_to_bigquery(self, config, data_frame, bigquery_client):
-        """Upload data to a BigQuery table."""
+        """Upload data to a BigQuery table with error tracking."""
         table = f'{bucket_name}.{config.table_name}'
         job_config = self.get_job_config()
-        job = bigquery_client.load_table_from_dataframe(data_frame, table, job_config=job_config)
-        job.result()
-        logging.info(f'Uploaded {config.file_name} to {bucket_name}.{config.table_name}')
+        try:
+            job = bigquery_client.load_table_from_dataframe(data_frame, table, job_config=job_config)
+            job.result() 
+            if job.errors:
+                for error in job.errors:
+                    logging.error(f"BigQuery Error: {error['message']} on row {error['rowNumber']}")
+            logging.info(f'Uploaded {config.file_name} to {bucket_name}.{config.table_name}')
+        except Exception as e:
+            logging.error(f"Error uploading {config.file_name} to BigQuery: {str(e)}")
 
     def process(self, element):
         for file_configuration in self.file_configurations:
@@ -237,17 +243,17 @@ def run():
 
     with beam.Pipeline(options=pipeline_options) as p:
         # Download and save cars files from the web to GCS.
-        download_save = (
-            p
-            | 'Create' >> beam.Create([None])
-            | 'Download and save' >> beam.ParDo(DownloadSave())
-        )
-        # Upload car files from GCS to BigQuery.
-        # upload_to_bigquery = (
+        # download_save = (
         #     p
-        #     | 'Create 2' >> beam.Create([None])
-        #     | 'Upload to BigQuery' >> beam.ParDo(UploadToBigQuery())
+        #     | 'Create' >> beam.Create([None])
+        #     | 'Download and save' >> beam.ParDo(DownloadSave())
         # )
+        # Upload car files from GCS to BigQuery.
+        upload_to_bigquery = (
+            p
+            | 'Create 2' >> beam.Create([None])
+            | 'Upload to BigQuery' >> beam.ParDo(UploadToBigQuery())
+        )
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
