@@ -73,7 +73,7 @@ file_configurations = [
             # {"name": 'ship_call_sign', "data_type": 'STRING'},
             {"name": 'own_le', "data_type": 'STRING'},
             {"name": 'shipyard_location', "data_type": 'STRING'},
-            {"name": 'ship_constructed', "data_type": 'INTERGER'},
+            {"name": 'ship_constructed', "data_type": 'NUMERIC'},
             # {"name": 'ship_freeboard', "data_type": 'FLOAT'},
             # {"name": 'ship_height', "data_type": 'FLOAT'},
             # {"name": 'ship_hull_material', "data_type": 'STRING'},
