@@ -181,12 +181,13 @@ class UploadToBigQuery(beam.DoFn):
         return data_frame
 
     def transform_ships_data(self, data_frame: pd.DataFrame) -> pd.DataFrame:
-        columns_to_keep = ['own_le', 'shipyard_location', 'ship_constructed']
-                            # 'ship_freeboard', 'ship_height', 'ship_hull_material', 'ship_length', 'ship_max_drght', 'ship_net_tg', 'ship_max_psg', 'ship_brand', 'shipyard_title', 'ship_id', 'ship_width']
+        columns_to_keep = ['own_le', 'shipyard_location', 'ship_constructed', 'ship_freeboard', 'ship_height', 'ship_hull_material', 'ship_length', 'ship_max_drght', 'ship_net_tg', 'ship_max_psg', 'ship_brand', 'ship_type', 'ship_use', 'shipyard_title', 'ship_id', 'ship_width']
+        # ships transformations to fit bigquery schema and data types
         data_frame = data_frame.dropna(subset=['ship_constructed'])
-        data_frame['ship_constructed'] = data_frame['ship_constructed'].astype(str).str[:-2]
-        # convert ship_constructed to yyyy-mm-dd
-        data_frame['ship_constructed'] = pd.to_datetime(data_frame['ship_constructed'], format='%Y')
+        data_frame['ship_constructed'] = data_frame['ship_constructed'].astype(str)
+        data_frame['ship_constructed'] = data_frame['ship_constructed'].apply(lambda x: x[:-2])
+        data_frame['ship_constructed'] = data_frame['ship_constructed'].apply(lambda x: x + '-01-01')
+        data_frame['ship_constructed'] = pd.to_datetime(data_frame['ship_constructed'], format='%Y-%m-%d')
         logging.info(f'Transformed {self.config.file_name}')
         return data_frame[columns_to_keep]
 
