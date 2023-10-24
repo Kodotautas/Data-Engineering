@@ -194,7 +194,7 @@ class UploadToBigQuery(beam.DoFn):
         return data_frame[columns_to_keep]
     
     def transform_marine_ships(self, data_frame: pd.DataFrame) -> pd.DataFrame:
-        columns_to_keep = ['own_le', 'ship_constructed', 'ship_dw', 'ship_gross_tg', 'ship_length', 'ship_max_drght', 'ship_name', 'ship_net_tg', 'ship_side_hght', 'ship_width', 'ship_type']
+        columns_to_keep = ['_id','own_le', 'ship_constructed', 'ship_dw', 'ship_gross_tg', 'ship_length', 'ship_max_drght', 'ship_name', 'ship_net_tg', 'ship_side_hght', 'ship_width', 'ship_type']
         logging.info(f'Transformed {self.config.file_name}')
         return data_frame[columns_to_keep]
 
@@ -254,11 +254,11 @@ def run():
 
     with beam.Pipeline(options=pipeline_options) as p:
         # Download and save cars files from the web to GCS.
-        # download_save = (
-        #     p
-        #     | 'Create' >> beam.Create([None])
-        #     | 'Download and save' >> beam.ParDo(DownloadSave())
-        # )
+        download_save = (
+            p
+            | 'Create' >> beam.Create([None])
+            | 'Download and save' >> beam.ParDo(DownloadSave())
+        )
         # Upload car files from GCS to BigQuery.
         upload_to_bigquery = (
             p

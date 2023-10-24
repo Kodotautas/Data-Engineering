@@ -94,6 +94,7 @@ file_configurations = [
         "delimiter": ",",
         "url": "https://get.data.gov.lt/datasets/gov/ltsa/juru_laivai/JuruLaivas/:format/csv",        
         "table_schema": [
+            {"_id": 'STRING'},
             {"name": 'own_le', "data_type": 'STRING'},
             {"name": 'ship_constructed', "data_type": 'TIMESTAMP'},
             {"name": 'ship_dw', "data_type": 'FLOAT'},
