@@ -18,14 +18,3 @@
 <img src="./diagram/lt_cars_dashboard.jpeg" alt="Data Pipeline Diagram" width="300">
 
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
-
-- what add more to dashboard?
-- update pipeline in dataflow
-- update architecture chart
-- connect JADIS(?) to get sales revenue
-- where get electric cars / fuel type data because rigitra is bad
-
-- set powerful cars >= 300 kW (set before launching)
-- inform about technical & fundamental changes in last Friday of the month 
-
-- transport meters data

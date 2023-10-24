@@ -246,7 +246,7 @@ class UploadToBigQuery(beam.DoFn):
 
 def run():
     pipeline_options = PipelineOptions()
-    pipeline_options.view_as(StandardOptions).runner = "DirectRunner"
+    pipeline_options.view_as(StandardOptions).runner = "DataflowRunner"
     pipeline_options.view_as(GoogleCloudOptions).project = "vl-data-learn"
     pipeline_options.view_as(GoogleCloudOptions).region = "europe-west1"
     pipeline_options.view_as(GoogleCloudOptions).staging_location = staging_location
