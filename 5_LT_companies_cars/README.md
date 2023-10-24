@@ -20,7 +20,7 @@
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
 
 - what add more to dashboard?
-- ships
+- ships add to dashboard
 - connect JADIS(?) to get sales revenue
 - where get electric cars / fuel type data because rigitra is bad
 
