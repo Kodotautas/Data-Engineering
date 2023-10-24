@@ -87,5 +87,24 @@ file_configurations = [
             {"name": 'ship_id', "data_type": 'STRING'},
             {"name": 'ship_width', "data_type": 'FLOAT'},
         ]
+    },
+        {
+        "file_name": "JuruLaivas.csv",
+        "table_name": "marine_vessels_raw",
+        "delimiter": ",",
+        "url": "https://get.data.gov.lt/datasets/gov/ltsa/juru_laivai/JuruLaivas/:format/csv",        
+        "table_schema": [
+            {"name": 'own_le', "data_type": 'STRING'},
+            {"name": 'ship_constructed', "data_type": 'TIMESTAMP'},
+            {"name": 'ship_dw', "data_type": 'FLOAT'},
+            {"name": 'ship_gross_tg', "data_type": 'FLOAT'},
+            {"name": 'ship_length', "data_type": 'FLOAT'},
+            {"name": 'ship_max_drght', "data_type": 'FLOAT'},
+            {"name": 'ship_name', "data_type": 'STRING'},
+            {"name": 'ship_net_tg', "data_type": 'FLOAT'},
+            {"name": 'ship_side_hght', "data_type": 'FLOAT'},
+            {"name": 'ship_width', "data_type": 'FLOAT'},
+            {"name": 'ship_type', "data_type": 'STRING'}
+        ]
     }
 ]

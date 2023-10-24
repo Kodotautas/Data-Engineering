@@ -116,7 +116,8 @@ class UploadToBigQuery(beam.DoFn):
             "Atviri_JTP_parko_duomenys.csv": self.transform_data_companies,
             "Atviri_TP_parko_duomenys.csv": self.transform_data_individuals,
             "employees_salaries_raw.csv": self.transform_data_employees,
-            "VidausVandenuLaivas.csv": self.transform_ships_data
+            "VidausVandenuLaivas.csv": self.transform_inland_ships,
+            "JuruLaivas.csv": self.transform_marine_ships
         }
 
     def read_file_from_gcs(self, config):
@@ -180,7 +181,8 @@ class UploadToBigQuery(beam.DoFn):
         logging.info(f'Transformed {self.config.file_name}')
         return data_frame
 
-    def transform_ships_data(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+    def transform_inland_ships(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        """Transforms the DataFrame by selecting columns, dropping missing values, fix data types."""
         columns_to_keep = ['own_le', 'shipyard_location', 'ship_constructed', 'ship_freeboard', 'ship_height', 'ship_hull_material', 'ship_length', 'ship_max_drght', 'ship_net_tg', 'ship_max_psg', 'ship_brand', 'ship_type', 'ship_use', 'shipyard_title', 'ship_id', 'ship_width']
         # ships transformations to fit bigquery schema and data types
         data_frame = data_frame.dropna(subset=['ship_constructed'])
@@ -188,6 +190,11 @@ class UploadToBigQuery(beam.DoFn):
         data_frame['ship_constructed'] = data_frame['ship_constructed'].apply(lambda x: x[:-2])
         data_frame['ship_constructed'] = data_frame['ship_constructed'].apply(lambda x: x + '-01-01')
         data_frame['ship_constructed'] = pd.to_datetime(data_frame['ship_constructed'], format='%Y-%m-%d')
+        logging.info(f'Transformed {self.config.file_name}')
+        return data_frame[columns_to_keep]
+    
+    def transform_marine_ships(self, data_frame: pd.DataFrame) -> pd.DataFrame:
+        columns_to_keep = ['own_le', 'ship_constructed', 'ship_dw', 'ship_gross_tg', 'ship_length', 'ship_max_drght', 'ship_name', 'ship_net_tg', 'ship_side_hght', 'ship_width', 'ship_type']
         logging.info(f'Transformed {self.config.file_name}')
         return data_frame[columns_to_keep]
 
