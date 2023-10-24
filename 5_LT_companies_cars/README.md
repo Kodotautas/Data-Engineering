@@ -21,6 +21,7 @@
 
 - what add more to dashboard?
 - update pipeline in dataflow
+- update architecture chart
 - connect JADIS(?) to get sales revenue
 - where get electric cars / fuel type data because rigitra is bad
 
