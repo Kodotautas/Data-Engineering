@@ -4,7 +4,7 @@
 - get information about companies cars from Regitra
 - get information about companies and it's names
 - store data in BigQuery
-- analyze companies and create dashboard with Looker
+- analyze companies and create dashboard with Looker Studio
 - set schedule to pipeline and dashboard
 
 ### Dataflow:
