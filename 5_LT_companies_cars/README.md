@@ -18,5 +18,3 @@
 <img src="./diagram/lt_cars_dashboard.jpeg" alt="Data Pipeline Diagram" width="300">
 
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)
-
-.
