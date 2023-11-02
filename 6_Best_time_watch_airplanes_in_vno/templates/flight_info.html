@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flight Information</title>
+</head>
+<body>
+    <h1>Flight Information</h1>
+    <button onclick="location.reload();">Refresh</button>
+    <ul>
+        {% for flight in flights %}
+            <li>Flight {{ flight['flight_number'] }} from {{ flight['origin'] }} to {{ flight['destination'] }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
