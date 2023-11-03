@@ -21,13 +21,5 @@ departures = airport_details['airport']['pluginData']['schedule']['departures'][
 arrivals_df = pd.json_normalize(arrivals)
 departures_df = pd.json_normalize(departures)
 
-# Add a common key for merging
-arrivals_df['key'] = 0
-departures_df['key'] = 0
-
-# Merge the DataFrames
-flights_df = pd.merge(arrivals_df, departures_df, on='key', suffixes=('_arrival', '_departure'))
-
-# Drop the key column
-flights_df.drop('key', axis=1, inplace=True)
-flights_df.to_csv('flights_data.csv', index=False)
+# Export the data to CSV file
+arrivals_df.to_csv('flights_data.csv', index=False)
