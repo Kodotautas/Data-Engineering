@@ -2,24 +2,35 @@ from FlightRadar24 import FlightRadar24API
 import pandas as pd
 import json
 
-fr_api = FlightRadar24API()
 
-airport_details = fr_api.get_airport_details("EYVI")
 
-# Access the data
-timestamp = airport_details['airport']['pluginData']['schedule']['arrivals']['timestamp']
-humidity = airport_details['airport']['pluginData']['weather']['humidity']
-sky_condition = airport_details['airport']['pluginData']['weather']['sky']['condition']
-wind_direction = airport_details['airport']['pluginData']['weather']['wind']['direction']
-wind_speed = airport_details['airport']['pluginData']['weather']['wind']['speed']['kmh']
-temperature = airport_details['airport']['pluginData']['weather']['temp']['celsius']
-
-arrivals = airport_details['airport']['pluginData']['schedule']['arrivals']['data']
-departures = airport_details['airport']['pluginData']['schedule']['departures']['data']
-
-# Create separate DataFrames for arrivals and departures
-arrivals_df = pd.json_normalize(arrivals)
-departures_df = pd.json_normalize(departures)
-
-# Export the data to CSV file
-arrivals_df.to_csv('flights_data.csv', index=False)
+class FlightData:
+    def __init__(self, airport_code):
+        self.fr_api = FlightRadar24API()
+        self.airport_details = self.fr_api.get_airport_details(airport_code)
+        self.timestamp = self.airport_details['airport']['pluginData']['schedule']['arrivals']['timestamp']
+        self.humidity = self.airport_details['airport']['pluginData']['weather']['humidity']
+        self.sky_condition = self.airport_details['airport']['pluginData']['weather']['sky']['condition']
+        self.wind_direction = self.airport_details['airport']['pluginData']['weather']['wind']['direction']
+        self.wind_speed = self.airport_details['airport']['pluginData']['weather']['wind']['speed']['kmh']
+        self.temperature = self.airport_details['airport']['pluginData']['weather']['temp']['celsius']
+        
+        self.arrivals = self.airport_details['airport']['pluginData']['schedule']['arrivals']['data']
+        self.departures = self.airport_details['airport']['pluginData']['schedule']['departures']['data']
+        
+    def get_arrivals(self):
+        arrivals_df = pd.json_normalize(self.arrivals)
+        arrivals_df['arrival_time'] = pd.to_datetime(arrivals_df['flight.time.scheduled.arrival'] + arrivals_df['flight.airport.destination.timezone.offset'], unit='s')
+        arrivals_df['arrival_estimated_time'] = pd.to_datetime(arrivals_df['flight.time.estimated.arrival'] + arrivals_df['flight.airport.destination.timezone.offset'], unit='s')
+        arrivals_df['arrival_final_time'] = arrivals_df['arrival_estimated_time'].fillna(arrivals_df['arrival_time'])
+        # columns to leave
+        columns_to_leave = ['flight.identification.number.default', 'flight.identification.callsign', 'flight.aircraft.model.text', 'flight.aircraft.country.name', 'flight.airline.short', 'flight.airport.origin.position.region.city', 'arrival_final_time']
+        arrivals_df = arrivals_df[columns_to_leave]
+        return arrivals_df
+    
+if __name__ == '__main__':
+    airport_code = 'EYVI'
+    fd = FlightData(airport_code)
+    arrivals_df = fd.get_arrivals()
+    arrivals_df.to_csv('flights_data.csv', index=False)
+    print(arrivals_df.head())
