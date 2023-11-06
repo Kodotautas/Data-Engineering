@@ -1,0 +1,14 @@
+vno best time project notes
+- think, plan project architecture
+- test, try flightsradar unoficial API 
+
+
+examples:
+https://www.freecodecamp.org/news/how-to-build-a-web-app-using-pythons-flask-and-google-app-engine-52b1bb82b221
+https://developer.mozilla.org/en-US/docs/Learn/Common_questions/Tools_and_setup/How_do_you_host_your_website_on_Google_App_Engine
+https://medium.com/@dmahugh_70618/deploying-a-flask-app-to-google-app-engine-faa883b5ffab
+
+arrivals
+flight.time.scheduled.arrival
+1699024800 should be 17:20 gmt+2
+flight.time.estimated.arrival
