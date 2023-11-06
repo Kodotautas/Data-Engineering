@@ -49,7 +49,7 @@ class FlightData:
         flights_df = flights_df.groupby('final_time').size().reset_index(name='count')
         return flights_df
     
-if __name__ == '__main__':
+def run():
     start_time = time.time()
 
     airport_code = 'EYVI'
@@ -61,3 +61,6 @@ if __name__ == '__main__':
     print(f'Flights in {airport_code} airport: {len(flights)}')
 
     print(f'Done in {time.time() - start_time} seconds')
+
+if __name__ == '__main__':
+    run()
