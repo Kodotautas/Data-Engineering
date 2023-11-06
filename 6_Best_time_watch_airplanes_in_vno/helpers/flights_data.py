@@ -28,12 +28,12 @@ class FlightData:
 
     def get_departures(self):
         departures_df = pd.json_normalize(self.departures)
-        # departures_df['departure_time'] = pd.to_datetime(departures_df['flight.time.scheduled.departure'] + departures_df['flight.airport.origin.timezone.offset'], unit='s')
-        # departures_df['departure_estimated_time'] = pd.to_datetime(departures_df['flight.time.estimated.departure'] + departures_df['flight.airport.origin.timezone.offset'], unit='s')
-        # departures_df['departure_final_time'] = departures_df['departure_estimated_time'].fillna(departures_df['departure_time'])
-        # # columns to leave
-        # columns_to_leave = ['flight.identification.number.default', 'flight.identification.callsign', 'flight.aircraft.model.text', 'flight.aircraft.country.name', 'flight.airline.short', 'flight.airport.destination.position.region.city', 'departure_final_time']
-        # departures_df = departures_df[columns_to_leave]
+        departures_df['departure_time'] = pd.to_datetime(departures_df['flight.time.scheduled.departure'] + departures_df['flight.airport.origin.timezone.offset'], unit='s')
+        departures_df['departure_estimated_time'] = pd.to_datetime(departures_df['flight.time.estimated.departure'] + departures_df['flight.airport.origin.timezone.offset'], unit='s')
+        departures_df['departure_final_time'] = departures_df['departure_estimated_time'].fillna(departures_df['departure_time'])
+        # columns to leave
+        columns_to_leave = ['flight.identification.number.default', 'flight.identification.callsign', 'flight.aircraft.model.text', 'flight.aircraft.country.name', 'flight.airline.short', 'flight.airport.destination.position.region.city', 'departure_final_time']
+        departures_df = departures_df[columns_to_leave]
         return departures_df
     
 
@@ -41,5 +41,5 @@ if __name__ == '__main__':
     airport_code = 'EYVI'
     fd = FlightData(airport_code)
     departures_df = fd.get_departures()
-    with open ('departures.txt', 'w') as f:
-        f.write(departures_df.to_string())
+    departures_df.to_csv('flights_data.csv', index=False)
+    print(departures_df.head(10))
