@@ -53,4 +53,4 @@ if __name__ == '__main__':
     print(f'Flights in {airport_code} airport: {len(flights)}')
     flights.to_csv(f'{airport_code}_flights.csv', index=False)
 
-    print(f'--- {time.time() - start_time} seconds ---')
+    print(f'Done in {time.time() - start_time} seconds')

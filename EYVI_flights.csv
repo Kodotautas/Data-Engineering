@@ -1,15 +1,14 @@
 flight.status.generic.status.type,flight.identification.number.default,flight.identification.callsign,flight.aircraft.model.text,flight.aircraft.country.name,flight.airline.short,flight.airport.origin.position.region.city,final_time,flight.airport.destination.position.region.city
-departure,LO273,LOT2AG,Embraer E190STD,Poland,LOT,,2023-11-06 17:10:00,London
-arrival,SK740,SAS740,Mitsubishi CRJ-900LR,Estonia,SAS,Stockholm,2023-11-06 17:10:54,
+arrival,SK740,SAS740,Mitsubishi CRJ-900LR,Estonia,SAS,Stockholm,2023-11-06 17:10:24,
 departure,BT925,BTI9WL,Airbus A220-300,Latvia,Air Baltic,,2023-11-06 17:20:00,Munich
-arrival,,OKPHA,Embraer Phenom 300,Czechia,,Athens,2023-11-06 17:51:01,
+arrival,,OKPHA,Embraer Phenom 300,Czechia,,Athens,2023-11-06 17:51:17,
 departure,SK739,SAS739,Mitsubishi CRJ-900LR,Estonia,SAS,,2023-11-06 18:00:00,Stockholm
 arrival,AY1105,FIN1RE,ATR 72-500,Finland,Finnair,Helsinki,2023-11-06 18:04:16,
 arrival,FR1502,RYR771Q,Boeing 737-8AS,Poland,Ryanair,Oslo,2023-11-06 18:06:24,
 arrival,W68026,WZZ1272,Airbus A320-232,Malta,Wizz Air,Eindhoven,2023-11-06 18:23:28,
 arrival,LO775,LOT7MW,Embraer E195LR,Poland,LOT,Warsaw,2023-11-06 18:30:00,
-arrival,FR1830,RYR5LZ,Boeing 737-8AS,Poland,Ryanair,Venice,2023-11-06 18:45:00,
 departure,AY1106,FIN5MB,ATR 72-500,Finland,Finnair,,2023-11-06 18:50:00,Helsinki
+arrival,FR1830,RYR5LZ,Boeing 737-8AS,Poland,Ryanair,Venice,2023-11-06 18:53:20,
 departure,FR7655,RYR6HA,Boeing 737-8AS,Poland,Ryanair,,2023-11-06 18:55:00,Eindhoven
 arrival,TK1409,THY3RW,Boeing 737-9F2(ER),Turkey,Turkish Airlines,Istanbul,2023-11-06 19:05:00,
 departure,FR1835,RYR2UX,Boeing 737-8AS,Poland,Ryanair,,2023-11-06 19:20:00,Bremen
@@ -20,8 +19,8 @@ departure,TK1410,THY1SR,Boeing 737 MAX 9,Turkey,Turkish Airlines,,2023-11-06 20:
 arrival,BT347,BTI9JT,Airbus A220-300,Latvia,Air Baltic,Riga,2023-11-06 20:40:00,
 arrival,W2306,,Airbus A320-232,Malta,Avion Express,Funchal,2023-11-06 20:50:00,
 arrival,AY1107,FIN8RD,ATR 72-500,Finland,Finnair,Helsinki,2023-11-06 20:50:00,
-arrival,FR3466,RYR1QY,Boeing 737 MAX 8-200,Ireland,Ryanair,London,2023-11-06 21:00:00,
 arrival,FR7139,RYR7139,Boeing 737-8AS,Ireland,Ryanair,Dublin,2023-11-06 21:00:00,
+arrival,FR3466,RYR1QY,Boeing 737 MAX 8-200,Ireland,Ryanair,London,2023-11-06 21:00:00,
 departure,FR3467,RYR61WD,Boeing 737 MAX 8-200,Ireland,Ryanair,,2023-11-06 21:25:00,London
 departure,AY1108,FIN1108,ATR 72-500,Finland,Finnair,,2023-11-06 21:25:00,Helsinki
 arrival,SK1740,SAS1740,Mitsubishi CRJ-900LR,Estonia,SAS,Stockholm,2023-11-06 21:30:00,
@@ -59,8 +58,8 @@ departure,SK743,SAS743,Mitsubishi CRJ-900LR,Estonia,SAS,,2023-11-07 06:25:00,Cop
 departure,LH889,,Airbus A321-231,Germany,Lufthansa,,2023-11-07 06:45:00,Frankfurt
 departure,BT983,,,,Air Baltic,,2023-11-07 06:50:00,Tenerife
 departure,W68081,WZZ569,Airbus A320-232,Malta,Wizz Air,,2023-11-07 06:51:00,Rome
-departure,W68031,,,,Wizz Air,,2023-11-07 06:55:00,Dortmund
 departure,SK1741,SAS93C,Mitsubishi CRJ-900ER,Estonia,SAS,,2023-11-07 07:00:00,Stockholm
+departure,W68031,WZZ9007,Airbus A320-232,Hungary,Wizz Air,,2023-11-07 07:06:00,Dortmund
 departure,BT961,,,,Air Baltic,,2023-11-07 07:50:00,Amsterdam
 arrival,BT904,,,,Air Baltic,Tallinn,2023-11-07 08:10:00,
 arrival,BT341,,,,Air Baltic,Riga,2023-11-07 08:15:00,
@@ -81,8 +80,8 @@ arrival,DY1082,,,,Norwegian,Oslo,2023-11-07 12:30:00,
 arrival,W68082,,,,Wizz Air,Rome,2023-11-07 12:50:00,
 arrival,AY1103,,ATR 72-500,Finland,Finnair,Helsinki,2023-11-07 12:55:00,
 departure,DY1083,,,,Norwegian,,2023-11-07 13:10:00,Oslo
-departure,AY1104,,ATR 72-500,Finland,Finnair,,2023-11-07 13:25:00,Helsinki
 arrival,FR1786,,,,Ryanair,Barcelona,2023-11-07 13:25:00,
+departure,AY1104,,ATR 72-500,Finland,Finnair,,2023-11-07 13:25:00,Helsinki
 departure,W68083,,,,Wizz Air,,2023-11-07 13:30:00,Malaga
 departure,W68021,,,,Wizz Air,,2023-11-07 13:35:00,Paris
 arrival,BT962,,,,Air Baltic,Amsterdam,2023-11-07 13:35:00,
@@ -93,8 +92,8 @@ arrival,,GJT9NV,Boeing 737-8FE,Lithuania,Getjet Airlines,Antalya,2023-11-07 13:5
 arrival,LO771,,,,LOT,Warsaw,2023-11-07 14:05:00,
 arrival,LH886,,,,Lufthansa,Frankfurt,2023-11-07 14:30:00,
 departure,LX1341,,,,Swiss,,2023-11-07 14:35:00,Zurich
-arrival,BT345,,,,Air Baltic,Riga,2023-11-07 14:40:00,
 departure,FR7233,,,,Ryanair,,2023-11-07 14:40:00,Paris
+arrival,BT345,,,,Air Baltic,Riga,2023-11-07 14:40:00,
 departure,LO772,,,,LOT,,2023-11-07 14:45:00,Warsaw
 departure,LH887,,,,Lufthansa,,2023-11-07 15:10:00,Frankfurt
 arrival,SK1742,SAS34J,Mitsubishi CRJ-900LR,Estonia,SAS,Copenhagen,2023-11-07 15:10:00,
