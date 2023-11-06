@@ -40,4 +40,6 @@ class FlightData:
 if __name__ == '__main__':
     airport_code = 'EYVI'
     fd = FlightData(airport_code)
-    depart
+    departures_df = fd.get_departures()
+    departures_df.to_csv('flights_data.csv', index=False)
+    print(departures_df.head())
