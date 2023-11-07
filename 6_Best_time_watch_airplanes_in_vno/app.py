@@ -1,17 +1,25 @@
+import plotly.express as px
+import plotly.graph_objects as go
+from plotly.offline import plot
+
 from flask import Flask, render_template
+from helpers.flights_data import FlightData
 
 app = Flask(__name__)
 
-# Simulated flight data
-flights = [
-    {'flight_number': 'F123', 'origin': 'New York', 'destination': 'Los Angeles'},
-    {'flight_number': 'F456', 'origin': 'Chicago', 'destination': 'Miami'},
-    {'flight_number': 'F789', 'origin': 'San Francisco', 'destination': 'Seattle'}
-]
+# Get flights data
+flights = FlightData('EYVI').group_flights_by_final_time()
 
 @app.route('/')
-def show_flights():
-    return render_template('flight_info.html', flights=flights)
+def flights_table():
+    # Create a table of flight destinations
+    fig = go.Figure(data=[go.Table(
+        header=dict(values=['Final Time', 'Count']),
+        cells=dict(values=[flights['final_time'], flights['count']])
+    )])
+    graph = plot(fig, output_type='div')
+
+    return render_template('flight_info.html', flights=flights, graph=graph)
 
 if __name__ == '__main__':
     app.run(debug=True)
