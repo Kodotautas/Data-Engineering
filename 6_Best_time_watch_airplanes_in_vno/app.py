@@ -19,7 +19,7 @@ def flights_bar_chart():
                  x='Flights count', y='Datetime',
                 color='Flights count',
                 orientation='h',
-                color_continuous_scale=["darkgrey", "green"],
+                color_continuous_scale=["darkgrey", "darkgreen"],
                 )
 
     # Calculate the height of the table based on the number of rows

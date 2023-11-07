@@ -36,9 +36,27 @@
                 max-height: 300px;
             }
         }
+        .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        }
+        .weather-data {
+        text-align: center;
+        color: white;
+        }
     </style>
 </head>
 <body>
+    <div class="header">
+        <div class="weather-data">
+            <span>Humidity: 5 </span> |
+            <span>Sky Condition: 6</span> |
+            <span>Wind Direction: 7</span> |
+            <span>Wind Speed: 8</span> |
+            <span>Temperature: 9</span>
+        </div>
+    </div>
     <h1>VNO viewpoint best time</h1>
     <button onclick="location.reload();">Refresh</button>
        
