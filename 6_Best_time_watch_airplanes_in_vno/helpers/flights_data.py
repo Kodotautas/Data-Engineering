@@ -54,10 +54,7 @@ def run():
 
     airport_code = 'EYVI'
     fd = FlightData(airport_code)
-    # flights = fd.concat_arrivals_departures()
-    # flights.to_csv(f'{airport_code}_flights_raw.csv', index=False)
     flights = fd.group_flights_by_final_time()
-    flights.to_csv(f'{airport_code}_flights.csv', index=False)
     print(f'Flights in {airport_code} airport: {len(flights)}')
 
     print(f'Done in {time.time() - start_time} seconds')
