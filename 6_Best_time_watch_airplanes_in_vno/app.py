@@ -1,19 +1,18 @@
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.offline import plot
-import pandas as pd
 
 from flask import Flask, render_template
 from helpers.flights_data import FlightData
-import colorlover as cl
 
 app = Flask(__name__)
 
-# Get flights data
+# Get flights and weather data
 flights = FlightData('EYVI').group_flights_by_final_time()
+weather_data = FlightData('EYVI').get_weather()
 
 @app.route('/')
-def flights_bar_chart():
+def home():
     # Create a table of flight destinations
     fig = px.bar(flights.sort_values('Datetime', ascending=False), 
                  x='Flights count', y='Datetime',
@@ -37,7 +36,8 @@ def flights_bar_chart():
 
     graph = plot(fig, output_type='div')
 
-    return render_template('best_time.html', flights=flights, graph=graph)
+    return render_template('best_time.html', flights=flights, graph=graph, weather=weather_data)
+
 
 if __name__ == '__main__':
     app.run(debug=True)

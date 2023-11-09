@@ -7,11 +7,11 @@ class FlightData:
         self.fr_api = FlightRadar24API()
         self.airport_details = self.fr_api.get_airport_details(airport_code)
         # self.timestamp = self.airport_details['airport']['pluginData']['schedule']['arrivals']['timestamp']
-        # self.humidity = self.airport_details['airport']['pluginData']['weather']['humidity']
-        # self.sky_condition = self.airport_details['airport']['pluginData']['weather']['sky']['condition']
-        # self.wind_direction = self.airport_details['airport']['pluginData']['weather']['wind']['direction']
-        # self.wind_speed = self.airport_details['airport']['pluginData']['weather']['wind']['speed']['kmh']
-        # self.temperature = self.airport_details['airport']['pluginData']['weather']['temp']['celsius']
+        self.humidity = self.airport_details['airport']['pluginData']['weather']['humidity']
+        self.sky_condition = self.airport_details['airport']['pluginData']['weather']['sky']['condition']
+        self.wind_direction = self.airport_details['airport']['pluginData']['weather']['wind']['direction']
+        self.wind_speed = self.airport_details['airport']['pluginData']['weather']['wind']['speed']['kmh']
+        self.temperature = self.airport_details['airport']['pluginData']['weather']['temp']['celsius']
         
         self.arrivals = self.airport_details['airport']['pluginData']['schedule']['arrivals']['data']
         self.departures = self.airport_details['airport']['pluginData']['schedule']['departures']['data']
@@ -47,8 +47,19 @@ class FlightData:
         flights_df = self.concat_arrivals_departures()
         flights_df['Datetime'] = flights_df['final_time'].dt.round('15min')
         flights_df = flights_df.groupby('Datetime').size().reset_index(name='Flights count')
+        # flights_df = flights_df.groupby(['Datetime', 'flight.status.generic.status.type']).size().reset_index(name='Flights count')
+        # flights_df = flights_df.rename(columns={'flight.status.generic.status.type': 'Type'})
         return flights_df
     
+    def get_weather(self):
+        """Returns weather data"""
+        humidity = self.humidity
+        sky_condition = self.sky_condition['text']
+        wind_direction = self.wind_direction['text']
+        wind_speed = self.wind_speed
+        temperature = self.temperature
+        return f'Humidity: {humidity}% | Sky condition: {sky_condition} | Wind direction: {wind_direction} | Wind speed: {wind_speed} km/h | Temperature: {temperature} °C'
+
 def run():
     start_time = time.time()
 

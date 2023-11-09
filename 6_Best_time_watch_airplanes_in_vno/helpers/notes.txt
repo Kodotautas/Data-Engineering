@@ -4,6 +4,7 @@ vno best time project notes
 - stacket bar chart with arrivals, departures count
 - another page for flights details
 - add weather data to page
+- check sorted datetime values
 
 
 examples:
