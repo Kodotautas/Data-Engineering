@@ -13,29 +13,12 @@ weather_data = FlightData('EYVI').get_weather()
 
 @app.route('/')
 def home():
-    # Create a table of flight destinations
-    fig = px.bar(flights.sort_values('Datetime', ascending=False), 
-                 x='Flights count', y='Datetime',
-                color='Flights count',
-                orientation='h',
-                color_continuous_scale=["darkgrey", "darkgreen"],
-                )
-    # Calculate the height of the table based on the number of rows
-    row_height = 15  # Set the height of each row in pixels
-    num_rows = len(flights['Datetime'])
-    table_height = row_height * num_rows
+    # Prepare data for Chart.js
+    labels = flights.sort_values('Datetime', ascending=False)['Datetime'].tolist()
+    data = flights.sort_values('Datetime', ascending=False)['Flights count'].tolist()
 
-    # Set the height of the table and disable scrolling
-    fig.update_layout(height=table_height, margin=dict(l=0, r=0, t=5, b=0), template='plotly_dark')
-    fig.update_xaxes(visible=False, showticklabels=False)
-    fig.update_yaxes(visible=True, showticklabels=True, tickmode='array', tickvals=flights['Datetime'], 
-                     ticktext=flights['Datetime'].dt.strftime('%m-%d %H:%M'), 
-                     type='category'
-                     )
-    graph = plot(fig, output_type='div')
-
-    return render_template('best_time.html', flights=flights, graph=graph, weather=weather_data)
-
+    # Pass data to template
+    return render_template('best_time.html', labels=labels, data=data, weather_data=weather_data)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -19,7 +19,7 @@
         .refresh-button {
         display: inline-block;
         text-align: center;
-        background-color: #FF813F;
+        background-color: grey;
         color: white;
         padding: 10px 20px;
         margin: 20px 0;
@@ -29,7 +29,7 @@
         cursor: pointer;
         }
         .refresh-button:hover {
-            background-color: #E87728;
+            background-color: grey;
         }
         .button-container {
         display: flex;
@@ -63,7 +63,7 @@
         .coffee-button a {
         display: inline-block;
         text-align: center;
-        background-color: #FF813F;
+        background-color: grey;
         color: white;
         padding: 10px 20px;
         margin: 20px 0;
@@ -71,7 +71,7 @@
         border-radius: 5px;
         }
         .coffee-button a:hover {
-            background-color: #E87728;
+            background-color: grey;
         }
         .coffee-button {
         display: flex;
@@ -83,7 +83,7 @@
 <body>
     <div class="header">
         <div class="weather-data">
-            <span>{{ weather }}</span>
+            <span>{{ weather_data }}</span>
         </div>
     </div>
     <h1>VNO viewpoint best time</h1>
@@ -94,13 +94,48 @@
     </div>
        
     <!-- Display the Plotly chart -->
-    <div class="graph-container">
+    <!-- <div class="graph-container">
         {{ graph | safe }}
+    </div> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Display chart.html -->
+    <!-- The canvas element for the chart -->
+    <div>
+        <canvas id="testChart"></canvas>
     </div>
+
+    <!-- The script that generates the chart -->
+    <script>
+        var ctx = document.getElementById('testChart').getContext('2d');
+        var labels = JSON.parse('{{ labels | tojson | safe }}');
+        var data = JSON.parse('{{ data | tojson | safe }}');
+    
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '# of Flights',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>   
 
     <!-- Buy Me A Coffee button -->
     <div class="coffee-button">
-        <a href="https://www.google.lt" target="_blank">Buy Me A Coffee</a>
+        <a href="https://www.buymeacoffee.com/kodotautas" target="_blank">Buy Me A Coffee</a>
     </div>
 
 </body>
