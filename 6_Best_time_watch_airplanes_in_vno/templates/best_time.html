@@ -111,6 +111,11 @@
         var labels = JSON.parse('{{ labels | tojson | safe }}');
         var data = JSON.parse('{{ data | tojson | safe }}');
     
+        // Format the labels to mm-dd hh:mm
+        for (var i = 0; i < labels.length; i++) {
+            labels[i] = labels[i].slice(5, 25);
+        }
+
         var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -123,13 +128,7 @@
                     borderWidth: 1
                 }]
             },
-            options: {
-                scales: {
-                    x: { 
-                        beginAtZero: true
-                    }
-                }
-            }
+            options: {indexAxis: 'y'}
         });
     </script>   
 

@@ -14,8 +14,8 @@ weather_data = FlightData('EYVI').get_weather()
 @app.route('/')
 def home():
     # Prepare data for Chart.js
-    labels = flights.sort_values('Datetime', ascending=False)['Datetime'].tolist()
-    data = flights.sort_values('Datetime', ascending=False)['Flights count'].tolist()
+    labels = flights.sort_values('Datetime', ascending=True)['Datetime'].tolist()
+    data = flights.sort_values('Datetime', ascending=True)['Flights count'].tolist()
 
     # Pass data to template
     return render_template('best_time.html', labels=labels, data=data, weather_data=weather_data)
