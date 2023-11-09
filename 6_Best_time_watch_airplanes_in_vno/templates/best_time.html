@@ -89,9 +89,9 @@
     <h1>VNO viewpoint best time</h1>
 
     <!-- Display the refresh button -->
-    <div class="button-container">
+    <!-- <div class="button-container">
         <button class="refresh-button" onclick="location.reload();">Refresh</button>
-    </div>
+    </div> -->
        
     <!-- Display the Plotly chart -->
     <!-- <div class="graph-container">
@@ -128,7 +128,16 @@
                     borderWidth: 1
                 }]
             },
-            options: {indexAxis: 'y',}
+            options: {
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
         });
     </script>   
 
@@ -139,6 +148,3 @@
 
 </body>
 </html>
-
-
-options: {indexAxis: 'y',}
