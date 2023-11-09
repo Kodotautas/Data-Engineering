@@ -102,12 +102,12 @@
     <!-- Display chart.html -->
     <!-- The canvas element for the chart -->
     <div>
-        <canvas id="testChart"></canvas>
+        <canvas id="timeChart"></canvas>
     </div>
 
     <!-- The script that generates the chart -->
     <script>
-        var ctx = document.getElementById('testChart').getContext('2d');
+        var ctx = document.getElementById('timeChart').getContext('2d');
         var labels = JSON.parse('{{ labels | tojson | safe }}');
         var data = JSON.parse('{{ data | tojson | safe }}');
     
@@ -125,7 +125,7 @@
             },
             options: {
                 scales: {
-                    y: {
+                    x: { 
                         beginAtZero: true
                     }
                 }
