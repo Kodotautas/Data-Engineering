@@ -20,9 +20,8 @@ def home():
                 orientation='h',
                 color_continuous_scale=["darkgrey", "darkgreen"],
                 )
-
     # Calculate the height of the table based on the number of rows
-    row_height = 20  # Set the height of each row in pixels
+    row_height = 15  # Set the height of each row in pixels
     num_rows = len(flights['Datetime'])
     table_height = row_height * num_rows
 
@@ -33,7 +32,6 @@ def home():
                      ticktext=flights['Datetime'].dt.strftime('%m-%d %H:%M'), 
                      type='category'
                      )
-
     graph = plot(fig, output_type='div')
 
     return render_template('best_time.html', flights=flights, graph=graph, weather=weather_data)

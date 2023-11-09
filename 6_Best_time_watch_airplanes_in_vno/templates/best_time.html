@@ -16,10 +16,25 @@
             text-align: center;
             color: white;
         }
-        button {
-            display: block;
-            margin: 0 auto;
-            border-radius: 8px;
+        .refresh-button {
+        display: inline-block;
+        text-align: center;
+        background-color: #FF813F;
+        color: white;
+        padding: 10px 20px;
+        margin: 20px 0;
+        text-decoration: none;
+        border-radius: 5px;
+        border: none;
+        cursor: pointer;
+        }
+        .refresh-button:hover {
+            background-color: #E87728;
+        }
+        .button-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         }
         .graph-container {
             display: flex;
@@ -45,6 +60,24 @@
         text-align: center;
         color: white;
         }
+        .coffee-button a {
+        display: inline-block;
+        text-align: center;
+        background-color: #FF813F;
+        color: white;
+        padding: 10px 20px;
+        margin: 20px 0;
+        text-decoration: none;
+        border-radius: 5px;
+        }
+        .coffee-button a:hover {
+            background-color: #E87728;
+        }
+        .coffee-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -54,11 +87,21 @@
         </div>
     </div>
     <h1>VNO viewpoint best time</h1>
-    <button onclick="location.reload();">Refresh</button>
+
+    <!-- Display the refresh button -->
+    <div class="button-container">
+        <button class="refresh-button" onclick="location.reload();">Refresh</button>
+    </div>
        
     <!-- Display the Plotly chart -->
     <div class="graph-container">
         {{ graph | safe }}
     </div>
+
+    <!-- Buy Me A Coffee button -->
+    <div class="coffee-button">
+        <a href="https://www.google.lt" target="_blank">Buy Me A Coffee</a>
+    </div>
+
 </body>
 </html>
