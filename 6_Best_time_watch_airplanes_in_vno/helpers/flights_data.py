@@ -47,8 +47,6 @@ class FlightData:
         flights_df = self.concat_arrivals_departures()
         flights_df['Datetime'] = flights_df['final_time'].dt.round('15min')
         flights_df = flights_df.groupby('Datetime').size().reset_index(name='Flights count')
-        # flights_df = flights_df.groupby(['Datetime', 'flight.status.generic.status.type']).size().reset_index(name='Flights count')
-        # flights_df = flights_df.rename(columns={'flight.status.generic.status.type': 'Type'})
         return flights_df
     
     def get_weather(self):
