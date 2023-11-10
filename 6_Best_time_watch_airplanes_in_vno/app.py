@@ -8,20 +8,39 @@ from helpers.flights_data import FlightData
 
 app = Flask(__name__)
 
-# Get flights and weather data
+# Get flights and weather data and filter by today and tomorrow
 flights = FlightData('EYVI').group_flights_by_final_time()
-# filter flights 'Datetime' column for today and tomorrow
 flights = flights[(flights['Datetime'].dt.date == pd.Timestamp.today().date()) | (flights['Datetime'].dt.date == pd.Timestamp.today().date() + pd.Timedelta(days=1))]
+
+# Get concatenated arrivals and departures dataframe
+flights_df = FlightData('EYVI').concat_arrivals_departures()
 weather_data = FlightData('EYVI').get_weather()
 
 @app.route('/')
-def home():
+def best_time():
     # Prepare data for Chart.js
     labels = flights.sort_values('Datetime', ascending=True)['Datetime'].tolist()
     data = flights.sort_values('Datetime', ascending=True)['Flights count'].tolist()
 
     # Pass data to template
     return render_template('best_time.html', labels=labels, data=data, weather_data=weather_data)
+
+@app.route('/flights_data')
+def flights_data():
+    # Prepare data for html table
+    flights_df = FlightData('EYVI').concat_arrivals_departures()
+    # rename columns
+    flights_df = flights_df.rename(columns={'flight.status.generic.status.type': 'Type', 
+                                            'flight.identification.number.default': 'Flight number', 
+                                            'flight.identification.callsign': 'Callsign', 
+                                            'flight.aircraft.model.text': 'Aircraft model', 
+                                            'flight.aircraft.country.name': 'Aircraft country', 
+                                            'flight.airline.short': 'Airline', 
+                                            'flight.airport.origin.position.region.city': 'Origin city', 
+                                            'flight.airport.destination.position.region.city': 'Destination city', 
+                                            'final_time': 'Final time'}).to_html(classes='flights_table', index=False)
+
+    return render_template('flights_data.html', weather_data=weather_data, flights_df=flights_df)
 
 if __name__ == '__main__':
     app.run(debug=True)

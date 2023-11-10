@@ -3,7 +3,6 @@
 <head>
     <title>VNO Viewpoint App</title>
     <!-- Add Plotly dependencies -->
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
         /* Default styles */
         body {
@@ -15,21 +14,6 @@
         h1 {
             text-align: center;
             color: white;
-        }
-        .refresh-button {
-        display: inline-block;
-        text-align: center;
-        background-color: grey;
-        color: white;
-        padding: 10px 20px;
-        margin: 20px 0;
-        text-decoration: none;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-        }
-        .refresh-button:hover {
-            background-color: grey;
         }
         .button-container {
         display: flex;
@@ -87,6 +71,7 @@
             <span>{{ weather_data }}</span>
         </div>
     </div>
+    <a href="{{ url_for('flights_data') }}">Flights</a>
     <h1>VNO viewpoint best time</h1>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -94,7 +79,7 @@
     <!-- Display chart.html -->
     <!-- The canvas element for the chart -->
     <div>
-        <canvas id="timeChart" height="310"></canvas>
+        <canvas id="timeChart" height="390"></canvas>
     </div>
 
     <!-- The script that generates the chart -->
