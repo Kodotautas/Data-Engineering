@@ -40,6 +40,10 @@ class FlightData:
         departures_df = self.get_departures()
         flights_df = pd.concat([arrivals_df, departures_df])
         flights_df = flights_df.sort_values(by='final_time', ascending=True)
+        flights_df = flights_df.fillna('')
+        # Add Vilnius city to origin and destination
+        flights_df.loc[flights_df['flight.status.generic.status.type'] == 'departure', 'flight.airport.origin.position.region.city'] = 'Vilnius'
+        flights_df.loc[flights_df['flight.status.generic.status.type'] == 'arrival', 'flight.airport.destination.position.region.city'] = 'Vilnius'
         return flights_df
     
     def group_flights_by_final_time(self):

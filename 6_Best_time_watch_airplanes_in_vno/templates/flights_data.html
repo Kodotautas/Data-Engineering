@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
     <title>VNO Viewpoint App</title>
-    <!-- Add Plotly dependencies -->
     <style>
         /* Default styles */
         body {
@@ -63,10 +65,13 @@
         align-items: center;
         margin-top: 20px;
         }
-        /* Add style to change table text color to white and make it responsive */
-        table {
-            color: white;
-            max-width: 100%;
+        .flights-data-table {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        color: white;
+        max-width: 95%;
+        text-align: center;
         }
     </style>
 </head>
@@ -77,8 +82,46 @@
         </div>
     </div>
     <a href="{{ url_for('best_time') }}">Best times</a>
-    <h1>VNO viewpoint best time</h1>
-    {{ flights_df | safe }}
+    
+    <h1>VNO flights data</h1>
+    
+    <table class="flights-data-table">
+        <thead>
+            <tr>
+                <th>Final time</th>
+                <th>Type</th>
+                <th>Origin city</th>
+                <th>Destination city</th>
+                <th>Flight number</th>
+                <th>Callsign</th>
+                <th>Aircraft model</th>
+                <th>Aircraft country</th>
+                <th>Airline</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for flight in flights_data %}
+            <tr>
+                <td>{{ flight['Final time'] }}</td>
+                <td>{{ flight['Type'] }}</td>
+                <td>{{ flight['Origin city'] }}</td>
+                <td>{{ flight['Destination city'] }}</td>
+                <td>{{ flight['Flight number'] }}</td>
+                <td>{{ flight['Callsign'] }}</td>
+                <td>{{ flight['Aircraft model'] }}</td>
+                <td>{{ flight['Aircraft country'] }}</td>
+                <td>{{ flight['Airline'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    <script>
+        $(document).ready(function() {
+            $('.flights-data-table').DataTable({
+            });
+        });
+    </script>
+    
     <!-- Buy Me A Coffee button -->
     <!-- <div class="coffee-button">
         <a href="https://www.buymeacoffee.com/kodotautas" target="_blank">Buy Me A Coffee</a>

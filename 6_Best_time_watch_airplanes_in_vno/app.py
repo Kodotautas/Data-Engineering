@@ -38,9 +38,11 @@ def flights_data():
                                             'flight.airline.short': 'Airline', 
                                             'flight.airport.origin.position.region.city': 'Origin city', 
                                             'flight.airport.destination.position.region.city': 'Destination city', 
-                                            'final_time': 'Final time'}).to_html(classes='flights_table', index=False)
+                                            'final_time': 'Final time'})
 
-    return render_template('flights_data.html', weather_data=weather_data, flights_df=flights_df)
+    flights_data = flights_df.to_dict('records')
+
+    return render_template('flights_data.html', weather_data=weather_data, flights_data=flights_data, index=False)
 
 if __name__ == '__main__':
     app.run(debug=True)
