@@ -11,11 +11,11 @@
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: black;
+            background-color: #E6E6FA
         }
         h1 {
             text-align: center;
-            color: white;
+            color: black;
         }
         .button-container {
         display: flex;
@@ -44,7 +44,7 @@
         }
         .weather-data {
         text-align: center;
-        color: white;
+        color: black;
         }
         .coffee-button a {
         display: inline-block;
@@ -60,18 +60,39 @@
             background-color: grey;
         }
         .coffee-button {
-        display: flex;
         justify-content: center;
         align-items: center;
-        margin-top: 20px;
+        position: fixed;
+        bottom: 10px;
+        right: 10px;
         }
         .flights-data-table {
         display: block;
         margin-left: auto;
         margin-right: auto;
-        color: white;
+        color: black;
         max-width: 95%;
         text-align: center;
+        }
+        .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px 2px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        color: #fff;
+        background-color: #333333;
+        border: none;
+        border-radius: 15px;
+        }
+
+        .button:hover {background-color: #5b5b5b}
+
+        .button:active {
+        background-color: #3e8e41;
+        transform: translateY(4px);
         }
     </style>
 </head>
@@ -81,9 +102,9 @@
             <span>{{ weather_data }}</span>
         </div>
     </div>
-    <a href="{{ url_for('best_time') }}">Best times</a>
+    <a href="{{ url_for('best_time') }}" class="button" >Best time</a>
     
-    <h1>VNO flights data</h1>
+    <h1>VNO Flights</h1>
     
     <table class="flights-data-table">
         <thead>
@@ -93,7 +114,6 @@
                 <th>Origin city</th>
                 <th>Destination city</th>
                 <th>Flight number</th>
-                <th>Callsign</th>
                 <th>Aircraft model</th>
                 <th>Aircraft country</th>
                 <th>Airline</th>
@@ -107,7 +127,6 @@
                 <td>{{ flight['Origin city'] }}</td>
                 <td>{{ flight['Destination city'] }}</td>
                 <td>{{ flight['Flight number'] }}</td>
-                <td>{{ flight['Callsign'] }}</td>
                 <td>{{ flight['Aircraft model'] }}</td>
                 <td>{{ flight['Aircraft country'] }}</td>
                 <td>{{ flight['Airline'] }}</td>

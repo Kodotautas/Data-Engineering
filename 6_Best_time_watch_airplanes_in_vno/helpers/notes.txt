@@ -2,9 +2,10 @@ vno best time project notes
 - done: think, plan project architecture
 - done: test, try flightsradar unoficial API
 - stacket bar chart with arrivals, departures count
-- another page for flights details
-- add weather data to page
+- done: another page for flights details
+- done: add weather data to page
 - check sorted datetime values
+- do css file to group all styles
 
 
 examples:

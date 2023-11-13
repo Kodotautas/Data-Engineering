@@ -2,18 +2,17 @@
 <html>
 <head>
     <title>VNO Viewpoint App</title>
-    <!-- Add Plotly dependencies -->
     <style>
         /* Default styles */
         body {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
-            background-color: black;
+            background-color: #E6E6FA
         }
         h1 {
             text-align: center;
-            color: white;
+            color: black;
         }
         .button-container {
         display: flex;
@@ -42,26 +41,44 @@
         }
         .weather-data {
         text-align: center;
-        color: white;
-        }
-        .coffee-button a {
-        display: inline-block;
-        text-align: center;
-        background-color: grey;
-        color: white;
-        padding: 10px 20px;
-        margin: 20px 0;
-        text-decoration: none;
-        border-radius: 5px;
-        }
-        .coffee-button a:hover {
-            background-color: grey;
+        color: black;
         }
         .coffee-button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: 20px;
+        display: inline-block;
+        font-weight: 400;
+        color: white;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        background-color: #333333;
+        border: 1px solid transparent;
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        border-radius: 15px;
+        transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        }
+        .coffee-button:hover {background-color: #5b5b5b}
+
+        .button {
+        display: inline-block;
+        padding: 10px 20px;
+        margin: 10px 2px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        outline: none;
+        color: #fff;
+        background-color: #333333;
+        border: none;
+        border-radius: 15px;
+        }
+
+        .button:hover {background-color: #5b5b5b}
+
+        .button:active {
+        background-color: #3e8e41;
+        transform: translateY(4px);
         }
     </style>
 </head>
@@ -71,8 +88,11 @@
             <span>{{ weather_data }}</span>
         </div>
     </div>
-    <a href="{{ url_for('flights_data') }}">Flights</a>
-    <h1>VNO viewpoint best time</h1>
+    <div style="text-align: left;">
+        <a href="{{ url_for('flights_data') }}" class="button">Flights</a>
+    </div>
+
+    <h1>VNO Viewpoint Best Time</h1>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -103,8 +123,8 @@
                 datasets: [{
                     label: '# of Flights',
                     data: data,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                    borderColor: 'rgba(0, 0, 0, 1)',
                     borderWidth: 1
                 }]
             },
@@ -114,6 +134,14 @@
                     x: {
                         ticks: {
                             stepSize: 1
+                        },
+                        grid: {
+                    display: false
+                        }
+                    },
+                    y: {
+                        grid: {
+                    display: false
                         }
                     }
                 },
@@ -128,9 +156,9 @@
     </script>
 
     <!-- Buy Me A Coffee button -->
-    <!-- <div class="coffee-button">
-        <a href="https://www.buymeacoffee.com/kodotautas" target="_blank">Buy Me A Coffee</a>
-    </div> -->
+    <div style="text-align: center;">
+        <a href="https://www.buymeacoffee.com/kodotautas" class="coffee-button" target="_blank">Buy Me A Coffee</a>
+    </div>
 
 </body>
 </html>

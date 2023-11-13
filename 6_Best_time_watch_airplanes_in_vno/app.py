@@ -25,14 +25,13 @@ def best_time():
     # Pass data to template
     return render_template('best_time.html', labels=labels, data=data, weather_data=weather_data)
 
-@app.route('/flights_data')
+@app.route('/vno_flights_data')
 def flights_data():
     # Prepare data for html table
     flights_df = FlightData('EYVI').concat_arrivals_departures()
     # rename columns
     flights_df = flights_df.rename(columns={'flight.status.generic.status.type': 'Type', 
-                                            'flight.identification.number.default': 'Flight number', 
-                                            'flight.identification.callsign': 'Callsign', 
+                                            'flight.identification.number.default': 'Flight number',
                                             'flight.aircraft.model.text': 'Aircraft model', 
                                             'flight.aircraft.country.name': 'Aircraft country', 
                                             'flight.airline.short': 'Airline', 
