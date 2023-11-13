@@ -11,4 +11,4 @@ There is data engineering projects / learnings completed on free time.
 
 4 - Lithuania statistics pipeline. Project to get data from Statistics Lithuania and store it in GCP Storage.
 
-5 - Dashboard about Lithuania transport (cars, bikes, ships) by individuals, comapnies. Project build using GCP tools: (Storage, Bigquery, Dataflow, Dataform, Looker Studio)
+5 - Dashboard about Lithuania transport (cars, bikes, ships) by individuals, comapnies. Project build using GCP tools: Storage, Bigquery, Dataflow, Dataform, Looker Studio.
