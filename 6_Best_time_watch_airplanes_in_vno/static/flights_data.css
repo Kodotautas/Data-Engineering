@@ -1,0 +1,87 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #E6E6FA
+}
+h1 {
+    text-align: center;
+    color: black;
+}
+.button-container {
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.graph-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.graph-container > div {
+    margin: auto;
+}
+/* Media queries */
+@media only screen and (max-width: 768px) {
+    /* Adjust styles for screens smaller than 768px */
+    .graph-container > div {
+        max-height: 300px;
+    }
+}
+.header {
+display: flex;
+justify-content: center;
+align-items: center;
+}
+.weather-data {
+text-align: center;
+color: grey;
+}
+.coffee-button a {
+display: inline-block;
+text-align: center;
+background-color: grey;
+color: white;
+padding: 10px 20px;
+margin: 20px 0;
+text-decoration: none;
+border-radius: 5px;
+}
+.coffee-button a:hover {
+    background-color: grey;
+}
+.coffee-button {
+justify-content: center;
+align-items: center;
+position: fixed;
+bottom: 10px;
+right: 10px;
+}
+.flights-data-table {
+display: block;
+margin-left: auto;
+margin-right: auto;
+color: black;
+max-width: 95%;
+text-align: center;
+}
+.button {
+display: inline-block;
+padding: 10px 20px;
+margin: 10px 2px;
+cursor: pointer;
+text-align: center;
+text-decoration: none;
+outline: none;
+color: #fff;
+background-color: #333333;
+border: none;
+border-radius: 15px;
+}
+
+.button:hover {background-color: #5b5b5b}
+
+.button:active {
+background-color: #3e8e41;
+transform: translateY(4px);
+}
