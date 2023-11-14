@@ -4,8 +4,9 @@ vno best time project notes
 - stacket bar chart with arrivals, departures count
 - done: another page for flights details
 - done: add weather data to page
-- check sorted datetime values
-- do css file to group all styles
+- done: check sorted datetime values
+- done: css file to group all styles
+- buy me coffee is with underscore, need to fix it
 
 
 examples:
