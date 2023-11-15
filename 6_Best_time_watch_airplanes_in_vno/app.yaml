@@ -1,1 +1,8 @@
-runtime: python312
+runtime: python
+
+# F1 = 2 workers, 384 MB memory, 600 MHz CPU
+instance_class: F1
+
+env: flex
+
+entrypoint: gunicorn -b :$PORT -w 2 main:app

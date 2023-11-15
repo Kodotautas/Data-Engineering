@@ -1,5 +1,4 @@
 import pandas as pd
-from plotly.offline import plot
 
 from flask import Flask, render_template
 from helpers.flights_data import FlightData
