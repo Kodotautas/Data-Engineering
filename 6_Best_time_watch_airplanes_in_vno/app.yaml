@@ -1,4 +1,4 @@
-runtime: python
+runtime: python312
 
 # F1 = 2 workers, 384 MB memory, 600 MHz CPU
 instance_class: F1
