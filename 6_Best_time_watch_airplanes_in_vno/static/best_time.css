@@ -8,6 +8,11 @@ h1 {
     text-align: center;
     color: black;
 }
+.smaller-text{
+    font-size: 18px;
+    color: grey
+}
+
 .button-container {
 display: flex;
 justify-content: center;
