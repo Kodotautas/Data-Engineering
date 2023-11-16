@@ -15,7 +15,6 @@ def best_time():
 
     # Prepare data for Chart.js
     labels = flights.sort_values('Datetime', ascending=True)['Datetime'].tolist()
-    # format label from 2013-11-16 18:45:00 to 2013-11-16 18:45
     labels = [datetime.datetime.strftime(x, '%Y-%m-%d %H:%M') for x in labels]
     data = flights.sort_values('Datetime', ascending=True)['Flights count'].tolist()
 
