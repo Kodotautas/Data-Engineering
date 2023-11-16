@@ -35,9 +35,9 @@
         var data = JSON.parse('{{ data | tojson | safe }}');
     
         // Format the labels to mm-dd hh:mm
-        for (var i = 0; i < labels.length; i++) {
-            labels[i] = labels[i].slice(5, 25);
-        }
+        // for (var i = 0; i < labels.length; i++) {
+        //     labels[i] = labels[i].slice(5, 22);
+        // }
     
         // Calculate dynamic left margin based on window width
         var dynamicLeftMargin = Math.min(150, window.innerWidth * 0.1);
