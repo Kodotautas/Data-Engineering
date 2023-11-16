@@ -32,12 +32,19 @@
     <script>
         var ctx = document.getElementById('timeChart').getContext('2d');
         var labels = JSON.parse('{{ labels | tojson | safe }}');
+        // Modify labels to hide date if not first value and show only hh:mm
+        var prevDate = '';
+        labels = labels.map(function(label, index) {
+            var currDate = label.slice(0, 10);
+            var currTime = label.slice(11, 16);
+            if (currDate !== prevDate) {
+                prevDate = currDate;
+                return label;
+            } else {
+                return currTime;
+            }
+        });
         var data = JSON.parse('{{ data | tojson | safe }}');
-    
-        // Format the labels to mm-dd hh:mm
-        // for (var i = 0; i < labels.length; i++) {
-        //     labels[i] = labels[i].slice(5, 22);
-        // }
     
         // Calculate dynamic left margin based on window width
         var dynamicLeftMargin = Math.min(150, window.innerWidth * 0.1);
@@ -69,7 +76,7 @@
                         grid: {
                     display: false
                         }
-                    }
+                    },
                 },
                 layout: {
                     padding: {
