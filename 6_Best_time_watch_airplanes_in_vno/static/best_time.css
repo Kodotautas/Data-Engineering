@@ -36,7 +36,8 @@ align-items: center;
 
 .weather-data {
 text-align: center;
-color: grey
+color: grey;
+font-size: 23px;
 }
 
 .coffee-button {
