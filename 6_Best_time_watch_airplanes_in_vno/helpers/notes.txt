@@ -16,6 +16,7 @@ vno best time project notes
 - add explanation what is bar chart / app
 - mark highest vales in bar chart to quick get top
 - optimize app engine costs
+- make more eficient app, like use polars etc.
 
 
 examples:
