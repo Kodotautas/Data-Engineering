@@ -7,10 +7,10 @@ body {
 h1 {
     text-align: center;
     color: black;
-    font-size: 24px; /* Increase font size for better readability on mobile */
+    font-size: 30px;
 }
 .smaller-text{
-    font-size: 11px;
+    font-size: 15px;
     color: grey
 }
 
@@ -55,7 +55,7 @@ h1 {
 .weather-data {
     text-align: center;
     color: grey;
-    font-size: 23px;
+    font-size: 25px;
 }
 
 .coffee-button {
