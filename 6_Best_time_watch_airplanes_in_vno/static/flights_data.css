@@ -75,7 +75,8 @@ h1 {
 }
 .button {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 15px 30px;
+    font-size: 20px;
     margin: 10px 2px;
     cursor: pointer;
     text-align: center;
@@ -86,11 +87,9 @@ h1 {
     border: none;
     border-radius: 15px;
 }
-
 .button:hover {
     background-color: #5b5b5b;
 }
-
 .button:active {
     background-color: #065535;
     transform: translateY(4px);
