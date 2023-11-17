@@ -11,10 +11,11 @@ vno best time project notes
 - done: no need each time repeat date 
 - maybe no need vizualize full bar chart?
 - done: larger weather data info
+- done: text color about bar chart the same as weather
 - flights data default rows change to 25
 - add explanation what is bar chart / app
 - mark highest vales in bar chart to quick get top
-- done: text color about bar chart the same as weather
+- optimize app engine costs
 
 
 examples:
