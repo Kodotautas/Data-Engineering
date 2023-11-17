@@ -82,6 +82,6 @@ border-radius: 15px;
 .button:hover {background-color: #5b5b5b}
 
 .button:active {
-background-color: #3e8e41;
+background-color: #065535;
 transform: translateY(4px);
 }
