@@ -9,9 +9,9 @@ h1 {
     color: black;
 }
 .button-container {
-display: flex;
-justify-content: center;
-align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .graph-container {
     display: flex;
@@ -27,61 +27,71 @@ align-items: center;
     .graph-container > div {
         max-height: 300px;
     }
+    .flights-data-table {
+        font-size: 14px;
+    }
+    .coffee-button {
+        bottom: 50px;
+        right: 50px;
+    }
 }
 .header {
-display: flex;
-justify-content: center;
-align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .weather-data {
-text-align: center;
-color: grey;
+    text-align: center;
+    color: grey;
+    font-size: 23px;
 }
 .coffee-button a {
-display: inline-block;
-text-align: center;
-background-color: grey;
-color: white;
-padding: 10px 20px;
-margin: 20px 0;
-text-decoration: none;
-border-radius: 5px;
+    display: inline-block;
+    text-align: center;
+    background-color: grey;
+    color: white;
+    padding: 10px 20px;
+    margin: 20px 0;
+    text-decoration: none;
+    border-radius: 5px;
 }
 .coffee-button a:hover {
     background-color: grey;
 }
 .coffee-button {
-justify-content: center;
-align-items: center;
-position: fixed;
-bottom: 10px;
-right: 10px;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
 }
 .flights-data-table {
-display: block;
-margin-left: auto;
-margin-right: auto;
-color: black;
-max-width: 95%;
-text-align: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    color: black;
+    max-width: 95%;
+    text-align: center;
 }
 .button {
-display: inline-block;
-padding: 10px 20px;
-margin: 10px 2px;
-cursor: pointer;
-text-align: center;
-text-decoration: none;
-outline: none;
-color: #fff;
-background-color: #333333;
-border: none;
-border-radius: 15px;
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px 2px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #333333;
+    border: none;
+    border-radius: 15px;
 }
 
-.button:hover {background-color: #5b5b5b}
+.button:hover {
+    background-color: #5b5b5b;
+}
 
 .button:active {
-background-color: #065535;
-transform: translateY(4px);
+    background-color: #065535;
+    transform: translateY(4px);
 }

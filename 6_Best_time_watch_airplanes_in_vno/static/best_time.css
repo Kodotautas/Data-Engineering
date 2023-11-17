@@ -7,6 +7,7 @@ body {
 h1 {
     text-align: center;
     color: black;
+    font-size: 24px; /* Increase font size for better readability on mobile */
 }
 .smaller-text{
     font-size: 11px;
@@ -14,9 +15,9 @@ h1 {
 }
 
 .button-container {
-display: flex;
-justify-content: center;
-align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .graph-container {
     display: flex;
@@ -32,52 +33,68 @@ align-items: center;
     .graph-container > div {
         max-height: 300px;
     }
+    h1 {
+        font-size: 20px; /* Decrease font size for better readability on mobile */
+    }
+    .weather-data {
+        font-size: 18px; /* Decrease font size for better readability on mobile */
+    }
+    .coffee-button {
+        font-size: 14px; /* Decrease font size for better readability on mobile */
+    }
+    .button {
+        font-size: 14px; /* Decrease font size for better readability on mobile */
+    }
 }
 .header {
-display: flex;
-justify-content: center;
-align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .weather-data {
-text-align: center;
-color: grey;
-font-size: 23px;
+    text-align: center;
+    color: grey;
+    font-size: 23px;
 }
 
 .coffee-button {
-display: inline-block;
-font-weight: 400;
-color: white;
-text-align: center;
-vertical-align: middle;
-cursor: pointer;
-background-color: #333333;
-border: 1px solid transparent;
-padding: .375rem .75rem;
-font-size: 1rem;
-line-height: 1.5;
-border-radius: 15px;
-transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-text-decoration: none;
+    display: inline-block;
+    font-weight: 400;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: #333333;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 15px;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    text-decoration: none;
 }
-.coffee-button:hover {background-color: #5b5b5b}
+.coffee-button:hover {
+    background-color: #5b5b5b;
+}
 
 .button {
-display: inline-block;
-padding: 10px 20px;
-margin: 10px 2px;
-cursor: pointer;
-text-align: center;
-text-decoration: none;
-outline: none;
-color: #fff;
-background-color: #333333;
-border: none;
-border-radius: 15px;
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px 2px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #333333;
+    border: none;
+    border-radius: 15px;
 }
-.button:hover {background-color: #5b5b5b}
+.button:hover {
+    background-color: #5b5b5b;
+}
 .button:active {
-background-color: #065535;
-transform: translateY(4px);
+    background-color: #065535;
+    transform: translateY(4px);
 }

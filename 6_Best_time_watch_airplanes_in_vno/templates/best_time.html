@@ -36,13 +36,19 @@
         // Modify labels to hide date if not first value and show only hh:mm
         var prevDate = '';
         labels = labels.map(function(label, index) {
-            var currDate = label.slice(0, 10);
-            var currTime = label.slice(11, 16);
-            if (currDate !== prevDate) {
-                prevDate = currDate;
-                return label;
+            var currDate = new Date(label);
+            var startTime = new Date(currDate.getTime() - 5*60000); // subtract 5 minutes
+            var endTime = new Date(currDate.getTime() + 5*60000); // add 5 minutes
+
+            var currDateString = currDate.toISOString().slice(0, 10);
+            var startTimeString = startTime.toISOString().slice(11, 16);
+            var endTimeString = endTime.toISOString().slice(11, 16);
+
+            if (currDateString !== prevDate) {
+                prevDate = currDateString;
+                return currDateString + ' ' + startTimeString + ' - ' + endTimeString;
             } else {
-                return currTime;
+                return startTimeString + ' - ' + endTimeString;
             }
         });
         var data = JSON.parse('{{ data | tojson | safe }}');
