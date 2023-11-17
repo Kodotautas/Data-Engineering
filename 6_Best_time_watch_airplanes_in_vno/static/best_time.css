@@ -9,7 +9,7 @@ h1 {
     color: black;
 }
 .smaller-text{
-    font-size: 18px;
+    font-size: 11px;
     color: grey
 }
 
@@ -21,7 +21,7 @@ align-items: center;
 .graph-container {
     display: flex;
     justify-content: center;
-    width: 90%;
+    width: 100%;
 }
 .graph-container > div {
     margin: auto;
@@ -78,6 +78,6 @@ border-radius: 15px;
 }
 .button:hover {background-color: #5b5b5b}
 .button:active {
-background-color: #3e8e41;
+background-color: #065535;
 transform: translateY(4px);
 }

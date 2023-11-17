@@ -10,6 +10,8 @@
             <span>{{ weather_data }}</span>
         </div>
     </div>
+
+    <!-- # Add button to navigate to flights_data.html -->
     <div style="text-align: right;">
         <a href="{{ url_for('flights_data') }}" class="button">Flights</a>
     </div>
@@ -17,14 +19,14 @@
     <h1>VNO Viewpoint Best Time</h1>
 
     <!-- add smalller text -->
-    <div style="text-align: center; max-width: 800px; margin: 0 auto; margin-bottom: 50px;">
+    <div style="text-align: center; max-width: 450px; margin: auto; margin-bottom: 15px;">
         <p class="smaller-text">The bar chart illustrates the frequency of flights at Vilnius International Airport in 15-minute intervals. A higher bar indicates a greater number of arrivals or departures during that specific time period.</p>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <!-- Display chart.html -->
-    <div style="margin-bottom: 50px;">
-        <canvas id="timeChart" height="400"></canvas>
+    <div style="margin-bottom: 30px;">
+        <canvas id="timeChart" height="600"></canvas>
     </div>
 
     <!-- The script that generates the chart -->
@@ -55,7 +57,18 @@
                 datasets: [{
                     label: '# of Flights',
                     data: data,
-                    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                    backgroundColor: function(context) {
+                        var index = context.dataIndex;
+                        var value = context.dataset.data[index];
+                        var sortedData = context.dataset.data.slice().sort(function(a, b) {
+                            return b - a;
+                        });
+                        if (sortedData.indexOf(value) <= 5) {
+                            return 'rgba(6, 85, 53, 0.6)';
+                        } else {
+                            return 'rgba(0, 0, 0, 0.6)';
+                        }
+                    },
                     borderColor: 'rgba(0, 0, 0, 1)',
                     borderWidth: 1
                 }]
@@ -68,12 +81,12 @@
                             stepSize: 1
                         },
                         grid: {
-                    display: false
+                            display: false
                         }
                     },
                     y: {
                         grid: {
-                    display: false
+                            display: false
                         }
                     },
                 },

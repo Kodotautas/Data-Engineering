@@ -2,17 +2,16 @@ from FlightRadar24 import FlightRadar24API
 import pandas as pd
 import time
 
+
 class FlightData:
     def __init__(self, airport_code):
         self.fr_api = FlightRadar24API()
         self.airport_details = self.fr_api.get_airport_details(airport_code)
-        # self.timestamp = self.airport_details['airport']['pluginData']['schedule']['arrivals']['timestamp']
         self.humidity = self.airport_details['airport']['pluginData']['weather']['humidity']
         self.sky_condition = self.airport_details['airport']['pluginData']['weather']['sky']['condition']
         self.wind_direction = self.airport_details['airport']['pluginData']['weather']['wind']['direction']
         self.wind_speed = self.airport_details['airport']['pluginData']['weather']['wind']['speed']['kmh']
         self.temperature = self.airport_details['airport']['pluginData']['weather']['temp']['celsius']
-        
         self.arrivals = self.airport_details['airport']['pluginData']['schedule']['arrivals']['data']
         self.departures = self.airport_details['airport']['pluginData']['schedule']['departures']['data']
         
