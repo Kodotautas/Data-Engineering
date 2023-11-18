@@ -26,7 +26,7 @@
 
     <!-- Display chart.html -->
     <div style="margin-bottom: 30px; max-width: 1000px; margin: auto;">
-        <canvas id="timeChart" height="600"></canvas>
+        <canvas id="timeChart" height=750 width=auto></canvas>
     </div>
 
     <!-- The script that generates the chart -->
@@ -93,6 +93,11 @@
                         }
                     },
                     y: {
+                        ticks: {
+                            font: {
+                                size: 19
+                            }
+                        },
                         grid: {
                             display: false
                         }
