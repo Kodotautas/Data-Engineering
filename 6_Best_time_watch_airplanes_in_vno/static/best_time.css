@@ -10,7 +10,7 @@ h1 {
     font-size: 30px;
 }
 .smaller-text{
-    font-size: 11px;
+    font-size: 16px;
     color: grey
 }
 
@@ -55,7 +55,7 @@ h1 {
 .weather-data {
     text-align: center;
     color: grey;
-    font-size: 25px;
+    font-size: 26px;
 }
 
 .coffee-button {

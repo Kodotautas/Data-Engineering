@@ -40,9 +40,11 @@
             var startTime = new Date(currDate.getTime() - 5*60000); // subtract 5 minutes
             var endTime = new Date(currDate.getTime() + 5*60000); // add 5 minutes
 
+            var formatter = new Intl.DateTimeFormat('en', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Vilnius' });
+
             var currDateString = currDate.toISOString().slice(0, 10);
-            var startTimeString = startTime.toISOString().slice(11, 16);
-            var endTimeString = endTime.toISOString().slice(11, 16);
+            var startTimeString = formatter.format(startTime);
+            var endTimeString = formatter.format(endTime);
 
             if (currDateString !== prevDate) {
                 prevDate = currDateString;

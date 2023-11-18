@@ -45,7 +45,7 @@ class FlightData:
         return flights_df
     
     def group_flights_by_final_time(self):
-        """Returns count of flights by 15 minutes time interval also add count of arrivals and departures"""
+        """Returns count of flights by 10 minutes time interval also add count of arrivals and departures"""
         flights_df = self.concat_arrivals_departures()
         flights_df['Datetime'] = flights_df['final_time'].dt.round('10min')
         flights_df = flights_df.groupby('Datetime').size().reset_index(name='Flights count')
