@@ -22,113 +22,103 @@
     <!-- <div style="text-align: center; max-width: 1000px; margin: auto; margin-bottom: 15px;">
         <p class="smaller-text">The bar chart illustrates the frequency of flights at Vilnius International Airport in 10-minute intervals. A higher bar indicates a greater number of arrivals or departures during that specific time period.</p>
     </div> -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- Display chart.html -->
-    <div style="margin-bottom: 30px; max-width: auto; margin: auto;">
-        <canvas id="timeChart" height=850 width=auto></canvas>
-    </div>
+<!-- Display chart.html -->
+<div style="margin-bottom: 30px; max-width: auto; margin: auto;">
+    <canvas id="timeChart"></canvas>
+</div>
 
-    <!-- The script that generates the chart -->
-    <script>
-        var ctx = document.getElementById('timeChart').getContext('2d');
-        var labels = JSON.parse('{{ labels | tojson | safe }}');
-        var data = JSON.parse('{{ data | tojson | safe }}');
-    
-        // Format the labels to mm-dd hh:mm
-        for (var i = 0; i < labels.length; i++) {
-            labels[i] = labels[i].slice(5, 25);
+<!-- The script that generates the chart -->
+<script>       
+    var canvas = document.getElementById('timeChart');
+    canvas.style.width ='100%';
+    canvas.style.height='1600px';
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+
+    var ctx = canvas.getContext('2d');
+    var labels = JSON.parse('{{ labels | tojson | safe }}');
+    // Modify labels to hide date if not first value and show only hh:mm
+    var prevDate = '';
+    labels = labels.map(function(label, index) {
+        var currDate = new Date(label);
+        var startTime = new Date(currDate.getTime() - 5*60000); // subtract 5 minutes
+        var endTime = new Date(currDate.getTime() + 5*60000); // add 5 minutes
+
+        var formatter = new Intl.DateTimeFormat('en', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Vilnius' });
+
+        var currDateString = currDate.toISOString().slice(0, 10);
+        var startTimeString = formatter.format(startTime);
+        var endTimeString = formatter.format(endTime);
+
+        if (currDateString !== prevDate) {
+            prevDate = currDateString;
+            return currDateString + ' ' + startTimeString + ' - ' + endTimeString;
+        } else {
+            return startTimeString + ' - ' + endTimeString;
         }
-        
-        // var ctx = document.getElementById('timeChart').getContext('2d');
-        // var labels = JSON.parse('{{ labels | tojson | safe }}');
-        // // Modify labels to hide date if not first value and show only hh:mm
-        // var prevDate = '';
-        // labels = labels.map(function(label, index) {
-        //     var currDate = new Date(label);
-        //     var startTime = new Date(currDate.getTime() - 5*60000); // subtract 5 minutes
-        //     var endTime = new Date(currDate.getTime() + 5*60000); // add 5 minutes
+    });
 
-        //     var formatter = new Intl.DateTimeFormat('en', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Vilnius' });
+    var data = JSON.parse('{{ data | tojson | safe }}');
 
-        //     var currDateString = currDate.toISOString().slice(0, 10);
-        //     var startTimeString = formatter.format(startTime);
-        //     var endTimeString = formatter.format(endTime);
+    // Calculate dynamic left margin based on window width
+    var dynamicLeftMargin = Math.min(150, window.innerWidth * 0.1);
 
-        //     if (currDateString !== prevDate) {
-        //         prevDate = currDateString;
-        //         return currDateString;
-        //     } else {
-        //         return startTimeString;
-        //     }
-
-            // if (currDateString !== prevDate) {
-            //     prevDate = currDateString;
-            //     return currDateString + ' ' + startTimeString + ' - ' + endTimeString;
-            // } else {
-            //     return startTimeString + ' - ' + endTimeString;
-            // }
-        // });
-
-        // var data = JSON.parse('{{ data | tojson | safe }}');
-    
-        // Calculate dynamic left margin based on window width
-        var dynamicLeftMargin = Math.min(150, window.innerWidth * 0.1);
-    
-        var myChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: '# of Flights',
-                    data: data,
-                    backgroundColor: function(context) {
-                        var index = context.dataIndex;
-                        var value = context.dataset.data[index];
-                        var sortedData = context.dataset.data.slice().sort(function(a, b) {
-                            return b - a;
-                        });
-                        if (sortedData.indexOf(value) <= 3) {
-                            return 'rgba(6, 85, 53, 0.6)';
-                        } else {
-                            return 'rgba(0, 0, 0, 0.6)';
-                        }
-                    },
-                    borderColor: 'rgba(0, 0, 0, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                scales: {
-                    x: {
-                        ticks: {
-                            stepSize: 1
-                        },
-                        grid: {
-                            display: false
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            font: {
-                                size: 20
-                            }
-                        },
-                        grid: {
-                            display: false
-                        }
-                    },
-                },
-                layout: {
-                    padding: {
-                        left: dynamicLeftMargin, 
-                        right: dynamicLeftMargin
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: '# of Flights',
+                data: data,
+                backgroundColor: function(context) {
+                    var index = context.dataIndex;
+                    var value = context.dataset.data[index];
+                    var sortedData = context.dataset.data.slice().sort(function(a, b) {
+                        return b - a;
+                    });
+                    if (sortedData.indexOf(value) <= 3) {
+                        return 'rgba(6, 85, 53, 0.6)';
+                    } else {
+                        return 'rgba(0, 0, 0, 0.6)';
                     }
+                },
+                borderColor: 'rgba(0, 0, 0, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    ticks: {
+                        stepSize: 1
+                    },
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    ticks: {
+                        font: {
+                            size: 18
+                        }
+                    },
+                    grid: {
+                        display: false
+                    }
+                },
+            },
+            layout: {
+                padding: {
+                    left: dynamicLeftMargin, 
+                    right: dynamicLeftMargin
                 }
             }
-        });
-    </script>
+        }
+    });
+</script>
 
     <!-- Buy Me A Coffee button -->
     <div style="text-align: right; margin-top: 30px; text-align: right;">

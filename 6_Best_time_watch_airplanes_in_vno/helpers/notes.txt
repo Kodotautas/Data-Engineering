@@ -19,5 +19,6 @@ vno best time project notes
 - done: make more eficient app, like use polars etc.
 - done: need fix flights data frame
 - done: time vizualize as interval
-- make larger chart labels
-- fix date (bad after added interval)
+- done: make larger chart labels
+- done: fix date (bad after added interval)
+- fix apple charts.js vizualization
