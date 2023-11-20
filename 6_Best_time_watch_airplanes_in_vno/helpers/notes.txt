@@ -21,4 +21,4 @@ vno best time project notes
 - done: time vizualize as interval
 - done: make larger chart labels
 - done: fix date (bad after added interval)
-- fix apple charts.js vizualization
+- done: fix apple charts.js vizualization
