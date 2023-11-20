@@ -33,27 +33,44 @@
     <script>
         var ctx = document.getElementById('timeChart').getContext('2d');
         var labels = JSON.parse('{{ labels | tojson | safe }}');
-        // Modify labels to hide date if not first value and show only hh:mm
-        var prevDate = '';
-        labels = labels.map(function(label, index) {
-            var currDate = new Date(label);
-            var startTime = new Date(currDate.getTime() - 5*60000); // subtract 5 minutes
-            var endTime = new Date(currDate.getTime() + 5*60000); // add 5 minutes
-
-            var formatter = new Intl.DateTimeFormat('en', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Vilnius' });
-
-            var currDateString = currDate.toISOString().slice(0, 10);
-            var startTimeString = formatter.format(startTime);
-            var endTimeString = formatter.format(endTime);
-
-            if (currDateString !== prevDate) {
-                prevDate = currDateString;
-                return currDateString + ' ' + startTimeString + ' - ' + endTimeString;
-            } else {
-                return startTimeString + ' - ' + endTimeString;
-            }
-        });
         var data = JSON.parse('{{ data | tojson | safe }}');
+    
+        // Format the labels to mm-dd hh:mm
+        for (var i = 0; i < labels.length; i++) {
+            labels[i] = labels[i].slice(5, 25);
+        }
+        
+        // var ctx = document.getElementById('timeChart').getContext('2d');
+        // var labels = JSON.parse('{{ labels | tojson | safe }}');
+        // // Modify labels to hide date if not first value and show only hh:mm
+        // var prevDate = '';
+        // labels = labels.map(function(label, index) {
+        //     var currDate = new Date(label);
+        //     var startTime = new Date(currDate.getTime() - 5*60000); // subtract 5 minutes
+        //     var endTime = new Date(currDate.getTime() + 5*60000); // add 5 minutes
+
+        //     var formatter = new Intl.DateTimeFormat('en', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Vilnius' });
+
+        //     var currDateString = currDate.toISOString().slice(0, 10);
+        //     var startTimeString = formatter.format(startTime);
+        //     var endTimeString = formatter.format(endTime);
+
+        //     if (currDateString !== prevDate) {
+        //         prevDate = currDateString;
+        //         return currDateString;
+        //     } else {
+        //         return startTimeString;
+        //     }
+
+            // if (currDateString !== prevDate) {
+            //     prevDate = currDateString;
+            //     return currDateString + ' ' + startTimeString + ' - ' + endTimeString;
+            // } else {
+            //     return startTimeString + ' - ' + endTimeString;
+            // }
+        // });
+
+        // var data = JSON.parse('{{ data | tojson | safe }}');
     
         // Calculate dynamic left margin based on window width
         var dynamicLeftMargin = Math.min(150, window.innerWidth * 0.1);
@@ -95,7 +112,7 @@
                     y: {
                         ticks: {
                             font: {
-                                size: 16
+                                size: 20
                             }
                         },
                         grid: {
