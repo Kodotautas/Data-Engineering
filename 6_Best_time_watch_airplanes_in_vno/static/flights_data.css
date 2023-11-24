@@ -43,28 +43,9 @@ h1 {
 .weather-data {
     text-align: center;
     color: grey;
-    font-size: 27px;
+    font-size: 26px;
 }
-.coffee-button a {
-    display: inline-block;
-    text-align: center;
-    background-color: grey;
-    color: white;
-    padding: 15px 30px;
-    margin: 20px 0;
-    text-decoration: none;
-    border-radius: 5px;
-}
-.coffee-button a:hover {
-    background-color: grey;
-}
-.coffee-button {
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-}
+
 .flights-data-table {
     display: block;
     margin-left: auto;

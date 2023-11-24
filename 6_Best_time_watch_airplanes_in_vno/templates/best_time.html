@@ -12,11 +12,7 @@
     </div>
 
     <!-- Add container to align buttons and add links to other pages -->
-    <div style="display: flex; justify-content: space-between;">
-        <div>
-            <a href="{{ 'https://www.google.com/maps/place/Vilniaus+oro+uosto+l%C4%97ktuv%C5%B3+steb%C4%97jimo+aik%C5%A1tel%C4%97/@54.6302678,25.2760025,17z/data=!3m1!4b1!4m6!3m5!1s0x46dd95ffb136b273:0xd6354b0f6b482d5d!8m2!3d54.6302678!4d25.2785774!16s%2Fg%2F11fqkp_bkw?entry=ttu' }}" class="button" target="_blank">Viewpoint location</a>
-        </div>
-
+    <div style="display: flex; justify-content: right;">
         <div>
             <a href="{{ url_for('flights_data') }}" class="button">Flights</a>
         </div>
@@ -24,10 +20,6 @@
 
     <h1>VNO Viewpoint Best Time</h1>
 
-    <!-- add smalller text -->
-    <!-- <div style="text-align: center; max-width: 1000px; margin: auto; margin-bottom: 15px;">
-        <p class="smaller-text">The bar chart illustrates the frequency of flights at Vilnius International Airport in 10-minute intervals. A higher bar indicates a greater number of arrivals or departures during that specific time period.</p>
-    </div> -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <!-- Display chart.html -->
@@ -126,10 +118,17 @@
     });
 </script>
 
-    <!-- Buy Me A Coffee button -->
-    <div style="text-align: right; margin-top: 30px; text-align: right;">
-        <a href="https://www.buymeacoffee.com/kodotautas" class="coffee-button" target="_blank">Buy Me A Coffee</a>
+    <!-- Add container to align buttons and add links to other pages -->
+    <div style="display: flex; justify-content: space-between;">
+        <div>
+            <a href="{{ 'https://www.google.com/maps/place/Vilniaus+oro+uosto+l%C4%97ktuv%C5%B3+steb%C4%97jimo+aik%C5%A1tel%C4%97/@54.6302678,25.2760025,17z/data=!3m1!4b1!4m6!3m5!1s0x46dd95ffb136b273:0xd6354b0f6b482d5d!8m2!3d54.6302678!4d25.2785774!16s%2Fg%2F11fqkp_bkw?entry=ttu' }}" class="coffee-button" target="_blank">Viewpoint location</a>
+        </div>
+
+        <div>
+            <a href="https://www.buymeacoffee.com/kodotautas" class="coffee-button" target="_blank">Buy Me A Coffee</a>
+        </div>
     </div>
+
 
 </body>
 </html>

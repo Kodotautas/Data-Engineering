@@ -41,7 +41,7 @@ h1 {
 .weather-data {
     text-align: center;
     color: grey;
-    font-size: 27px;
+    font-size: 26px;
 }
 
 .coffee-button {
@@ -59,6 +59,8 @@ h1 {
     border-radius: 15px;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
     text-decoration: none;
+    margin-left: 8px;
+    margin-right: 8px;
 }
 .coffee-button:hover {
     background-color: #5b5b5b;
