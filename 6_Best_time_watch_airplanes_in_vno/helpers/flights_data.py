@@ -27,12 +27,12 @@ class FlightData:
 
     def get_arrivals(self):
         """Returns arrivals dataframe"""
-        columns_to_leave = ['flight.status.generic.status.type', 'flight.identification.number.default', 'flight.identification.callsign', 'flight.aircraft.model.text', 'flight.aircraft.country.name', 'flight.airline.short', 'flight.airport.origin.position.region.city', 'final_time']
+        columns_to_leave = ['flight.status.generic.status.type', 'flight.identification.number.default', 'flight.identification.callsign', 'flight.aircraft.model.text', 'flight.airline.short', 'flight.airport.origin.position.region.city', 'final_time']
         return self.arrivals[columns_to_leave]
 
     def get_departures(self):
         """Returns departures dataframe"""
-        columns_to_leave = ['flight.status.generic.status.type', 'flight.identification.number.default', 'flight.aircraft.model.text', 'flight.aircraft.country.name', 'flight.airline.short', 'flight.airport.destination.position.region.city', 'final_time']
+        columns_to_leave = ['flight.status.generic.status.type', 'flight.identification.number.default', 'flight.aircraft.model.text', 'flight.airline.short', 'flight.airport.destination.position.region.city', 'final_time']
         return self.departures[columns_to_leave]
     
     def concat_arrivals_departures(self):
