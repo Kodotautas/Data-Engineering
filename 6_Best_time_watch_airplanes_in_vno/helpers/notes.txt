@@ -22,4 +22,4 @@ vno best time project notes
 - done: make larger chart labels
 - done: fix date (bad after added interval)
 - done: fix apple charts.js vizualization
-- add vno viewpoint google maps link to app
+- done: add vno viewpoint google maps link to app
