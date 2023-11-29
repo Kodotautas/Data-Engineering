@@ -1,0 +1,1 @@
+/home/vytautas/Documents/GitHub/Data-Engineering/7_Pipeline_with_Rust/data-with-rust/target/debug/data-with-rust: /home/vytautas/Documents/GitHub/Data-Engineering/7_Pipeline_with_Rust/data-with-rust/src/main.rs
