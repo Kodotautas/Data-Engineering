@@ -28,14 +28,19 @@
 </div>
 
 <!-- The script that generates the chart -->
-<script>       
+<script>
     var canvas = document.getElementById('timeChart');
-    canvas.style.width ='100%';
-    canvas.style.height='2300px';
-    canvas.width  = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight * 2.25;
+    var ctx = canvas.getContext('2d'); 
+          
+    // var canvas = document.getElementById('timeChart');
+    // canvas.style.width ='100%';
+    // canvas.style.height='2300px';
+    // canvas.width  = canvas.offsetWidth;
+    // canvas.height = canvas.offsetHeight;
 
-    var ctx = canvas.getContext('2d');
+    // var ctx = canvas.getContext('2d');
     var labels = JSON.parse('{{ labels | tojson | safe }}');
     // Modify labels to hide date if not first value and show only hh:mm
     var prevDate = '';
