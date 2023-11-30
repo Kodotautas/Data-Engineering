@@ -15,7 +15,7 @@ def upload_file(project_name, bucket_name, source_file_name, destination_blob_na
 # Set variables
 project_name = "data-engineering-with-rust"
 bucket_name = "files-to-experiment"
-source_file_name = "/home/vytautas/Desktop/DSCF1818.jpg"
+source_file_name = "/home/vytautas/Desktop/archive.zip"
 destination_blob_name = source_file_name.split("/")[-1]
 
 start = time.time()
