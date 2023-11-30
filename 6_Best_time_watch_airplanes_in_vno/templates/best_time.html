@@ -34,13 +34,6 @@
     canvas.height = window.innerHeight * 2.25;
     var ctx = canvas.getContext('2d'); 
           
-    // var canvas = document.getElementById('timeChart');
-    // canvas.style.width ='100%';
-    // canvas.style.height='2300px';
-    // canvas.width  = canvas.offsetWidth;
-    // canvas.height = canvas.offsetHeight;
-
-    // var ctx = canvas.getContext('2d');
     var labels = JSON.parse('{{ labels | tojson | safe }}');
     // Modify labels to hide date if not first value and show only hh:mm
     var prevDate = '';
@@ -87,8 +80,8 @@
                         return 'rgba(0, 0, 0, 0.6)';
                     }
                 },
-                borderColor: 'rgba(0, 0, 0, 1)',
-                borderWidth: 1
+                // borderColor: 'rgba(0, 0, 0, 1)',
+                // borderWidth: 1
             }]
         },
         options: {
