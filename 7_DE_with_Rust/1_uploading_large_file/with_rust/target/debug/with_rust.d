@@ -1,1 +1,0 @@
-/home/vytautas/Documents/GitHub/Data-Engineering/7_DE_with_Rust/1_uploading_large_file/with_rust/target/debug/with_rust: /home/vytautas/Documents/GitHub/Data-Engineering/7_DE_with_Rust/1_uploading_large_file/with_rust/src/main.rs
