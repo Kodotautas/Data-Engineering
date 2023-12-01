@@ -20,14 +20,92 @@
 
     <h1>VNO Viewpoint Best Time</h1>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Add chart container -->
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+
+    <div id="chart" style="height: 1600px; margin-left: 5%; margin-right: 5%;"></div>
+    
+    <script>
+        var labels = JSON.parse('{{ labels | tojson | safe }}');
+        var data = JSON.parse('{{ data | tojson | safe }}');
+    
+        function adjustTime(timeStr) {
+            var timeParts = timeStr.split(':');
+            var date = new Date();
+            date.setHours(parseInt(timeParts[0]));
+            date.setMinutes(parseInt(timeParts[1]));
+    
+            var dateBefore = new Date(date);
+            dateBefore.setMinutes(date.getMinutes() - 5);
+            var dateAfter = new Date(date);
+            dateAfter.setMinutes(date.getMinutes() + 5);
+    
+            var timeBefore = dateBefore.getHours().toString().padStart(2, '0') + ':' + dateBefore.getMinutes().toString().padStart(2, '0');
+            var timeAfter = dateAfter.getHours().toString().padStart(2, '0') + ':' + dateAfter.getMinutes().toString().padStart(2, '0');
+    
+            return timeBefore + '-' + timeAfter;
+        }
+    
+        Highcharts.chart('chart', {
+            chart: {
+                type: 'bar',
+                backgroundColor: '#E6E6FA'
+            },
+            title: {
+                text: '# of Flights'
+            },
+            xAxis: {
+                categories: labels,
+                labels: {
+                    formatter: function() {
+                        var label = this.value;
+                        var previousLabel = this.axis.categories[this.pos - 1] || '';
+                        var currentDay = label.split(' ')[0];
+                        var previousDay = previousLabel.split(' ')[0];
+    
+                        if (currentDay !== previousDay) {
+                            return label.split(' ')[0] + ' ' + adjustTime(label.split(' ')[1]);
+                        } else {
+                            return adjustTime(label.split(' ')[1]);
+                        }
+                    }
+                }
+            },
+            yAxis: {
+                title: {
+                    text: null // Set the y-axis title to null to hide it
+                },
+                tickInterval: 1,
+                max: Math.max(...data),
+            },
+            series: [{
+                name: '# of Flights',
+                data: data,
+                colorByPoint: true
+            }],
+            plotOptions: {
+                bar: {
+                    colorByPoint: true
+                }
+            },
+            colors: data.map((value, index) => {
+                var sortedData = [...data].sort((a, b) => b - a);
+                return sortedData.indexOf(value) <= 3 ? 'rgba(6, 85, 53, 0.6)' : 'rgba(0, 0, 0, 0.6)';
+            }),
+            credits: {
+                enabled: false
+            }
+        });
+    </script>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
 
 <!-- Display chart.html -->
-<div style="margin-bottom: 30px; max-width: auto; margin: auto;">
+<!-- <div style="margin-bottom: 30px; max-width: auto; margin: auto;">
     <canvas id="timeChart"></canvas>
 </div>
 
-<!-- The script that generates the chart -->
+The script that generates the chart
 <script>
     var canvas = document.getElementById('timeChart');
     canvas.width = window.innerWidth;
@@ -114,7 +192,7 @@
             }
         }
     });
-</script>
+</script> -->
 
     <!-- Add container to align buttons and add links to other pages -->
     <div style="display: flex; justify-content: space-between;">
