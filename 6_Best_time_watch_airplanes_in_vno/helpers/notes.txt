@@ -23,3 +23,4 @@ vno best time project notes
 - done: fix date (bad after added interval)
 - done: fix apple charts.js vizualization
 - done: add vno viewpoint google maps link to app
+- need hide standart time but not where is yyyy-mm-dd format
