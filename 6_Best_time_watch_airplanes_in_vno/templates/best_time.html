@@ -20,7 +20,7 @@
 
     <h1>VNO Viewpoint Best Time</h1>
 
-    <!-- Add chart container -->
+    <!-- Add chart highcharts container -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
 
     <div id="chart" style="height: 1600px; margin-left: 5%; margin-right: 5%;"></div>
@@ -49,13 +49,25 @@
         Highcharts.chart('chart', {
             chart: {
                 type: 'bar',
-                backgroundColor: '#E6E6FA'
+                backgroundColor: '#E6E6FA',
+                // add hidden labels functionality
+                events: {
+                // load: function() {
+                //     var chart = this;
+                //     chart.series[0].data.forEach(function(point, i) {
+                //         if (point.color !== 'rgba(0, 0, 255, 0.6)') {
+                //             chart.xAxis[0].ticks[i].label.hide();
+                //         }
+                //     });
+                // }
+            }
             },
             title: {
                 text: '# of Flights'
             },
             xAxis: {
                 categories: labels,
+                tickInterval: 2,
                 labels: {
                     formatter: function() {
                         var label = this.value;
@@ -90,7 +102,7 @@
             },
             colors: data.map((value, index) => {
                 var sortedData = [...data].sort((a, b) => b - a);
-                return sortedData.indexOf(value) <= 3 ? 'rgba(6, 85, 53, 0.6)' : 'rgba(0, 0, 0, 0.6)';
+                return sortedData.indexOf(value) <= 3 ? 'rgba(0, 0, 255, 0.6)' : 'rgba(0, 0, 0, 0.6)';
             }),
             credits: {
                 enabled: false
