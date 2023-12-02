@@ -385,13 +385,14 @@ checksum = "4271d37baee1b8c7e4b708028c57d816cf9d2434acb33a549475f78c181f6253"
 
 [[package]]
 name = "google-cloud-auth"
-version = "0.8.1"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "08d86a8cc190da6ab0cff095fcbfe95a057496428ff2a0a711ca110f2fcbb231"
+checksum = "af1087f1fbd2dd3f58c17c7574ddd99cd61cbbbc2c4dc81114b8687209b196cb"
 dependencies = [
  "async-trait",
  "base64 0.21.5",
  "google-cloud-metadata",
+ "google-cloud-token",
  "home",
  "jsonwebtoken",
  "reqwest",
@@ -406,9 +407,9 @@ dependencies = [
 
 [[package]]
 name = "google-cloud-metadata"
-version = "0.3.1"
+version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0d2c3b00f0a07a1a9efffc1bdd0603ef853d8a6d4ee9de8d73039cd92fdc8f26"
+checksum = "cc279bfb50487d7bcd900e8688406475fc750fe474a835b2ab9ade9eb1fc90e2"
 dependencies = [
  "reqwest",
  "thiserror",
@@ -417,9 +418,9 @@ dependencies = [
 
 [[package]]
 name = "google-cloud-storage"
-version = "0.8.1"
+version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d877fcae5d4507b9e7ac199ff183c25a1b7962646b2eb57070212a8041f4d8e1"
+checksum = "bea96059b656bc5f3332865c02cadc532238b269bd29b2fde64d8ecb878d1b13"
 dependencies = [
  "async-stream",
  "base64 0.21.5",
@@ -427,6 +428,7 @@ dependencies = [
  "futures-util",
  "google-cloud-auth",
  "google-cloud-metadata",
+ "google-cloud-token",
  "hex",
  "once_cell",
  "percent-encoding",
@@ -440,9 +442,17 @@ dependencies = [
  "thiserror",
  "time",
  "tokio",
- "tokio-util",
  "tracing",
  "url",
+]
+
+[[package]]
+name = "google-cloud-token"
+version = "0.1.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8f49c12ba8b21d128a2ce8585955246977fbce4415f680ebf9199b6f9d6d725f"
+dependencies = [
+ "async-trait",
 ]
 
 [[package]]
@@ -665,6 +675,16 @@ name = "mime"
 version = "0.3.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6877bb514081ee2a7ff5ef9de3281f14a4dd4bceac4c09388074a6b5df8a139a"
+
+[[package]]
+name = "mime_guess"
+version = "2.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4192263c238a5f0d0c6bfd21f336a313a4ce1c450542449ca191bb657b4642ef"
+dependencies = [
+ "mime",
+ "unicase",
+]
 
 [[package]]
 name = "miniz_oxide"
@@ -1026,6 +1046,7 @@ dependencies = [
  "js-sys",
  "log",
  "mime",
+ "mime_guess",
  "native-tls",
  "once_cell",
  "percent-encoding",
@@ -1476,6 +1497,15 @@ name = "typenum"
 version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
+
+[[package]]
+name = "unicase"
+version = "2.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f7d2d4dafb69621809a81864c9c1b864479e1235c0dd4e199924b9742439ed89"
+dependencies = [
+ "version_check",
+]
 
 [[package]]
 name = "unicode-bidi"
