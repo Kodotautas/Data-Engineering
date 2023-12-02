@@ -50,8 +50,32 @@
             chart: {
                 type: 'bar',
                 backgroundColor: '#E6E6FA',
+                responsive: {
+                    rules: [{
+                        condition: {
+                            maxWidth: 500 // this will apply to screens smaller than 500px
+                        },
+                        chartOptions: {
+                            chart: {
+                                height: 'auto' // chart height will adjust automatically
+                            },
+                            legend: {
+                                layout: 'horizontal',
+                                align: 'center',
+                                verticalAlign: 'bottom'
+                            },
+                            xAxis: {
+                                labels: {
+                                    style: {
+                                        fontSize: '18px' // smaller font size for mobile
+                                    }
+                                }
+                            }
+                        }
+                    }]
+                }
                 // add hidden labels functionality
-                events: {
+                // events: {
                 // load: function() {
                 //     var chart = this;
                 //     chart.series[0].data.forEach(function(point, i) {
@@ -60,7 +84,7 @@
                 //         }
                 //     });
                 // }
-            }
+            // }
             },
             title: {
                 text: '# of Flights'
