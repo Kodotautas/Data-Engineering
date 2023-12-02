@@ -72,6 +72,6 @@ h1 {
     background-color: #5b5b5b;
 }
 .button:active {
-    background-color: #065535;
+    background-color: #0000FF;
     transform: translateY(4px);
 }

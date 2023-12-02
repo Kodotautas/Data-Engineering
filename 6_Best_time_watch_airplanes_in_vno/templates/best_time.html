@@ -23,7 +23,7 @@
     <!-- Add chart highcharts container -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
 
-    <div id="chart" style="height: 1600px; margin-left: 5%; margin-right: 5%;"></div>
+    <div id="chart" style="height: 2250px; margin-left: 5%; margin-right: 5%;"></div>
     
     <script>
         var labels = JSON.parse('{{ labels | tojson | safe }}');
@@ -67,8 +67,11 @@
             },
             xAxis: {
                 categories: labels,
-                tickInterval: 2,
+                // tickInterval: 2,
                 labels: {
+                    style: {
+                        fontSize: '19px'
+                    },
                     formatter: function() {
                         var label = this.value;
                         var previousLabel = this.axis.categories[this.pos - 1] || '';
@@ -109,102 +112,6 @@
             }
         });
     </script>
-
-<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
-
-<!-- Display chart.html -->
-<!-- <div style="margin-bottom: 30px; max-width: auto; margin: auto;">
-    <canvas id="timeChart"></canvas>
-</div>
-
-The script that generates the chart
-<script>
-    var canvas = document.getElementById('timeChart');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight * 2.25;
-    var ctx = canvas.getContext('2d'); 
-          
-    var labels = JSON.parse('{{ labels | tojson | safe }}');
-    // Modify labels to hide date if not first value and show only hh:mm
-    var prevDate = '';
-    labels = labels.map(function(label, index) {
-        var currDate = new Date(label);
-        var startTime = new Date(currDate.getTime() - 5*60000); // subtract 5 minutes
-        var endTime = new Date(currDate.getTime() + 5*60000); // add 5 minutes
-
-        var formatter = new Intl.DateTimeFormat('en', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Europe/Vilnius' });
-
-        var currDateString = currDate.toISOString().slice(0, 10);
-        var startTimeString = formatter.format(startTime);
-        var endTimeString = formatter.format(endTime);
-
-        if (currDateString !== prevDate) {
-            prevDate = currDateString;
-            return currDateString + ' ' + startTimeString + ' - ' + endTimeString;
-        } else {
-            return startTimeString + ' - ' + endTimeString;
-        }
-    });
-
-    var data = JSON.parse('{{ data | tojson | safe }}');
-
-    // Calculate dynamic left margin based on window width
-    var dynamicLeftMargin = Math.min(150, window.innerWidth * 0.1);
-
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: labels,
-            datasets: [{
-                label: '# of Flights',
-                data: data,
-                backgroundColor: function(context) {
-                    var index = context.dataIndex;
-                    var value = context.dataset.data[index];
-                    var sortedData = context.dataset.data.slice().sort(function(a, b) {
-                        return b - a;
-                    });
-                    if (sortedData.indexOf(value) <= 3) {
-                        return 'rgba(6, 85, 53, 0.6)';
-                    } else {
-                        return 'rgba(0, 0, 0, 0.6)';
-                    }
-                },
-                // borderColor: 'rgba(0, 0, 0, 1)',
-                // borderWidth: 1
-            }]
-        },
-        options: {
-            indexAxis: 'y',
-            scales: {
-                x: {
-                    ticks: {
-                        stepSize: 1
-                    },
-                    grid: {
-                        display: false
-                    }
-                },
-                y: {
-                    ticks: {
-                        font: {
-                            size: 18
-                        }
-                    },
-                    grid: {
-                        display: false
-                    }
-                },
-            },
-            layout: {
-                padding: {
-                    left: dynamicLeftMargin, 
-                    right: dynamicLeftMargin
-                }
-            }
-        }
-    });
-</script> -->
 
     <!-- Add container to align buttons and add links to other pages -->
     <div style="display: flex; justify-content: space-between;">
