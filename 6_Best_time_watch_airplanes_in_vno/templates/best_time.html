@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <h1>VNO Viewpoint Best Time</h1>
+    <h1>VNO viewpoint best times to watch planes</h1>
 
     <!-- Add chart highcharts container -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -87,11 +87,10 @@
             // }
             },
             title: {
-                text: '# of Flights'
+                text: null
             },
             xAxis: {
                 categories: labels,
-                // tickInterval: 2,
                 labels: {
                     style: {
                         fontSize: '19px'
@@ -112,7 +111,7 @@
             },
             yAxis: {
                 title: {
-                    text: null // Set the y-axis title to null to hide it
+                    text: null // remove y-axis title
                 },
                 tickInterval: 1,
                 max: Math.max(...data),
