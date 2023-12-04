@@ -20,14 +20,54 @@
 
     <h1>VNO viewpoint best times to watch planes</h1>
 
+    <!-- toogle between today and tomorrow -->
+    <div style="text-align: center;">
+        <button id="dateButton" class="dateSelector">Tomorrow</button>
+    </div>
+    
+    <script>
+        var dateButton = document.getElementById('dateButton');
+        dateButton.addEventListener('click', function() {
+            if (dateButton.textContent === 'Tomorrow') {
+                dateButton.textContent = 'Today';
+                dateButton.value = 'today';
+                createChart(tomorrowLabels, tomorrowData);
+            } else {
+                dateButton.textContent = 'Tomorrow';
+                dateButton.value = 'tomorrow';
+                createChart(todayLabels, todayData);
+            }
+        });
+    </script>
+
+
+    <div id="container"></div>
+
     <!-- Add chart highcharts container -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
-
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <div id="chart" style="height: 2250px; margin-left: 5%; margin-right: 5%;"></div>
     
     <script>
         var labels = JSON.parse('{{ labels | tojson | safe }}');
         var data = JSON.parse('{{ data | tojson | safe }}');
+
+        // Split the data and labels into today and tomorrow
+        var today = new Date();
+        var tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+
+        var todayLabels = labels.filter(label => label.includes(formatDate(today)));
+        var tomorrowLabels = labels.filter(label => label.includes(formatDate(tomorrow)));
+
+        function formatDate(date) {
+            var year = date.getFullYear();
+            var month = (date.getMonth() + 1).toString().padStart(2, '0');
+            var day = date.getDate().toString().padStart(2, '0');
+            return year + '-' + month + '-' + day;
+        }
+        var todayData = data.slice(0, todayLabels.length);
+        var tomorrowData = data.slice(todayLabels.length);
     
         function adjustTime(timeStr) {
             var timeParts = timeStr.split(':');
@@ -46,10 +86,17 @@
             return timeBefore + '-' + timeAfter;
         }
     
-        Highcharts.chart('chart', {
+        // Function to create the chart
+        function createChart(labels, data) {
+            Highcharts.chart('chart', {
             chart: {
                 type: 'bar',
                 backgroundColor: '#E6E6FA',
+                navigation: {
+                    buttonOptions: {
+                        enabled: true
+                    }
+                },
                 responsive: {
                     rules: [{
                         condition: {
@@ -67,30 +114,20 @@
                             xAxis: {
                                 labels: {
                                     style: {
-                                        fontSize: '18px' // smaller font size for mobile
+                                        fontSize: '19px' // smaller font size for mobile
                                     }
                                 }
                             }
                         }
                     }]
                 }
-                // add hidden labels functionality
-                // events: {
-                // load: function() {
-                //     var chart = this;
-                //     chart.series[0].data.forEach(function(point, i) {
-                //         if (point.color !== 'rgba(0, 0, 255, 0.6)') {
-                //             chart.xAxis[0].ticks[i].label.hide();
-                //         }
-                //     });
-                // }
-            // }
             },
             title: {
                 text: null
             },
             xAxis: {
                 categories: labels,
+                tickInterval: 2,
                 labels: {
                     style: {
                         fontSize: '19px'
@@ -132,9 +169,35 @@
             }),
             credits: {
                 enabled: false
+            },
+            exporting: {
+                buttons: {
+                    contextButton: {
+                    theme: {
+                        fill: '#E6E6FA'
+                    },
+                    menuItems: ["viewFullscreen"]
+                }
+                }
+            }
+        })};
+
+        // Create the chart for today by default
+        createChart(todayLabels, todayData);
+
+        // Update the chart when the selected date changes
+        document.getElementById('dateSelect').addEventListener('change', function() {
+            var selectedDate = this.value;
+            if (selectedDate === 'today') {
+                createChart(todayLabels, todayData);
+            } else if (selectedDate === 'tomorrow') {
+                createChart(tomorrowLabels, tomorrowData);
             }
         });
+    
     </script>
+
+    
 
     <!-- Add container to align buttons and add links to other pages -->
     <div style="display: flex; justify-content: space-between;">
