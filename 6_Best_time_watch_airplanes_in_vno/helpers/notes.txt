@@ -26,4 +26,4 @@ vno best time project notes
 - done: add charts context menu
 - done: maybe ability select today / tommorow
 - get flight status
-- double check departures flights
+- double check departures flights (can be mistake in code)
