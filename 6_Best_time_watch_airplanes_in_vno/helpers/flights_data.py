@@ -68,7 +68,7 @@ class FlightData:
         wind_direction = self.wind_direction['text']
         wind_speed = self.wind_speed
         temperature = self.temperature
-        return f'Humidity: {humidity}% | Sky: {sky_condition} | Wind direction: {wind_direction} | Wind speed: {wind_speed} km/h | Temp: {temperature} °C'
+        return f'Humidity: {humidity}% | Sky: {sky_condition} | Wind: {wind_speed} km/h, {wind_direction} | Temp: {temperature} °C'
 
 def run():
     start_time = time.time()
