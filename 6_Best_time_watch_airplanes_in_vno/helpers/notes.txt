@@ -25,5 +25,5 @@ vno best time project notes
 - done: add vno viewpoint google maps link to app
 - done: add charts context menu
 - done: maybe ability select today / tommorow
-- get flight status
-- double check departures flights (can be mistake in code)
+- done: get flight status
+- done: double check departures flights (can be mistake in code)
