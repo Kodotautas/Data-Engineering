@@ -25,3 +25,4 @@ vno best time project notes
 - done: add vno viewpoint google maps link to app
 - done: add charts context menu
 - done: maybe ability select today / tommorow
+- add tooltip flights summary
