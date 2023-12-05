@@ -95,7 +95,7 @@
                 navigation: {
                     buttonOptions: {
                         enabled: true
-                    }
+                    },
                 },
                 responsive: {
                     rules: [{
@@ -127,7 +127,7 @@
             },
             xAxis: {
                 categories: labels,
-                tickInterval: 1,
+                tickInterval: 2,
                 labels: {
                     style: {
                         fontSize: '20px'
@@ -178,6 +178,15 @@
                     },
                     menuItems: ["viewFullscreen"]
                 }
+                }
+            },
+            // Add this inside Highcharts.chart('chart', { ... })
+            tooltip: {
+                formatter: function() {
+                    var dateTime = this.x;
+                    var time = dateTime.split(' ')[1];
+                    var adjustedTime = adjustTime(time);
+                    return adjustedTime + ': ' + this.y;
                 }
             }
         })};
