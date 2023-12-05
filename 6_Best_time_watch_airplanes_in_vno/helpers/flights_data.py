@@ -22,7 +22,8 @@ class FlightData:
 
     def process_flights(self, flights):
         df = pd.json_normalize(flights)
-        df['final_time'] = pd.to_datetime(df['flight.time.estimated.arrival'].fillna(df['flight.time.scheduled.arrival']) + df['flight.airport.destination.timezone.offset'], unit='s')
+        # df['final_time'] = pd.to_datetime(df['flight.time.estimated.arrival'].fillna(df['flight.time.scheduled.arrival']) + df['flight.airport.destination.timezone.offset'], unit='s')
+        df['final_time'] = pd.to_datetime(df['flight.time.estimated.arrival'].fillna(df['flight.time.scheduled.arrival']) + 7200, unit='s')
         return df
 
     def get_arrivals(self):
@@ -58,7 +59,7 @@ class FlightData:
         wind_direction = self.wind_direction['text']
         wind_speed = self.wind_speed
         temperature = self.temperature
-        return f'Humidity: {humidity}% | Sky condition: {sky_condition} | Wind direction: {wind_direction} | Wind speed: {wind_speed} km/h | Temp: {temperature} °C'
+        return f'Humidity: {humidity}% | Sky: {sky_condition} | Wind direction: {wind_direction} | Wind speed: {wind_speed} km/h | Temp: {temperature} °C'
 
 def run():
     start_time = time.time()
@@ -67,7 +68,8 @@ def run():
     fd = FlightData(airport_code)
     flights = fd.group_flights_by_final_time()
     print(f'Flights in {airport_code} airport: {len(flights)}')
-
+    get_departures = fd.get_departures()
+    get_departures.to_csv(f'{airport_code}_departures.csv', index=False)
     print(f'Done in {time.time() - start_time} seconds')
 
 if __name__ == '__main__':
