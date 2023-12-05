@@ -38,7 +38,8 @@ def flights_data():
                                'flight.airline.short': 'Airline', 
                                'flight.airport.origin.position.region.city': 'Origin city', 
                                'flight.airport.destination.position.region.city': 'Destination city', 
-                               'final_time': 'Final time'}, inplace=True)
+                               'final_time': 'Final time',
+                               'flight.status.generic.status.color': 'Status'}, inplace=True)
 
     flights_data = flights_df.to_dict('records')
 

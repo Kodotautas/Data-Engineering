@@ -22,22 +22,22 @@ class FlightData:
 
     def process__arrival_flights(self, flights):
         df = pd.json_normalize(flights)
-        df['final_time'] = pd.to_datetime(df['flight.time.estimated.arrival'].fillna(df['flight.time.scheduled.arrival']) + 7200, unit='s')
+        df['final_time'] = pd.to_datetime(df['flight.time.estimated.arrival'].fillna(df['flight.time.scheduled.arrival']) + df['flight.airport.origin.timezone.offset'], unit='s')
         return df
     
     def process_departure_flights(self, flights):
         df = pd.json_normalize(flights)
-        df['final_time'] = pd.to_datetime(df['flight.time.estimated.departure'].fillna(df['flight.time.scheduled.departure']) + 7200, unit='s')
+        df['final_time'] = pd.to_datetime(df['flight.time.estimated.departure'].fillna(df['flight.time.scheduled.departure']) + df['flight.airport.origin.timezone.offset'], unit='s')
         return df
 
     def get_arrivals(self):
         """Returns arrivals dataframe"""
-        columns_to_leave = ['flight.status.generic.status.type', 'flight.identification.number.default', 'flight.identification.callsign', 'flight.aircraft.model.text', 'flight.airline.short', 'flight.airport.origin.position.region.city', 'final_time']
+        columns_to_leave = ['flight.status.generic.status.type', 'flight.identification.number.default', 'flight.identification.callsign', 'flight.aircraft.model.text', 'flight.airline.short', 'flight.airport.origin.position.region.city', 'final_time', 'flight.status.generic.status.color']
         return self.arrivals[columns_to_leave]
 
     def get_departures(self):
         """Returns departures dataframe"""
-        columns_to_leave = ['flight.status.generic.status.type', 'flight.identification.number.default', 'flight.aircraft.model.text', 'flight.airline.short', 'flight.airport.destination.position.region.city', 'final_time']
+        columns_to_leave = ['flight.status.generic.status.type', 'flight.identification.number.default', 'flight.aircraft.model.text', 'flight.airline.short', 'flight.airport.destination.position.region.city', 'final_time', 'flight.status.generic.status.color']
         return self.departures[columns_to_leave]
     
     def concat_arrivals_departures(self):
@@ -47,6 +47,11 @@ class FlightData:
         # Add Vilnius city to origin and destination
         flights_df.loc[flights_df['flight.status.generic.status.type'] == 'departure', 'flight.airport.origin.position.region.city'] = 'Vilnius'
         flights_df.loc[flights_df['flight.status.generic.status.type'] == 'arrival', 'flight.airport.destination.position.region.city'] = 'Vilnius'
+        # Add statuses meanings
+        flights_df.loc[flights_df['flight.status.generic.status.color'] == 'yellow', 'flight.status.generic.status.color'] = 'delayed'
+        flights_df.loc[flights_df['flight.status.generic.status.color'] == 'green', 'flight.status.generic.status.color'] = 'estimated'
+        flights_df.loc[flights_df['flight.status.generic.status.color'] == 'red', 'flight.status.generic.status.color'] = 'canceled'
+        flights_df.loc[flights_df['flight.status.generic.status.color'] == 'gray', 'flight.status.generic.status.color'] = 'scheduled'
         return flights_df
     
     def group_flights_by_final_time(self):
