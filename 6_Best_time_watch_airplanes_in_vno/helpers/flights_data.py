@@ -17,13 +17,17 @@ class FlightData:
         self.wind_direction = weather['wind']['direction']
         self.wind_speed = weather['wind']['speed']['kmh']
         self.temperature = weather['temp']['celsius']
-        self.arrivals = self.process_flights(schedule['arrivals']['data'])
-        self.departures = self.process_flights(schedule['departures']['data'])
+        self.arrivals = self.process__arrival_flights(schedule['arrivals']['data'])
+        self.departures = self.process_departure_flights(schedule['departures']['data'])
 
-    def process_flights(self, flights):
+    def process__arrival_flights(self, flights):
         df = pd.json_normalize(flights)
-        # df['final_time'] = pd.to_datetime(df['flight.time.estimated.arrival'].fillna(df['flight.time.scheduled.arrival']) + df['flight.airport.destination.timezone.offset'], unit='s')
         df['final_time'] = pd.to_datetime(df['flight.time.estimated.arrival'].fillna(df['flight.time.scheduled.arrival']) + 7200, unit='s')
+        return df
+    
+    def process_departure_flights(self, flights):
+        df = pd.json_normalize(flights)
+        df['final_time'] = pd.to_datetime(df['flight.time.estimated.departure'].fillna(df['flight.time.scheduled.departure']) + 7200, unit='s')
         return df
 
     def get_arrivals(self):
