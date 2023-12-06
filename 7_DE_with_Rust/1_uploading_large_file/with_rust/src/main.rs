@@ -1,35 +1,31 @@
 use google_cloud_storage::client::{ClientConfig, Client};
 use google_cloud_storage::http::objects::upload::{Media, UploadObjectRequest, UploadType};
 use std::time::Instant;
-use std::fs::read;
+use tokio::fs::read; 
 use reqwest::Body;
-use tokio::fs::File;
-use tokio::io::{self, AsyncReadExt, AsyncWriteExt};
-use std::io::Write;
-use flate2::Compression;
-use flate2::write::GzEncoder;
-use std::io::Cursor;
+use async_zip::ZipEntryBuilder;
+use async_zip::tokio::write::ZipFileWriter;
+use async_zip::Compression;
+use std::path::Path;
 
-async fn zip_file(file_path: String) -> io::Result<String> {
-    let mut buffer = [0; 1024];
-    let mut file = File::open(&file_path).await?;
-    let zip_file_path = format!("{}.gz", &file_path);
-    let mut zip_file = File::create(&zip_file_path).await?;
-    let mut encoder = GzEncoder::new(Cursor::new(Vec::new()), Compression::default());
+async fn zip_file_with_async_zip(file_path: &str) -> std::io::Result<String> {
+    let zip_file_path = "archive.zip";
+    let mut file = tokio::fs::File::create(zip_file_path).await?;
+    let mut writer = ZipFileWriter::with_tokio(&mut file);
 
-    while let Ok(n) = file.read(&mut buffer).await {
-        if n == 0 {
-            break;
-        }
-        encoder.write_all(&buffer[..n])?;
-    }
+    let data = match read(file_path).await {
+        Ok(data) => data,
+        Err(e) => return Err(std::io::Error::new(std::io::ErrorKind::Other, e)),
+    };
 
-    let inner = encoder.finish()?;
-    zip_file.write_all(inner.get_ref().as_slice()).await?;
+    let filename = Path::new(file_path).file_name().unwrap().to_str().unwrap();
+    let builder = ZipEntryBuilder::new(filename.into(), Compression::Deflate);
 
-    Ok(zip_file_path)
+    writer.write_entry_whole(builder, &data).await.map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+    writer.close().await.map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+
+    Ok(zip_file_path.to_string())
 }
-
 
 async fn upload(config: ClientConfig, file_path: String) -> Result<(), Box<dyn std::error::Error>> {
 
@@ -38,7 +34,7 @@ async fn upload(config: ClientConfig, file_path: String) -> Result<(), Box<dyn s
     let client = Client::new(config);
 
     // Read the file into a byte array
-    let data = match read(&file_path) {
+    let data = match read(&file_path).await {
         Ok(data) => data,
         Err(e) => {
             println!("Failed to read file: {}", e);
@@ -50,7 +46,7 @@ async fn upload(config: ClientConfig, file_path: String) -> Result<(), Box<dyn s
     let body = Body::from(data);
 
     // Upload the file
-    let upload_type = UploadType::Simple(Media::new("archive.zip"));
+    let upload_type = UploadType::Simple(Media::new("application/zip"));
     let uploaded = client.upload_object(&UploadObjectRequest {
         bucket: "files-to-experiment".to_string(),
         ..Default::default()
@@ -69,7 +65,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let start_zip = Instant::now();
 
     let file_path = "/home/vytautas/Desktop/itineraries.csv".to_string();
-    let zip_file_path = zip_file(file_path).await?;
+    let zip_file_path = zip_file_with_async_zip(&file_path).await?;
 
     let duration_zip = start_zip.elapsed();
     println!("File zipped in {} minutes", duration_zip.as_secs_f64() / 60.0);
