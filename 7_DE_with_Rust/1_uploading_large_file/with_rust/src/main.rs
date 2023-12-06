@@ -3,26 +3,38 @@ use google_cloud_storage::http::objects::upload::{Media, UploadObjectRequest, Up
 use std::time::Instant;
 use tokio::fs::read; 
 use reqwest::Body;
-use async_zip::ZipEntryBuilder;
-use async_zip::tokio::write::ZipFileWriter;
-use async_zip::Compression;
+use std::io::prelude::*;
+use std::io::BufReader;
+use std::fs::File;
+use zip::write::FileOptions;
+use zip::CompressionMethod::Stored;
 use std::path::Path;
 
-async fn zip_file_with_async_zip(file_path: &str) -> std::io::Result<String> {
-    let zip_file_path = "archive.zip";
-    let mut file = tokio::fs::File::create(zip_file_path).await?;
-    let mut writer = ZipFileWriter::with_tokio(&mut file);
+fn zip_file(file_path: &str) -> std::io::Result<String> {
+    let zip_file_path = "/home/vytautas/Desktop/archive.zip";
+    let file = File::create(zip_file_path)?;
+    let mut zip = zip::ZipWriter::new(file);
+    let options = FileOptions::default()
+        .compression_method(Stored)
+        .unix_permissions(0o755);
 
-    let data = match read(file_path).await {
-        Ok(data) => data,
-        Err(e) => return Err(std::io::Error::new(std::io::ErrorKind::Other, e)),
-    };
+    let path = Path::new(file_path);
+    let file_name = path.file_name().unwrap().to_str().unwrap();
 
-    let filename = Path::new(file_path).file_name().unwrap().to_str().unwrap();
-    let builder = ZipEntryBuilder::new(filename.into(), Compression::Deflate);
+    zip.start_file(file_name, options)?;
 
-    writer.write_entry_whole(builder, &data).await.map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
-    writer.close().await.map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+    let mut buffer = [0; 1024 * 1024]; // 1MB buffer
+    let mut reader = BufReader::new(File::open(&path)?);
+
+    loop {
+        let n = reader.read(&mut buffer)?;
+        if n == 0 {
+            break;
+        }
+        zip.write_all(&buffer[..n])?;
+    }
+
+    zip.finish()?;
 
     Ok(zip_file_path.to_string())
 }
@@ -65,7 +77,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let start_zip = Instant::now();
 
     let file_path = "/home/vytautas/Desktop/itineraries.csv".to_string();
-    let zip_file_path = zip_file_with_async_zip(&file_path).await?;
+    let zip_file_path = zip_file(&file_path)?;
 
     let duration_zip = start_zip.elapsed();
     println!("File zipped in {} minutes", duration_zip.as_secs_f64() / 60.0);
