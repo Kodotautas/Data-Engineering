@@ -17,12 +17,12 @@ class FlightData:
         self.wind_direction = weather['wind']['direction']
         self.wind_speed = weather['wind']['speed']['kmh']
         self.temperature = weather['temp']['celsius']
-        self.arrivals = self.process__arrival_flights(schedule['arrivals']['data'])
+        self.arrivals = self.process_arrival_flights(schedule['arrivals']['data'])
         self.departures = self.process_departure_flights(schedule['departures']['data'])
 
-    def process__arrival_flights(self, flights):
+    def process_arrival_flights(self, flights):
         df = pd.json_normalize(flights)
-        df['final_time'] = pd.to_datetime(df['flight.time.estimated.arrival'].fillna(df['flight.time.scheduled.arrival']) + df['flight.airport.origin.timezone.offset'], unit='s')
+        df['final_time'] = pd.to_datetime(df['flight.time.estimated.arrival'].fillna(df['flight.time.scheduled.arrival']) + df['flight.airport.destination.timezone.offset'], unit='s')
         return df
     
     def process_departure_flights(self, flights):
@@ -33,7 +33,7 @@ class FlightData:
     def get_arrivals(self):
         """Returns arrivals dataframe"""
         columns_to_leave = ['flight.status.generic.status.type', 'flight.identification.number.default', 'flight.identification.callsign', 'flight.aircraft.model.text', 'flight.airline.short', 'flight.airport.origin.position.region.city', 'final_time', 'flight.status.generic.status.color']
-        return self.arrivals[columns_to_leave]
+        return self.arrivals
 
     def get_departures(self):
         """Returns departures dataframe"""
@@ -77,8 +77,8 @@ def run():
     fd = FlightData(airport_code)
     flights = fd.group_flights_by_final_time()
     print(f'Flights in {airport_code} airport: {len(flights)}')
-    get_departures = fd.get_departures()
-    get_departures.to_csv(f'{airport_code}_departures.csv', index=False)
+    get_arrivals = fd.get_arrivals()
+    get_arrivals.to_csv(f'{airport_code}_departures.csv', index=False)
     print(f'Done in {time.time() - start_time} seconds')
 
 if __name__ == '__main__':
