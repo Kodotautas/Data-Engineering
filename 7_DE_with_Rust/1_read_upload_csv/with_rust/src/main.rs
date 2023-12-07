@@ -23,7 +23,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let metadata = fs::metadata(source_file_name)?;
     let file_size = metadata.len();
 
-    let mut file = File::create("times.txt")?;
+    let mut file = File::create("/src/times.txt")?;
     write!(file, "Time elapsed with Polars: {} seconds to read {} which size is {} bytes.\n", 
         duration.as_secs_f64(), source_file_name, file_size)?;
 
