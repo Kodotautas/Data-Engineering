@@ -27,3 +27,4 @@ vno best time project notes
 - done: maybe ability select today / tommorow
 - done: get flight status
 - done: double check departures flights (can be mistake in code)
+- next day forst hour is -5 min previous day
