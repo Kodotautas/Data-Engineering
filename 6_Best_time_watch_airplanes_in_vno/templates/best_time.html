@@ -46,7 +46,7 @@
     <!-- Add chart highcharts container -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <div id="chart" style="height: 1400px; margin-left: 5%; margin-right: 5%;"></div>
+    <div id="chart" style="height: 1425px; margin-left: 5%; margin-right: 5%;"></div>
     
     <script>
         var labels = JSON.parse('{{ labels | tojson | safe }}');
@@ -74,15 +74,18 @@
             var date = new Date();
             date.setHours(parseInt(timeParts[0]));
             date.setMinutes(parseInt(timeParts[1]));
-    
+
             var dateBefore = new Date(date);
-            dateBefore.setMinutes(date.getMinutes() - 5);
             var dateAfter = new Date(date);
             dateAfter.setMinutes(date.getMinutes() + 5);
-    
+
+            if (timeStr !== '00:00') {
+                dateBefore.setMinutes(date.getMinutes() - 5);
+            }
+
             var timeBefore = dateBefore.getHours().toString().padStart(2, '0') + ':' + dateBefore.getMinutes().toString().padStart(2, '0');
             var timeAfter = dateAfter.getHours().toString().padStart(2, '0') + ':' + dateAfter.getMinutes().toString().padStart(2, '0');
-    
+
             return timeBefore + '-' + timeAfter;
         }
     
