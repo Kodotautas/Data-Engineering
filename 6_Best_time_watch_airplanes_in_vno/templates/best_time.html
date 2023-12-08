@@ -45,7 +45,6 @@
 
     <!-- Add chart highcharts container -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
     <div id="chart" style="height: 1425px; margin-left: 5%; margin-right: 5%;"></div>
     
     <script>
@@ -158,8 +157,12 @@
             },
             series: [{
                 name: '# of Flights',
-                data: data,
-                colorByPoint: true
+                data: data.map((value) => {
+                    return {
+                        y: value,
+                        color: getColor(value)
+                    };
+                }),
             }],
             plotOptions: {
                 bar: {
@@ -173,17 +176,6 @@
             credits: {
                 enabled: false
             },
-            exporting: {
-                buttons: {
-                    contextButton: {
-                    theme: {
-                        fill: '#E6E6FA'
-                    },
-                    menuItems: ["viewFullscreen"]
-                }
-                }
-            },
-            // Add this inside Highcharts.chart('chart', { ... })
             tooltip: {
                 formatter: function() {
                     var dateTime = this.x;
@@ -193,6 +185,18 @@
                 }
             }
         })};
+
+        function getColor(value) {
+            const max = Math.max(...data);
+            const ratio = value / max;
+            if (ratio < 0.5) {
+                return '#ccccff'; 
+            } else if (ratio < 0.9) {
+                return '#6666ff'; 
+            } else {
+                return '#0000ff';
+            }
+        }
 
         // Create the chart for today by default
         createChart(todayLabels, todayData);
@@ -210,7 +214,6 @@
     </script>
 
     
-
     <!-- Add container to align buttons and add links to other pages -->
     <div style="display: flex; justify-content: space-between;">
         <div>
