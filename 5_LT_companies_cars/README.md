@@ -15,6 +15,8 @@
 `python3 main.py --setup_file ./setup.py --region europe-west1 --output gs://lithuania_statistics/output --runner DataflowRunner --project vl-data-learn --staging_location gs://vl-data-learn/dataflow/staging --temp_location  gs://lithuania_statistics/temp/ --worker_machine_type=e2-standard-2`
 
 ### Architecture:
-<img src="./diagram/lt_cars_dashboard.jpeg" alt="Data Pipeline Diagram" width="300">
+<div align="center">
+  <img src="./diagram/lt_cars_dashboard.jpeg" alt="Data Pipeline Diagram" width="300">
+</div>
 
 ##### Dashboard link: [Here](https://lookerstudio.google.com/s/uMGgaIay7bA)

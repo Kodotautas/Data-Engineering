@@ -1,13 +1,18 @@
-#### This project helps to find best time to watch planes in VNO viewpoint and check flights data.
+#### Overview
+Created out of a personal passion for plane-watching with my son in Vilnius International Airport viewpoint ([Maps location](https://maps.app.goo.gl/PTA66kc9aR2LAeks8)), project offering real-time flight data. Leveraging FlightRadar24 ([unoficial API](https://github.com/JeanExtreme002/FlightRadarAPI)), the application is deployed on GCP App Engine, app powered by Python and Flask.
 
-It get data from FlightRadar24, transform data and vizualize it in web app. All app deployed on GCP App Engine and code written in Python using Flask web framework.
+#### Key Features
+- `Time Grouping & Vizualization`: categorizes flights into 10-minute intervals for easy comprehension of flight distribution over time and vizualize number of counts.
 
-##### Info:
-- Flights grouped by 10 min. intervals
-- Ability to see number of flight of intervals
-- VNO flights in separate page as a table to have more information
-- refresh page if you eant see latest flights data
+- `Detailed VNO Flights Table`: Access a comprehensive table dedicated to VNO flights.
 
-"architecture image"
+- `Real-time Data Updates`: Stay current with the latest flight data by refreshing the page.
 
-[Link to web app](https://vno-viewpoint.appspot.com/)
+#### Architecture
+<div align="center">
+  <img src="./diagram/vno_app_architecture.jpeg" alt="Data Pipeline Diagram" width="300">
+</div>
+
+#### Access the Web Application
+####[Here](https://vno-viewpoint.appspot.com/) 
+For inquiries or feedback, feel free to reach out. Happy plane spotting in Vilnius!
