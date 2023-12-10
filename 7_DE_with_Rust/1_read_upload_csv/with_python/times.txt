@@ -1,4 +1,0 @@
-Time elapsed with Py Pandas: 45.630977153778076 seconds to read /home/vytautas/Desktop/alban_news.csv which size is 3853253657 bytes.
-Time elapsed with Py Polars: 32.61953020095825 seconds to read /home/vytautas/Desktop/alban_news.csv which size is 3853253657 bytes.
-Time elapsed with Py BigQuery: 47.02288317680359 seconds to upload /home/vytautas/Desktop/alban_news.csv which size is 3853253657 bytes.
-Time elapsed with Py BigQuery: 47.26993775367737 seconds to upload /home/vytautas/Desktop/alban_news.csv which size is 3853253657 bytes.
