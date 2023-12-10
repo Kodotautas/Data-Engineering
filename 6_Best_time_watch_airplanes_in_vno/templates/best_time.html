@@ -187,13 +187,14 @@
                         return timeDifference <= 5 * 60 * 1000;  // 5 minutes
                     });
                     flights.forEach(function(flight) {
-                        tooltip += flight['Final time'] + ', ' +
-                            flight['Type'] + ', ' +
-                            flight['Aircraft model'] + '<br/>';
-                    });
-                    return tooltip;
-                }
+                    var formattedFinalTime = Highcharts.dateFormat('%H:%M', new Date(flight['Final time']));
+                    tooltip += formattedFinalTime + ', ' +
+                        flight['Type'] + ', ' +
+                        flight['Flight number'] + '<br/>';
+                });
+                return tooltip;
             }
+        }
         })};
 
         function getColor(value) {
