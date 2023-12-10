@@ -52,7 +52,7 @@ with open("7_DE_with_Rust/1_read_upload_csv/with_python/times.txt", "a") as f:
 
 # test with BigQuery
 start = time.time()
-File.upload_to_bigquery(source_file_name, "data_tests", "alban_news")
+File.upload_to_bigquery(source_file_name, "data_tests", "chess_games")
 end = time.time()
 # export time to txt file
 with open("7_DE_with_Rust/1_read_upload_csv/with_python/times.txt", "a") as f:

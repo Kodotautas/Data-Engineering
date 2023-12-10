@@ -1,1 +1,1 @@
-Time elapsed with Polars: 7.568982388 seconds to read /home/vytautas/Desktop/alban_news.csv which size is 3853253657 bytes.
+Time elapsed with Rust Polars: 3.675031617 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
