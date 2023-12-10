@@ -25,22 +25,6 @@
         <button id="dateButton" class="dateSelector">Tomorrow</button>
     </div>
     
-    <script>
-        var dateButton = document.getElementById('dateButton');
-        dateButton.addEventListener('click', function() {
-            if (dateButton.textContent === 'Tomorrow') {
-                dateButton.textContent = 'Today';
-                dateButton.value = 'today';
-                createChart(tomorrowLabels, tomorrowData);
-            } else {
-                dateButton.textContent = 'Tomorrow';
-                dateButton.value = 'tomorrow';
-                createChart(todayLabels, todayData);
-            }
-        });
-    </script>
-
-
     <div id="container"></div>
 
     <!-- Add chart highcharts container -->
@@ -66,8 +50,9 @@
             var day = date.getDate().toString().padStart(2, '0');
             return year + '-' + month + '-' + day;
         }
-        var todayData = data.slice(0, todayLabels.length);
-        var tomorrowData = data.slice(todayLabels.length);
+        
+        var todayData = data.filter((_, index) => todayLabels.includes(labels[index]));
+        var tomorrowData = data.filter((_, index) => tomorrowLabels.includes(labels[index]));
     
         function adjustTime(timeStr) {
             var timeParts = timeStr.split(':');
@@ -187,13 +172,14 @@
                         return timeDifference <= 5 * 60 * 1000;  // 5 minutes
                     });
                     flights.forEach(function(flight) {
-                    var formattedFinalTime = Highcharts.dateFormat('%H:%M', new Date(flight['Final time']));
-                    tooltip += formattedFinalTime + ', ' +
-                        flight['Type'] + ', ' +
-                        flight['Flight number'] + '<br/>';
-                });
-                return tooltip;
-            }
+                        var finalTime = new Date(flight['Final time']);
+                        var finalTimeFormatted = finalTime.getHours().toString().padStart(2, '0') + ':' + finalTime.getMinutes().toString().padStart(2, '0');
+                        tooltip += finalTimeFormatted + ', ' +
+                            flight['Type'] + ', ' +
+                            flight['Flight number'] + '<br/>';
+                    });
+                    return tooltip;
+                }
         }
         })};
 
