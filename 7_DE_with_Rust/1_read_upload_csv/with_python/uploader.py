@@ -34,8 +34,6 @@ class File:
 source_file_name = "/home/vytautas/Desktop/chess_games.csv"
 
 
-
-
 # test with pandas
 start = time.time()
 File.read_csv_with_pandas(source_file_name)
