@@ -23,7 +23,7 @@ impl FileHandler {
             .await?;
     
         let https = hyper_rustls::HttpsConnector::with_native_roots();
-        let client = hyper::client::builder().build::<_, hyper::Body>(https);
+        let client = hyper::Client::builder().build::<_, hyper::Body>(https);
         let mut bigquery = Bigquery::new(client, auth);
 
         let mut rows = Vec::new();
