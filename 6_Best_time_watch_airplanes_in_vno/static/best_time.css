@@ -85,7 +85,7 @@ h1 {
     background-color: #5b5b5b;
 }
 .button:active {
-    background-color: #0000FF;
+    background-color: #133337;
     transform: translateY(4px);
 }
 
@@ -107,6 +107,6 @@ h1 {
     background-color: #5b5b5b;
 }
 .dateSelector:active {
-    background-color: #0000FF;
+    background-color: #133337;
     transform: translateY(4px);
 }

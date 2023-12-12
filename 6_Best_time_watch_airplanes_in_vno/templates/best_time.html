@@ -165,6 +165,7 @@
             tooltip: {
                 formatter: function() {
                     var tooltip = '<b>' + Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x) + '</b><br/>';
+                    tooltip += 'Group of ' + this.x.slice(-5) + ':' + '<br/>';
                     var time = new Date(this.x);
                     var flights = flightsData.filter(function(flight) {
                         var flightTime = new Date(flight['Final time']);
