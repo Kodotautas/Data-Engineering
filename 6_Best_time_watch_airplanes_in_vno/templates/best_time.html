@@ -55,23 +55,7 @@
         var tomorrowData = data.filter((_, index) => tomorrowLabels.includes(labels[index]));
     
         function adjustTime(timeStr) {
-            var timeParts = timeStr.split(':');
-            var date = new Date();
-            date.setHours(parseInt(timeParts[0]));
-            date.setMinutes(parseInt(timeParts[1]));
-
-            var dateBefore = new Date(date);
-            var dateAfter = new Date(date);
-            dateAfter.setMinutes(date.getMinutes() + 5);
-
-            if (timeStr !== '00:00') {
-                dateBefore.setMinutes(date.getMinutes() - 5);
-            }
-
-            var timeBefore = dateBefore.getHours().toString().padStart(2, '0') + ':' + dateBefore.getMinutes().toString().padStart(2, '0');
-            var timeAfter = dateAfter.getHours().toString().padStart(2, '0') + ':' + dateAfter.getMinutes().toString().padStart(2, '0');
-
-            return timeBefore + '-' + timeAfter;
+        return timeStr;
         }
     
         // Function to create the chart
@@ -121,17 +105,17 @@
                         fontSize: '20px'
                     },
                     formatter: function() {
-                        var label = this.value;
-                        var previousLabel = this.axis.categories[this.pos - 1] || '';
-                        var currentDay = label.split(' ')[0];
-                        var previousDay = previousLabel.split(' ')[0];
-    
-                        if (currentDay !== previousDay) {
-                            return label.split(' ')[0] + ' ' + adjustTime(label.split(' ')[1]);
-                        } else {
-                            return adjustTime(label.split(' ')[1]);
-                        }
+                    var label = this.value;
+                    var previousLabel = this.axis.categories[this.pos - 1] || '';
+                    var currentDay = label.split(' ')[0];
+                    var previousDay = previousLabel.split(' ')[0];
+
+                    if (currentDay !== previousDay) {
+                        return label.split(' ')[0] + ' ' + label.split(' ')[1];
+                    } else {
+                        return label.split(' ')[1];
                     }
+                }
                 }
             },
             yAxis: {
