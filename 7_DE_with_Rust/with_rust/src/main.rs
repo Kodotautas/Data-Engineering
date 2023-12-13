@@ -3,10 +3,8 @@ use std::fs::File;
 use std::io::Write;
 use std::time::Instant;
 use polars::prelude::*;
-use google_bigquery2::Bigquery;
-use yup_oauth2 as oauth2;
-use google_bigquery2::api::TableDataInsertAllRequest;
 use serde_json::json;
+use gcp_bigquery_client::model::query_request::QueryRequest;
 
 struct FileHandler;
 
