@@ -39,7 +39,7 @@ start = time.time()
 File.read_csv_with_pandas(source_file_name)
 end = time.time()
 # export time to txt file
-with open("7_DE_with_Rust/1_read_upload_csv/with_python/times.txt", "a") as f:
+with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
     f.write(f"Time elapsed with Py Pandas: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
 # test with polars
@@ -47,7 +47,7 @@ start = time.time()
 File.read_csv_with_polars(source_file_name)
 end = time.time()
 # export time to txt file
-with open("7_DE_with_Rust/1_read_upload_csv/with_python/times.txt", "a") as f:
+with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
     f.write(f"Time elapsed with Py Polars: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
 # test with BigQuery
@@ -55,5 +55,5 @@ start = time.time()
 File.upload_to_bigquery(source_file_name, "data_tests", "chess_games")
 end = time.time()
 # export time to txt file
-with open("7_DE_with_Rust/1_read_upload_csv/with_python/times.txt", "a") as f:
+with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
     f.write(f"Time elapsed with Py BigQuery: {(end - start)} seconds to upload {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
