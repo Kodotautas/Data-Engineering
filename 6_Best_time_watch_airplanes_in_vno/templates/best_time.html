@@ -86,7 +86,7 @@
                             xAxis: {
                                 labels: {
                                     style: {
-                                        fontSize: '20px' // smaller font size for mobile
+                                        fontSize: '24px'
                                     }
                                 }
                             }
@@ -102,7 +102,7 @@
                 tickInterval: 2,
                 labels: {
                     style: {
-                        fontSize: '20px'
+                        fontSize: '24px'
                     },
                     formatter: function() {
                     var label = this.value;
@@ -146,10 +146,13 @@
             credits: {
                 enabled: false
             },
-            tooltip: {
-            formatter: function() {
-                var tooltip = '<b>' + Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x) + '</b><br/>';
-                tooltip += 'Group of ' + this.x.slice(-5) + ':' + '<br/>';
+            tooltip: {useHTML: true,
+            style: {
+                fontSize: '24px' // tooltip size
+            },
+            formatter: 
+                function() {
+                var tooltip = 'Group of ' + this.x.slice(-5) + ':' + '<br/>';
                 var time = new Date(this.x);
                 var flights = flightsData.filter(function(flight) {
                     var flightTime = new Date(flight['Final time']);
@@ -165,8 +168,9 @@
                 });
                 return tooltip;
             }
+        }}
+        )
         }
-        })};
 
         function getColor(value) {
             const max = Math.max(...data);
