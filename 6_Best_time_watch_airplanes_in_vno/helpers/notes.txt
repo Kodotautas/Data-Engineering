@@ -1,0 +1,31 @@
+vno best time project notes
+- done: think, plan project architecture
+- done: test, try flightsradar unoficial API
+- stacket bar chart with arrivals, departures count
+- done: another page for flights details
+- done: add weather data to page
+- done: check sorted datetime values
+- done: css file to group all styles
+- done: buy me coffee is with underscore, need to fix it
+- done: no need seconds in datetime
+- done: no need each time repeat date 
+- maybe no need vizualize full bar chart?
+- done: larger weather data info
+- done: text color about bar chart the same as weather
+- done: flights data default rows change to 25
+- done: add explanation what is bar chart / app
+- done: mark highest vales in bar chart to quick get top
+- optimize app engine costs
+- done: make more eficient app, like use polars etc.
+- done: need fix flights data frame
+- done: time vizualize as interval
+- done: make larger chart labels
+- done: fix date (bad after added interval)
+- done: fix apple charts.js vizualization
+- done: add vno viewpoint google maps link to app
+- done: add charts context menu
+- done: maybe ability select today / tommorow
+- done: get flight status
+- done: double check departures flights (can be mistake in code)
+- done: next day forst hour is -5 min previous day
+- add 5 percent margin to left/right buttons
