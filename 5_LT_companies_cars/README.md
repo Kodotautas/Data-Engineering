@@ -1,4 +1,4 @@
-### This project is about to create dashboard about Lithuania companies which own luxury cars, build using GCP (Dataflow, Storage, Bigquery, Looker)
+### This project is dashboard focusing on Lithuanian companies, individuals transport. The whole project constructed using Google Cloud Platform tools such as Dataflow, Storage, BigQuery, and Looker Studio.
 
 ### About pipeline:
 - get information about companies cars from Regitra
