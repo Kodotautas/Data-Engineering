@@ -16,5 +16,5 @@ Created out of a personal passion for plane-watching with my son in Vilnius Inte
 </div>
 
 #### Access the Web Application
-####[Here](https://vno-viewpoint.appspot.com/) 
+[Here](https://vno-viewpoint.appspot.com/) 
 For inquiries or feedback, feel free to reach out. Happy plane spotting in Vilnius!
