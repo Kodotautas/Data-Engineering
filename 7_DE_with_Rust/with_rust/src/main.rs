@@ -43,7 +43,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     rt.block_on(FileHandler::read_from_bigquery())?;
     let duration = start.elapsed();
 
-    write!(file, "Time elapsed with Rust Polars read / upload: {} seconds to upload {} which size is {} bytes.\n", 
+    write!(file, "Time elapsed with Rust read from BigQuery: {} seconds to upload {} which size is {} bytes.\n", 
         duration.as_secs_f64(), source_file_name, file_size)?;
 
     Ok(())
