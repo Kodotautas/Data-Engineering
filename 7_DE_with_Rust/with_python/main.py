@@ -30,6 +30,14 @@ class File:
         job.result()
         print("Loaded {} rows into {}:{}.".format(job.output_rows, dataset_id, table_id))
 
+    def read_from_bigquery(dataset_id, table_id):
+        """Reads a csv file from BigQuery."""
+        client = bigquery.Client()
+        table_ref = client.dataset(dataset_id).table(table_id)
+        df = client.list_rows(table_ref).to_dataframe()
+        print(df)
+        return df
+
 # Set variables
 source_file_name = "/home/vytautas/Desktop/chess_games.csv"
 
@@ -57,3 +65,11 @@ end = time.time()
 # export time to txt file
 with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
     f.write(f"Time elapsed with Py BigQuery: {(end - start)} seconds to upload {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
+
+# test with BigQuery
+start = time.time()
+File.read_from_bigquery("data_tests", "chess_games")
+end = time.time()
+# export time to txt file
+with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
+    f.write(f"Time elapsed with Python BigQuery: {(end - start)} seconds to read table from BigQuery.\n")
