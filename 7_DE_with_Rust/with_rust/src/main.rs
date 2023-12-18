@@ -6,6 +6,7 @@ use std::time::Instant;
 use tokio::runtime::Runtime;
 use polars::prelude::*;
 struct FileHandler;
+use gcp_bigquery_client::model::query_request::QueryRequest;
 
 impl FileHandler {
     fn read_csv_with_polars(file_name: &str) -> Result<DataFrame, Box<dyn std::error::Error>> {
@@ -17,8 +18,27 @@ impl FileHandler {
     async fn read_from_bigquery() -> Result<(), Box<dyn std::error::Error>> {
         let gcp_sa_key = env::var("GOOGLE_APPLICATION_CREDENTIALS")
             .map_err(|_| "Environment variable GOOGLE_APPLICATION_CREDENTIALS is not set")?;
-        let _client = gcp_bigquery_client::Client::from_service_account_key_file(&gcp_sa_key).await?;
+        let client = gcp_bigquery_client::Client::from_service_account_key_file(&gcp_sa_key).await?;
         
+        let query = "SELECT * FROM `data-engineering-with-rust.data_tests.chess_games`";
+        
+        let rs = client
+            .job()
+            .query("data-engineering-with-rust", QueryRequest::new(query))
+            .await?;
+
+        if let Some(rows) = &rs.query_response().rows {
+            for row in rows {
+                if let Some(columns) = &row.columns {
+                    for cell in columns {
+                        if let Some(value) = &cell.value {
+                            print!("{} ", value);
+                        }
+                    }
+                    println!(); // Print a newline at the end of each row
+                }
+            }
+        }
         Ok(())
     }
 }

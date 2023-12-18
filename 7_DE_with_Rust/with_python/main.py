@@ -34,10 +34,7 @@ class File:
         """Reads a csv file from BigQuery."""
         client = bigquery.Client()
         table_ref = client.dataset(dataset_id).table(table_id)
-        rows = client.list_rows(table_ref)
-
-        for row in rows:
-            print(row)
+        rows = client.list_rows(table_ref).to_dataframe()
 
         return rows
 
