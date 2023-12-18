@@ -1,7 +1,7 @@
 use std::fs;
 use std::env;
-use std::io::Write;
 use std::fs::File;
+use std::io::Write;
 use std::time::Instant;
 use tokio::runtime::Runtime;
 use polars::prelude::*;
@@ -26,21 +26,16 @@ impl FileHandler {
             .job()
             .query("data-engineering-with-rust", QueryRequest::new(query))
             .await?;
-    
-        // Open a new file in write mode, or create it if it doesn't exist
-        let mut file = File::create("output.txt")?;
-    
+
         if let Some(rows) = &rs.query_response().rows {
             for row in rows {
                 if let Some(columns) = &row.columns {
                     for cell in columns {
                         if let Some(value) = &cell.value {
-                            // Write the value to the file
-                            write!(file, "{} ", value)?;
+                            print!("{} ", value);
                         }
                     }
-                    // Write a newline at the end of each row
-                    writeln!(file)?;
+                    println!(); // Print a newline at the end of each row
                 }
             }
         }

@@ -1,4 +1,4 @@
 Time elapsed with Py Pandas reading csv: 48.05144906044006 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
 Time elapsed with Py Polars reading csv: 15.33346176147461 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
 Time elapsed with Py BigQuery uploading csv: 213.6083047389984 seconds to upload /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
-Time elapsed with Python BigQuery: 927.7954850196838 seconds to read table from BigQuery.
+Time elapsed with Python BigQuery: 1029.3712434768677 seconds to read table from BigQuery and save as .txt.

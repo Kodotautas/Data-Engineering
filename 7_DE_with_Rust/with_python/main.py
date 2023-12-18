@@ -30,11 +30,14 @@ class File:
         job.result()
         print("Loaded {} rows into {}:{}.".format(job.output_rows, dataset_id, table_id))
 
-    def read_from_bigquery(dataset_id, table_id):
+    def read_from_bigquery(dataset_id, table_id, filename):
         """Reads a csv file from BigQuery."""
         client = bigquery.Client()
         table_ref = client.dataset(dataset_id).table(table_id)
         rows = client.list_rows(table_ref).to_dataframe()
+
+        # Save DataFrame to a text file
+        rows.to_csv(filename, sep='\t', index=False)
 
         return rows
 
@@ -68,8 +71,8 @@ with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
 
 # test with BigQuery
 start = time.time()
-File.read_from_bigquery("data_tests", "chess_games")
+File.read_from_bigquery("data_tests", "chess_games", "chess_games_from_bigquery.txt")
 end = time.time()
 # export time to txt file
 with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
-    f.write(f"Time elapsed with Python BigQuery: {(end - start)} seconds to read table from BigQuery.\n")
+    f.write(f"Time elapsed with Python BigQuery: {(end - start)} seconds to read table from BigQuery and save as .txt.\n")
