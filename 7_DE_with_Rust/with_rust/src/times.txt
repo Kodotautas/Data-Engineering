@@ -1,2 +1,2 @@
-Time elapsed with Rust Polars: 3.810515702 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
-Time elapsed to read and write to file from BigQuery: 5.266409629 seconds to read table and wtite it to .txt file.
+Time elapsed with Rust Polars: 5.541297582 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
+Time elapsed to read and write to file from BigQuery: 4.263235948 seconds to read table and write it to .txt file.

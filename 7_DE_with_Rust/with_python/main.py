@@ -31,10 +31,10 @@ class File:
         print("Loaded {} rows into {}:{}.".format(job.output_rows, dataset_id, table_id))
 
     def read_from_bigquery(dataset_id, table_id, filename):
-        """Reads a csv file from BigQuery."""
+        """Reads a csv file from BigQuery and exports the first 13000 rows to a text file."""
         client = bigquery.Client()
         table_ref = client.dataset(dataset_id).table(table_id)
-        rows = client.list_rows(table_ref).to_dataframe()
+        rows = client.list_rows(table_ref, max_results=13000).to_dataframe()
 
         # Save DataFrame to a text file
         rows.to_csv(filename, sep='\t', index=False)
@@ -45,7 +45,7 @@ class File:
 source_file_name = "/home/vytautas/Desktop/chess_games.csv"
 
 
-# test with pandas
+# # test with pandas
 start = time.time()
 File.read_csv_with_pandas(source_file_name)
 end = time.time()

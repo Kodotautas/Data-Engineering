@@ -28,7 +28,7 @@ impl FileHandler {
             .await?;
     
         // Open a new file in write mode, or create it if it doesn't exist
-        let mut file = File::create("output.txt")?;
+        let mut file = File::create("data_sample.txt")?;
     
         if let Some(rows) = &rs.query_response().rows {
             for row in rows {
@@ -68,7 +68,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     rt.block_on(FileHandler::read_from_bigquery())?;
     let duration = start.elapsed();
 
-    write!(file, "Time elapsed to read and write to file from BigQuery: {} seconds to read table and wtite it to .txt file.\n",
+    write!(file, "Time elapsed to read and write to file from BigQuery: {} seconds to read table and write it to .txt file.\n",
         duration.as_secs_f64())?;
 
     Ok(())
