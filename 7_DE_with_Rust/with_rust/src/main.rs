@@ -20,7 +20,7 @@ impl FileHandler {
             .map_err(|_| "Environment variable GOOGLE_APPLICATION_CREDENTIALS is not set")?;
         let client = gcp_bigquery_client::Client::from_service_account_key_file(&gcp_sa_key).await?;
         
-        let query = "SELECT * FROM `data-engineering-with-rust.data_tests.chess_games`";
+        let query = "SELECT * FROM `data-engineering-with-rust.data_tests.chess_games` limit 13000";
         
         let rs = client
             .job()
@@ -68,8 +68,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     rt.block_on(FileHandler::read_from_bigquery())?;
     let duration = start.elapsed();
 
-    write!(file, "Time elapsed with Rust read from BigQuery: {} seconds to upload {} which size is {} bytes.\n", 
-        duration.as_secs_f64(), source_file_name, file_size)?;
+    write!(file, "Time elapsed to read and write to file from BigQuery: {} seconds to read table and wtite it to .txt file.\n",
+        duration.as_secs_f64())?;
 
     Ok(())
 }
