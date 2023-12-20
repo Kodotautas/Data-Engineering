@@ -16,6 +16,15 @@ impl FileHandler {
         Ok(df)
     }
 
+    fn read_csv_with_polars_drop_nulls(file_name: &str) -> Result<DataFrame, Box<dyn std::error::Error>> {
+        let df = CsvReader::from_path(file_name)?.finish()?;
+    
+        // Drop null values
+        let df = df.drop_nulls::<&str>(None)?;
+    
+        Ok(df)
+    }
+
     async fn read_from_bigquery() -> Result<(), Box<dyn std::error::Error>> {
         let gcp_sa_key = env::var("GOOGLE_APPLICATION_CREDENTIALS")
             .map_err(|_| "Environment variable GOOGLE_APPLICATION_CREDENTIALS is not set")?;
@@ -69,6 +78,7 @@ impl FileHandler {
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let source_file_name = "/home/vytautas/Desktop/chess_games.csv";
 
+    // Read csv file with Polars
     let start = Instant::now();
     let _df = FileHandler::read_csv_with_polars(source_file_name)?;
     let duration = start.elapsed();
@@ -80,20 +90,30 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     write!(file, "Time elapsed with Rust Polars: {} seconds to read {} which size is {} bytes.\n", 
         duration.as_secs_f64(), source_file_name, file_size)?;
 
+    // Read csv file with Polars and drop null values
     let start = Instant::now();
-    let rt = Runtime::new()?;
-    rt.block_on(FileHandler::read_from_bigquery())?;
+    let _df = FileHandler::read_csv_with_polars_drop_nulls(source_file_name)?;
     let duration = start.elapsed();
 
-    write!(file, "Time elapsed to read and write to file from BigQuery: {} seconds to read table and write it to .txt file.\n",
-        duration.as_secs_f64())?;
+    write!(file, "Time elapsed with Rust Polars and drop null values: {} seconds to read {} which size is {} bytes.\n", 
+        duration.as_secs_f64(), source_file_name, file_size)?;
 
-    let start = Instant::now();
-    FileHandler::load_csv_to_bigquery("data_tests", "chess_games", "files-to-experiment", "chess_games.csv")?;
-    let duration = start.elapsed();
+    // Read from BigQuery   
+    // let start = Instant::now();
+    // let rt = Runtime::new()?;
+    // rt.block_on(FileHandler::read_from_bigquery())?;
+    // let duration = start.elapsed();
 
-    write!(file, "Time elapsed to load data to BigQuery: {} seconds to load data to BigQuery.\n",
-        duration.as_secs_f64())?;
+    // write!(file, "Time elapsed to read and write to file from BigQuery: {} seconds to read table and write it to .txt file.\n",
+    //     duration.as_secs_f64())?;
+
+    // // Load data to BigQuery
+    // let start = Instant::now();
+    // FileHandler::load_csv_to_bigquery("data_tests", "chess_games", "files-to-experiment", "chess_games.csv")?;
+    // let duration = start.elapsed();
+
+    // write!(file, "Time elapsed to load data to BigQuery: {} seconds to load data to BigQuery.\n",
+    //     duration.as_secs_f64())?;
 
     Ok(())
 }
