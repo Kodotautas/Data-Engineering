@@ -1,7 +1,7 @@
 use std::fs;
 use std::env;
-use std::fs::File;
 use std::io::Write;
+use std::fs::File;
 use std::time::Instant;
 use tokio::runtime::Runtime;
 use polars::prelude::*;
@@ -20,22 +20,27 @@ impl FileHandler {
             .map_err(|_| "Environment variable GOOGLE_APPLICATION_CREDENTIALS is not set")?;
         let client = gcp_bigquery_client::Client::from_service_account_key_file(&gcp_sa_key).await?;
         
-        let query = "SELECT * FROM `data-engineering-with-rust.data_tests.chess_games`";
+        let query = "SELECT * FROM `data-engineering-with-rust.data_tests.chess_games` limit 13000";
         
         let rs = client
             .job()
             .query("data-engineering-with-rust", QueryRequest::new(query))
             .await?;
-
+    
+        // Open a new file in write mode, or create it if it doesn't exist
+        let mut file = File::create("data_sample.txt")?;
+    
         if let Some(rows) = &rs.query_response().rows {
             for row in rows {
                 if let Some(columns) = &row.columns {
                     for cell in columns {
                         if let Some(value) = &cell.value {
-                            print!("{} ", value);
+                            // Write the value to the file
+                            write!(file, "{} ", value)?;
                         }
                     }
-                    println!(); // Print a newline at the end of each row
+                    // Write a newline at the end of each row
+                    writeln!(file)?;
                 }
             }
         }
@@ -63,8 +68,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     rt.block_on(FileHandler::read_from_bigquery())?;
     let duration = start.elapsed();
 
-    write!(file, "Time elapsed with Rust read from BigQuery: {} seconds to upload {} which size is {} bytes.\n", 
-        duration.as_secs_f64(), source_file_name, file_size)?;
+    write!(file, "Time elapsed to read and write to file from BigQuery: {} seconds to read table and write it to .txt file.\n",
+        duration.as_secs_f64())?;
 
     Ok(())
 }

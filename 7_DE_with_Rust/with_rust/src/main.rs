@@ -3,6 +3,7 @@ use std::env;
 use std::io::Write;
 use std::fs::File;
 use std::time::Instant;
+use std::process::Command;
 use tokio::runtime::Runtime;
 use polars::prelude::*;
 struct FileHandler;
@@ -46,6 +47,22 @@ impl FileHandler {
         }
         Ok(())
     }
+
+    fn load_csv_to_bigquery(dataset: &str, table: &str, bucket: &str, file: &str) -> std::io::Result<()> {
+        let output = Command::new("bq")
+            .arg("load")
+            .arg("--autodetect")
+            .arg("--source_format=CSV")
+            .arg(format!("{}.{}", dataset, table))
+            .arg(format!("gs://{}/{}", bucket, file))
+            .output()?;
+    
+        if !output.status.success() {
+            eprintln!("Error: {}", String::from_utf8_lossy(&output.stderr));
+        }
+    
+        Ok(())
+    }
 }
 
 
@@ -69,6 +86,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let duration = start.elapsed();
 
     write!(file, "Time elapsed to read and write to file from BigQuery: {} seconds to read table and write it to .txt file.\n",
+        duration.as_secs_f64())?;
+
+    let start = Instant::now();
+    FileHandler::load_csv_to_bigquery("data_tests", "chess_games", "files-to-experiment", "chess_games.csv")?;
+    let duration = start.elapsed();
+
+    write!(file, "Time elapsed to load data to BigQuery: {} seconds to load data to BigQuery.\n",
         duration.as_secs_f64())?;
 
     Ok(())
