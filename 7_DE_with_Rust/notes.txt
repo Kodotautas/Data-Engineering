@@ -1,2 +1,3 @@
--- test Py vs Rust read BQ table to console
--- test Py vs Rust to upload csv to bigquery
+-- done: test Py vs Rust read BQ table to console
+-- done: Py vs Rust to upload csv to bigquery
+-- 

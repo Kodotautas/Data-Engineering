@@ -10,9 +10,21 @@ class File:
         df = pd.read_csv(file_name)
         return df
     
+    def read_csv_with_pandas_and_remove_nulls(file_name):
+        """Reads a csv file with pandas and removes nulls."""
+        df = pd.read_csv(file_name)
+        df = df.dropna()
+        return df
+    
     def read_csv_with_polars(file_name):
         """Reads a csv file with polars."""
         df = pl.read_csv(file_name)
+        return df
+    
+    def read_csv_with_polars_and_remove_nulls(file_name):
+        """Reads a csv file with polars and removes nulls."""
+        df = pl.read_csv(file_name)
+        df = df.drop_nulls()
         return df
     
     def upload_to_bigquery(source_file_name, dataset_id, table_id):
@@ -45,13 +57,21 @@ class File:
 source_file_name = "/home/vytautas/Desktop/chess_games.csv"
 
 
-# # test with pandas
+# test with pandas
 start = time.time()
 File.read_csv_with_pandas(source_file_name)
 end = time.time()
 # export time to txt file
 with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
     f.write(f"Time elapsed with Py Pandas: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
+
+# test with pandas and removing nulls
+start = time.time()
+File.read_csv_with_pandas_and_remove_nulls(source_file_name)
+end = time.time()
+# export time to txt file
+with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
+    f.write(f"Time elapsed with Py Pandas and removing nulls: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
 # test with polars
 start = time.time()
@@ -61,18 +81,26 @@ end = time.time()
 with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
     f.write(f"Time elapsed with Py Polars: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
-# test with BigQuery
+# test with polars and removing nulls
 start = time.time()
-File.upload_to_bigquery(source_file_name, "data_tests", "chess_games")
+File.read_csv_with_polars_and_remove_nulls(source_file_name)
 end = time.time()
 # export time to txt file
 with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
-    f.write(f"Time elapsed with Py BigQuery: {(end - start)} seconds to upload {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
+    f.write(f"Time elapsed with Py Polars and removing nulls: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
 # test with BigQuery
-start = time.time()
-File.read_from_bigquery("data_tests", "chess_games", "chess_games_from_bigquery.txt")
-end = time.time()
-# export time to txt file
-with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
-    f.write(f"Time elapsed with Python BigQuery: {(end - start)} seconds to read table from BigQuery and save as .txt.\n")
+# start = time.time()
+# File.upload_to_bigquery(source_file_name, "data_tests", "chess_games")
+# end = time.time()
+# # export time to txt file
+# with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
+#     f.write(f"Time elapsed with Py BigQuery: {(end - start)} seconds to upload {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
+
+# # test with BigQuery
+# start = time.time()
+# File.read_from_bigquery("data_tests", "chess_games", "chess_games_from_bigquery.txt")
+# end = time.time()
+# # export time to txt file
+# with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
+#     f.write(f"Time elapsed with Python BigQuery: {(end - start)} seconds to read table from BigQuery and save as .txt.\n")
