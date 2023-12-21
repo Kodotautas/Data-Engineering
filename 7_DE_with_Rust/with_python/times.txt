@@ -1,6 +1,9 @@
-Time elapsed with Py Pandas: 42.62131977081299 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
-Time elapsed with Py Pandas and removing nulls: 48.701050996780396 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
-Time elapsed with Py Polars: 20.43431568145752 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
-Time elapsed with Py Polars and removing nulls: 29.30496096611023 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
+Time elapsed with Py Pandas: 45.69874882698059 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
+Time elapsed with Py Pandas and removing nulls: 48.30531144142151 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
+Time elapsed with Py Pandas and filtering event column: 43.04229950904846 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
+Time elapsed with Py Polars: 20.905689239501953 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
+Time elapsed with Py Polars and removing nulls: 34.69100522994995 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
 Time elapsed with Py BigQuery uploading csv: 213.6083047389984 seconds to upload /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
 Time elapsed with Python BigQuery: 3.8952789306640625 seconds to read table from BigQuery and save as .txt.
+Time elapsed with Py Polars and filtering event column: 15.797489166259766 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
+Time elapsed with Py Polars and filtering event column: 15.584113359451294 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.

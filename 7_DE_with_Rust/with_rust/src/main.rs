@@ -24,6 +24,7 @@ impl FileHandler {
     
         Ok(df)
     }
+    
 
     async fn read_from_bigquery() -> Result<(), Box<dyn std::error::Error>> {
         let gcp_sa_key = env::var("GOOGLE_APPLICATION_CREDENTIALS")
