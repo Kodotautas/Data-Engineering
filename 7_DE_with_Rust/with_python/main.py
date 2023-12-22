@@ -36,7 +36,7 @@ class File:
     def read_csv_with_polars_filter_event_column(file_name):
         """Reads a csv file with polars and count all 'Blitz' events in the Event column."""
         df = pl.read_csv(file_name)
-        df = df.filter(pl.col('Event') == " Blitz ")
+        df = df.filter(pl.col('Event').str.strip() == "Blitz")
         return print(df.shape[0])
     
     def upload_to_bigquery(source_file_name, dataset_id, table_id):
