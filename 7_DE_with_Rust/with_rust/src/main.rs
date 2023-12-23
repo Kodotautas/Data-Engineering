@@ -36,9 +36,7 @@ impl FileHandler {
             .utf8()?
             .apply(|opt_name| opt_name.map(|name| Cow::Owned(name.trim().to_string())));
 
-        // print Event column unique values
-        println!("Here are unique values of Event column:");
-        println!("{:?}", event_column.unique());
+        // need to filter .....
 
         Ok(df)
     }
@@ -122,7 +120,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let start = Instant::now();
     let _df = FileHandler::read_csv_with_polars_filter_event_column(source_file_name)?;
     let duration = start.elapsed();
-    
+
     // write!(file, "Time elapsed with Rust Polars and filter event column: {} seconds to read {} which size is {} bytes.\n", 
     //     duration.as_secs_f64(), source_file_name, file_size)?;
 
