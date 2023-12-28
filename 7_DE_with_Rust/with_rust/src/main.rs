@@ -10,6 +10,9 @@ use polars::prelude::*;
 struct FileHandler;
 use gcp_bigquery_client::model::query_request::QueryRequest;
 use std::borrow::Cow;
+use std::io::Read;
+use csv::ReaderBuilder;
+use csv::StringRecord;
 
 
 impl FileHandler {
@@ -28,17 +31,23 @@ impl FileHandler {
         Ok(df)
     }
     
-    fn read_csv_with_polars_filter_event_column(file_name: &str) -> Result<DataFrame, Box<dyn std::error::Error>> {
-        let df = CsvReader::from_path(file_name)?.finish()?;
+    fn read_csv_and_filter_event_column(file_name: &str) -> Result<Vec<StringRecord>, Box<dyn Error>> {
+        let mut rdr = ReaderBuilder::new().from_path(file_name)?;
+        let headers = rdr.headers()?.clone();
     
-        // remove whitespaces from event column
-        let event_column = df.column("Event")?
-            .utf8()?
-            .apply(|opt_name| opt_name.map(|name| Cow::Owned(name.trim().to_string())));
-
-        // need to filter ........
-
-        Ok(df)
+        let mut records: Vec<StringRecord> = Vec::new();
+        for result in rdr.records() {
+            let record = result?;
+            if let Some(event_index) = headers.iter().position(|h| h == "Event") {
+                if let Some(event) = record.get(event_index) {
+                    if event.trim() == "Blitz" {
+                        records.push(record.clone());
+                    }
+                }
+            }
+        }
+    
+        Ok(records)
     }
     
 
@@ -103,7 +112,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let metadata = fs::metadata(source_file_name)?;
     let file_size = metadata.len();
 
-    // let mut file = File::create("src/times.txt")?;
+    let mut file = File::create("src/times.txt")?;
     // write!(file, "Time elapsed with Rust Polars: {} seconds to read {} which size is {} bytes.\n", 
     //     duration.as_secs_f64(), source_file_name, file_size)?;
 
@@ -118,11 +127,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // Read csv file with Polars and filter event column
     let start = Instant::now();
-    let _df = FileHandler::read_csv_with_polars_filter_event_column(source_file_name)?;
+    let _df = FileHandler::read_csv_and_filter_event_column(source_file_name)?;
     let duration = start.elapsed();
 
-    // write!(file, "Time elapsed with Rust Polars and filter event column: {} seconds to read {} which size is {} bytes.\n", 
-    //     duration.as_secs_f64(), source_file_name, file_size)?;
+    write!(file, "Time elapsed with Rust Polars and filter event column: {} seconds to read {} which size is {} bytes.\n", 
+        duration.as_secs_f64(), source_file_name, file_size)?;
 
     // Read from BigQuery   
     // let start = Instant::now();

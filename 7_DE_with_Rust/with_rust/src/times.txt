@@ -1,2 +1,1 @@
-Time elapsed with Rust Polars: 22.57266403 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
-Time elapsed with Rust Polars and drop null values: 36.287306304 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
+Time elapsed with Rust Polars and filter event column: 6.641773141 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
