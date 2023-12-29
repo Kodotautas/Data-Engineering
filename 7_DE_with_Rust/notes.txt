@@ -1,4 +1,5 @@
 -- done: test Py vs Rust read BQ table to console
 -- done: Py vs Rust to upload csv to bigquery
 -- done: filter csv file and measure times
--- data serialization from dataframe to json
+-- done: data serialization from dataframe to json
+-- data encoding to arrow format
