@@ -22,6 +22,12 @@ class File:
         df = df[df['Event'] == " Blitz "]
         return print(df.shape[0])
     
+    def read_csv_with_pandas_and_convert_to_json(file_name):
+        """Reads a csv file with pandas and converts to json."""
+        df = pd.read_csv(file_name)
+        df = df.to_json()
+        return df
+
     def read_csv_with_polars(file_name):
         """Reads a csv file with polars."""
         df = pl.read_csv(file_name)
@@ -39,6 +45,12 @@ class File:
         df = df.filter(pl.col('Event').str.strip() == "Blitz")
         return print(df.shape[0])
     
+    def read_csv_with_polars_and_convert_to_json(file_name):
+        """Reads a csv file with polars and converts to json."""
+        df = pl.read_csv(file_name)
+        df = df.write_json()
+        return df
+
     def upload_to_bigquery(source_file_name, dataset_id, table_id):
         """Uploads a csv file to BigQuery."""
         client = bigquery.Client()
@@ -93,6 +105,14 @@ source_file_name = "/home/vytautas/Desktop/chess_games.csv"
 # with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
 #     f.write(f"Time elapsed with Py Pandas and filtering event column: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
+# test with pandas and converting to json
+# start = time.time()
+# File.read_csv_with_pandas_and_convert_to_json(source_file_name)
+# end = time.time()
+# # export time to txt file
+# with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
+#     f.write(f"Time elapsed with Py Pandas and converting to json: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
+
 # # test with polars
 # start = time.time()
 # File.read_csv_with_polars(source_file_name)
@@ -110,13 +130,20 @@ source_file_name = "/home/vytautas/Desktop/chess_games.csv"
 #     f.write(f"Time elapsed with Py Polars and removing nulls: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
 # test with polars and filtering event column
+# start = time.time()
+# File.read_csv_with_polars_filter_event_column(source_file_name)
+# end = time.time()
+# # export time to txt file
+# with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
+#     f.write(f"Time elapsed with Py Polars and filtering event column: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
+
+# test with polars and converting to json
 start = time.time()
-File.read_csv_with_polars_filter_event_column(source_file_name)
+File.read_csv_with_polars_and_convert_to_json(source_file_name)
 end = time.time()
 # export time to txt file
 with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
-    f.write(f"Time elapsed with Py Polars and filtering event column: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
-
+    f.write(f"Time elapsed with Py Polars and converting to json: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
 # test with BigQuery
 # start = time.time()
