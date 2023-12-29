@@ -1,1 +1,2 @@
 Time elapsed with Rust Polars and filter event column: 6.641773141 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
+Time elapsed with Rust Polars and convert to json: 11.10651235 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.

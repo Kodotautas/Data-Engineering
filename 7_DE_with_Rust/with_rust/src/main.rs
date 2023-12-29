@@ -13,6 +13,7 @@ use std::borrow::Cow;
 use std::io::Read;
 use csv::ReaderBuilder;
 use csv::StringRecord;
+use serde_json::json;
 
 
 impl FileHandler {
@@ -50,6 +51,14 @@ impl FileHandler {
         Ok(records)
     }
     
+    fn read_csv_with_polars_convert_to_json(file_name: &str) -> Result<String, Box<dyn Error>> {
+        let df = CsvReader::from_path(file_name)?.finish()?;
+    
+        // Convert df to json
+        let json = json!(df.get_columns().iter().map(|s| s.name().to_string()).collect::<Vec<_>>());
+    
+        Ok(json.to_string())
+    }
 
     async fn read_from_bigquery() -> Result<(), Box<dyn std::error::Error>> {
         let gcp_sa_key = env::var("GOOGLE_APPLICATION_CREDENTIALS")
@@ -131,11 +140,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 
     // Read csv file with Polars and filter event column
+    // let start = Instant::now();
+    // let _df = FileHandler::read_csv_and_filter_event_column(source_file_name)?;
+    // let duration = start.elapsed();
+
+    // write!(file, "Time elapsed with Rust Polars and filter event column: {} seconds to read {} which size is {} bytes.\n", 
+    //     duration.as_secs_f64(), source_file_name, file_size)?;
+
+    // // Read csv file with Polars and convert to json
     let start = Instant::now();
-    let _df = FileHandler::read_csv_and_filter_event_column(source_file_name)?;
+    let _df = FileHandler::read_csv_with_polars_convert_to_json(source_file_name)?;
     let duration = start.elapsed();
 
-    write!(file, "Time elapsed with Rust Polars and filter event column: {} seconds to read {} which size is {} bytes.\n", 
+    write!(file, "Time elapsed with Rust Polars and convert to json: {} seconds to read {} which size is {} bytes.\n",
         duration.as_secs_f64(), source_file_name, file_size)?;
 
     // Read from BigQuery   
