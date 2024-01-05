@@ -2,5 +2,5 @@
 -- done: Py vs Rust to upload csv to bigquery
 -- done: filter csv file and measure times
 -- done: data serialization from dataframe to json
--- data encoding to arrow format ..
+-- data encoding to arrow format
 -- realtime streaming test, compare latency
