@@ -1,5 +1,6 @@
 use std::fs;
 use std::env;
+use std::io;
 use std::io::Write;
 use std::fs::File;
 use std::time::Instant;
@@ -54,38 +55,23 @@ impl FileHandler {
         Ok(records)
     }
     
-    // fn read_csv_with_polars_convert_to_arrow(file_name: &str) -> Result<RecordBatch, Box<dyn Error>> {
-    //     let df = CsvReader::from_path(file_name)?.finish()?;
-    
-    //     // Convert df to arrow format
-    //     let arrow = df.to_arrow()?;
 
-    //     Ok(arrow)
-    // }
-
-    fn csv_to_arrow(file_path: &str) -> Result<Vec<RecordBatch>, Box<dyn Error>> {
-        // Define the schema for the CSV file
-        let schema = Schema::new(vec![
-            Field::new("column1", DataType::Utf8, false),
-            Field::new("column2", DataType::Int32, false),
-            // Add more fields as per your CSV structure
-        ]);
+    fn csv_to_parquet(csv_file: &str, parquet_file: &str) -> io::Result<()> {
+        let output = Command::new("dr")
+            .arg("csv")
+            .arg(csv_file)
+            .arg("-P")
+            .arg(parquet_file)
+            .output()?;
     
-        // Create a CSV reader with the schema
-        let mut reader = csv::ReaderBuilder::new()
-            .has_headers(true)
-            .infer_schema(Some(100))
-            .from_reader(File::open(file_path)?);
-    
-        // Read the CSV file into a vector of RecordBatches
-        let mut batches = Vec::new();
-        while let Ok(Some(batch)) = reader.next() {
-            batches.push(batch);
+        if !output.status.success() {
+            eprintln!("Error: {}", String::from_utf8_lossy(&output.stderr));
         }
     
-        Ok(batches)
+        Ok(())
     }
-    
+
+
     async fn read_from_bigquery() -> Result<(), Box<dyn std::error::Error>> {
         let gcp_sa_key = env::var("GOOGLE_APPLICATION_CREDENTIALS")
             .map_err(|_| "Environment variable GOOGLE_APPLICATION_CREDENTIALS is not set")?;
@@ -173,10 +159,13 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // write!(file, "Time elapsed with Rust Polars and filter event column: {} seconds to read {} which size is {} bytes.\n", 
     //     duration.as_secs_f64(), source_file_name, file_size)?;
 
-    // // Read csv file with Polars and convert to json
-    // let start = Instant::now();
-    // let _df = FileHandler::read_csv_with_polars_convert_to_arrow(source_file_name)?;
-    // let duration = start.elapsed();
+    // csv to parquet
+    let start = Instant::now();
+    let _df = FileHandler::csv_to_parquet(source_file_name, "chess_games.parquet")?;
+    let duration = start.elapsed();
+
+    write!(file, "Time elapsed with Rust convert to parquet: {} seconds to read {} which size is {} bytes.\n",
+        duration.as_secs_f64(), source_file_name, file_size)?;
 
     // write!(file, "Time elapsed with Rust Polars and convert to json: {} seconds to read {} which size is {} bytes.\n",
     //     duration.as_secs_f64(), source_file_name, file_size)?;
