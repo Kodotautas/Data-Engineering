@@ -57,10 +57,10 @@ impl FileHandler {
     
 
     fn csv_to_parquet(csv_file: &str, parquet_file: &str) -> io::Result<()> {
-        let output = Command::new("dr")
-            .arg("csv")
+        let output = Command::new("csv2parquet")
+            .arg("-i")
             .arg(csv_file)
-            .arg("-P")
+            .arg("-o")
             .arg(parquet_file)
             .output()?;
     
