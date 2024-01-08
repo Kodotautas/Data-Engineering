@@ -1,3 +1,2 @@
 Time elapsed with Rust Polars and filter event column: 6.641773141 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
-Time elapsed with Rust Arrow: 9.39308945 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
-Time elapsed with Rust convert to parquet: 0.002509593 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
+Time elapsed with Rust Arrow: 9.39308945 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.Time elapsed with Rust convert to parquet: 16.168432575 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.

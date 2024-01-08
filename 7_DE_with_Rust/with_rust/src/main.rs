@@ -10,14 +10,8 @@ use tokio::runtime::Runtime;
 use polars::prelude::*;
 struct FileHandler;
 use gcp_bigquery_client::model::query_request::QueryRequest;
-use std::borrow::Cow;
-use std::io::Read;
 use csv::ReaderBuilder;
 use csv::StringRecord;
-use arrow::csv as csv_arrow;
-use arrow::datatypes::{DataType, Field, Schema};
-use arrow::record_batch::RecordBatch;
-use std::sync::Arc;
 
 
 impl FileHandler {
@@ -56,12 +50,12 @@ impl FileHandler {
     }
     
 
-    fn csv_to_parquet(csv_file: &str, parquet_file: &str) -> io::Result<()> {
-        let output = Command::new("csv2parquet")
-            .arg("-i")
+    fn csv_to_arrow(csv_file: &str, schema_json: &str, arrow_file: &str) -> io::Result<()> {
+        let output = Command::new("csv2arrow")
+            .arg("--schema-file")
+            .arg(schema_json)
             .arg(csv_file)
-            .arg("-o")
-            .arg(parquet_file)
+            .arg(arrow_file)
             .output()?;
     
         if !output.status.success() {
@@ -124,68 +118,69 @@ impl FileHandler {
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let source_file_name = "/home/vytautas/Desktop/chess_games.csv";
+    let schema_json = "/home/vytautas/Desktop/chess_schema.json";
 
     // Read csv file with Polars
-    // let start = Instant::now();
-    // let _df = FileHandler::read_csv_with_polars(source_file_name)?;
-    // let duration = start.elapsed();
+    let start = Instant::now();
+    let _df = FileHandler::read_csv_with_polars(source_file_name)?;
+    let duration = start.elapsed();
 
     let metadata = fs::metadata(source_file_name)?;
     let file_size = metadata.len();
 
     // set apend file
-    let mut file = fs::OpenOptions::new()
-        .append(true)
-        .open("src/times.txt")?;
+    // let mut file = fs::OpenOptions::new()
+    //     .append(true)
+    //     .open("src/times.txt")?;
 
-    // let mut file = File::create("src/times.txt")?;
-    // write!(file, "Time elapsed with Rust Polars: {} seconds to read {} which size is {} bytes.\n", 
-    //     duration.as_secs_f64(), source_file_name, file_size)?;
+    let mut file = File::create("src/times.txt")?;
+    write!(file, "Time elapsed with Rust Polars: {} seconds to read {} which size is {} bytes.\n", 
+        duration.as_secs_f64(), source_file_name, file_size)?;
 
-    // // Read csv file with Polars and drop null values
-    // let start = Instant::now();
-    // let _df = FileHandler::read_csv_with_polars_drop_nulls(source_file_name)?;
-    // let duration = start.elapsed();
+    // Read csv file with Polars and drop null values
+    let start = Instant::now();
+    let _df = FileHandler::read_csv_with_polars_drop_nulls(source_file_name)?;
+    let duration = start.elapsed();
 
-    // write!(file, "Time elapsed with Rust Polars and drop null values: {} seconds to read {} which size is {} bytes.\n", 
-    //     duration.as_secs_f64(), source_file_name, file_size)?;
+    write!(file, "Time elapsed with Rust Polars and drop null values: {} seconds to read {} which size is {} bytes.\n", 
+        duration.as_secs_f64(), source_file_name, file_size)?;
 
 
     // Read csv file with Polars and filter event column
-    // let start = Instant::now();
-    // let _df = FileHandler::read_csv_and_filter_event_column(source_file_name)?;
-    // let duration = start.elapsed();
+    let start = Instant::now();
+    let _df = FileHandler::read_csv_and_filter_event_column(source_file_name)?;
+    let duration = start.elapsed();
 
-    // write!(file, "Time elapsed with Rust Polars and filter event column: {} seconds to read {} which size is {} bytes.\n", 
-    //     duration.as_secs_f64(), source_file_name, file_size)?;
+    write!(file, "Time elapsed with Rust Polars and filter event column: {} seconds to read {} which size is {} bytes.\n", 
+        duration.as_secs_f64(), source_file_name, file_size)?;
 
     // csv to parquet
     let start = Instant::now();
-    let _df = FileHandler::csv_to_parquet(source_file_name, "chess_games.parquet")?;
+    let _df = FileHandler::csv_to_arrow(source_file_name, schema_json, "chess_games.arrow")?;
     let duration = start.elapsed();
 
     write!(file, "Time elapsed with Rust convert to parquet: {} seconds to read {} which size is {} bytes.\n",
         duration.as_secs_f64(), source_file_name, file_size)?;
 
-    // write!(file, "Time elapsed with Rust Polars and convert to json: {} seconds to read {} which size is {} bytes.\n",
-    //     duration.as_secs_f64(), source_file_name, file_size)?;
+    write!(file, "Time elapsed with Rust Polars and convert to json: {} seconds to read {} which size is {} bytes.\n",
+        duration.as_secs_f64(), source_file_name, file_size)?;
 
     // Read from BigQuery   
-    // let start = Instant::now();
-    // let rt = Runtime::new()?;
-    // rt.block_on(FileHandler::read_from_bigquery())?;
-    // let duration = start.elapsed();
+    let start = Instant::now();
+    let rt = Runtime::new()?;
+    rt.block_on(FileHandler::read_from_bigquery())?;
+    let duration = start.elapsed();
 
-    // write!(file, "Time elapsed to read and write to file from BigQuery: {} seconds to read table and write it to .txt file.\n",
-    //     duration.as_secs_f64())?;
+    write!(file, "Time elapsed to read and write to file from BigQuery: {} seconds to read table and write it to .txt file.\n",
+        duration.as_secs_f64())?;
 
-    // // Load data to BigQuery
-    // let start = Instant::now();
-    // FileHandler::load_csv_to_bigquery("data_tests", "chess_games", "files-to-experiment", "chess_games.csv")?;
-    // let duration = start.elapsed();
+    // Load data to BigQuery
+    let start = Instant::now();
+    FileHandler::load_csv_to_bigquery("data_tests", "chess_games", "files-to-experiment", "chess_games.csv")?;
+    let duration = start.elapsed();
 
-    // write!(file, "Time elapsed to load data to BigQuery: {} seconds to load data to BigQuery.\n",
-    //     duration.as_secs_f64())?;
+    write!(file, "Time elapsed to load data to BigQuery: {} seconds to load data to BigQuery.\n",
+        duration.as_secs_f64())?;
 
     Ok(())
 }
