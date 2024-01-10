@@ -60,6 +60,10 @@ def start_client():
     average_latency = sum(latencies) / len(latencies) * 1000
     print(f"Average Latency: {average_latency} ms")
 
+     # add average latency to times.txt
+    with open('times.txt', 'a') as f:
+        f.write(f"Average latency: {average_latency}\n")
+
 if __name__ == "__main__":
     stop_flag = [False]  # Shared flag
 

@@ -8,3 +8,4 @@ Time elapsed with Py Polars and filtering event column: 27.944177389144897 secon
 Time elapsed with Py Polars and converting to arrow: 19.609869241714478 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
 Time elapsed with Py BigQuery uploading csv: 213.6083047389984 seconds to upload /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
 Time elapsed with Python BigQuery: 3.8952789306640625 seconds to read table from BigQuery and save as .txt.
+Average latency: 0.3559509913126628

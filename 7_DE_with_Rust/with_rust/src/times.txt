@@ -4,4 +4,4 @@ Time elapsed with Rust Polars and filter event column: 6.962751422 seconds to re
 Time elapsed with Rust convert to arrow: 17.502641831 seconds to read /home/vytautas/Desktop/chess_games.csv which size is 4378895157 bytes.
 Time elapsed to read and write to file from BigQuery: 6.615160588 seconds to read table and write it to .txt file.
 Time elapsed to load data to BigQuery: 12.766645111 seconds to load data to BigQuery.
-Average Latency: 0.2722910000 milliseconds
+Average Latency: 0.3222910000 milliseconds
