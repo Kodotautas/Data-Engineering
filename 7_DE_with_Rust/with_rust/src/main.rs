@@ -122,27 +122,36 @@ impl FileHandler {
 impl Streamer {
     fn start_server(stop_flag: Arc<Mutex<bool>>) {
         let listener = TcpListener::bind("127.0.0.1:12345").unwrap();
+        listener.set_nonblocking(true).expect("Cannot set non-blocking");
         println!("Server started, waiting for connections...");
-
-        for stream in listener.incoming() {
-            if *stop_flag.lock().unwrap() {
-                break;
-            }
-
-            let mut stream = stream.unwrap();
-            println!("Connection from {}", stream.peer_addr().unwrap());
-
-            let mut buffer = [0; 1024];
-            while let Ok(n) = stream.read(&mut buffer) {
-                if n == 0 {
-                    break;
+    
+        loop {
+            match listener.accept() {
+                Ok((mut stream, addr)) => {
+                    println!("Connection from {}", addr);
+    
+                    let mut buffer = [0; 1024];
+                    while let Ok(n) = stream.read(&mut buffer) {
+                        if n == 0 {
+                            break;
+                        }
+    
+                        println!("Received data: {}", String::from_utf8_lossy(&buffer[..n]));
+                        stream.write_all(b"Received").unwrap();
+                    }
                 }
-
-                println!("Received data: {}", String::from_utf8_lossy(&buffer[..n]));
-                stream.write_all(b"Received").unwrap();
+                Err(ref e) if e.kind() == io::ErrorKind::WouldBlock => {
+                    if *stop_flag.lock().unwrap() {
+                        break;
+                    }
+                    // sleep for a while
+                    thread::sleep(Duration::from_millis(100));
+                    continue;
+                }
+                Err(e) => panic!("encountered IO error: {}", e),
             }
         }
-
+    
         println!("Server stopped");
     }
 
@@ -171,6 +180,13 @@ impl Streamer {
         let average_latency: Duration = latencies.iter().sum::<Duration>() / latencies.len() as u32;
         let average_latency_ms = average_latency.as_secs_f64() * 1000.0;
         println!("Average Latency: {:.10} milliseconds", average_latency_ms);
+
+        // add latency to file
+        let mut file = fs::OpenOptions::new()
+            .append(true)
+            .open("src/times.txt").unwrap();
+
+        write!(file, "Average Latency: {:.10} milliseconds\n", average_latency_ms).unwrap();
     }
     
     
@@ -190,79 +206,77 @@ impl Streamer {
         *stop_flag.lock().unwrap() = true; // Signal the server to stop
     
         server_thread.join().unwrap();
+
     }
 }
 
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // let source_file_name = "/home/vytautas/Desktop/chess_games.csv";
-    // let schema_json = "/home/vytautas/Desktop/chess_schema.json";
+    let source_file_name = "/home/vytautas/Desktop/chess_games.csv";
+    let schema_json = "/home/vytautas/Desktop/chess_schema.json";
 
-    // // Read csv file with Polars
-    // let start = Instant::now();
-    // let _df = FileHandler::read_csv_with_polars(source_file_name)?;
-    // let duration = start.elapsed();
+    // Read csv file with Polars
+    let start = Instant::now();
+    let _df = FileHandler::read_csv_with_polars(source_file_name)?;
+    let duration = start.elapsed();
 
-    // let metadata = fs::metadata(source_file_name)?;
-    // let file_size = metadata.len();
+    let metadata = fs::metadata(source_file_name)?;
+    let file_size = metadata.len();
 
-    // // set apend file
-    // // let mut file = fs::OpenOptions::new()
-    // //     .append(true)
-    // //     .open("src/times.txt")?;
+    // set apend file
+    let mut file = fs::OpenOptions::new()
+        .append(true)
+        .open("src/times.txt")?;
 
-    // let mut file = File::create("src/times.txt")?;
-    // write!(file, "Time elapsed with Rust Polars: {} seconds to read {} which size is {} bytes.\n", 
-    //     duration.as_secs_f64(), source_file_name, file_size)?;
+    let mut file = File::create("src/times.txt")?;
+    write!(file, "Time elapsed with Rust Polars: {} seconds to read {} which size is {} bytes.\n", 
+        duration.as_secs_f64(), source_file_name, file_size)?;
 
-    // // Read csv file with Polars and drop null values
-    // let start = Instant::now();
-    // let _df = FileHandler::read_csv_with_polars_drop_nulls(source_file_name)?;
-    // let duration = start.elapsed();
+    // Read csv file with Polars and drop null values
+    let start = Instant::now();
+    let _df = FileHandler::read_csv_with_polars_drop_nulls(source_file_name)?;
+    let duration = start.elapsed();
 
-    // write!(file, "Time elapsed with Rust Polars and drop null values: {} seconds to read {} which size is {} bytes.\n", 
-    //     duration.as_secs_f64(), source_file_name, file_size)?;
+    write!(file, "Time elapsed with Rust Polars and drop null values: {} seconds to read {} which size is {} bytes.\n", 
+        duration.as_secs_f64(), source_file_name, file_size)?;
 
 
-    // // Read csv file with Polars and filter event column
-    // let start = Instant::now();
-    // let _df = FileHandler::read_csv_and_filter_event_column(source_file_name)?;
-    // let duration = start.elapsed();
+    // Read csv file with Polars and filter event column
+    let start = Instant::now();
+    let _df = FileHandler::read_csv_and_filter_event_column(source_file_name)?;
+    let duration = start.elapsed();
 
-    // write!(file, "Time elapsed with Rust Polars and filter event column: {} seconds to read {} which size is {} bytes.\n", 
-    //     duration.as_secs_f64(), source_file_name, file_size)?;
+    write!(file, "Time elapsed with Rust Polars and filter event column: {} seconds to read {} which size is {} bytes.\n", 
+        duration.as_secs_f64(), source_file_name, file_size)?;
 
-    // // csv to parquet
-    // let start = Instant::now();
-    // let _df = FileHandler::csv_to_arrow(source_file_name, schema_json, "chess_games.arrow")?;
-    // let duration = start.elapsed();
+    // csv to parquet
+    let start = Instant::now();
+    let _df = FileHandler::csv_to_arrow(source_file_name, schema_json, "chess_games.arrow")?;
+    let duration = start.elapsed();
 
-    // write!(file, "Time elapsed with Rust convert to parquet: {} seconds to read {} which size is {} bytes.\n",
-    //     duration.as_secs_f64(), source_file_name, file_size)?;
+    write!(file, "Time elapsed with Rust convert to arrow: {} seconds to read {} which size is {} bytes.\n",
+        duration.as_secs_f64(), source_file_name, file_size)?;
 
-    // write!(file, "Time elapsed with Rust Polars and convert to json: {} seconds to read {} which size is {} bytes.\n",
-    //     duration.as_secs_f64(), source_file_name, file_size)?;
+    // Read from BigQuery   
+    let start = Instant::now();
+    let rt = Runtime::new()?;
+    rt.block_on(FileHandler::read_from_bigquery())?;
+    let duration = start.elapsed();
 
-    // // Read from BigQuery   
-    // let start = Instant::now();
-    // let rt = Runtime::new()?;
-    // rt.block_on(FileHandler::read_from_bigquery())?;
-    // let duration = start.elapsed();
+    write!(file, "Time elapsed to read and write to file from BigQuery: {} seconds to read table and write it to .txt file.\n",
+        duration.as_secs_f64())?;
 
-    // write!(file, "Time elapsed to read and write to file from BigQuery: {} seconds to read table and write it to .txt file.\n",
-    //     duration.as_secs_f64())?;
+    // Load data to BigQuery
+    let start = Instant::now();
+    FileHandler::load_csv_to_bigquery("data_tests", "chess_games", "files-to-experiment", "chess_games.csv")?;
+    let duration = start.elapsed();
 
-    // // Load data to BigQuery
-    // let start = Instant::now();
-    // FileHandler::load_csv_to_bigquery("data_tests", "chess_games", "files-to-experiment", "chess_games.csv")?;
-    // let duration = start.elapsed();
-
-    // write!(file, "Time elapsed to load data to BigQuery: {} seconds to load data to BigQuery.\n",
-    //     duration.as_secs_f64())?;
+    write!(file, "Time elapsed to load data to BigQuery: {} seconds to load data to BigQuery.\n",
+        duration.as_secs_f64())?;
 
     // lauch stream processor
     Streamer::main_stream_processor();
 
-
     Ok(())
+    
 }
