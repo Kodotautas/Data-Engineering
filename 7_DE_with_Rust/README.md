@@ -19,7 +19,7 @@ OS: Pop!_OS 22.04 LTS
 | **Data clean & transform** | Read & remove nulls Polars | 35 s | 32 s | +9%
 | **Data aggregation**   | Read & filter Pandas | 43 s || +614% | Python Pandas vs Rust Polars
 | **Data aggregation**   | Read & filter Polars | 28 s | 7 s | +400%
-| **Data encoding / decoding** | Convert .csv to .arrow Pandas | 62 s || +344% | Python Pandas vs Rust csv2arrow
+| **Data encoding / decoding** | Convert .csv to .arrow Pandas | 62 s || +344% | Python Pandas vs Rust csv2arrow crate
 | **Data encoding / decoding** | Convert .csv to .arrow Polars | 20 s | 18 s | +11% |
 | **Data transfer** | Bigquery -> .txt | 4 s | 5 s | -20% |
 | **Data transfer** | .csv -> Bigquery | 214 s | 13 s | +1646% 
