@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+    <title>VNO Viewpoint App</title>
+    <link rel="stylesheet" type="text/css" href="/static/flights_data.css">
+</head>
+<body>
+    <div class="header">
+        <div class="weather-data">
+            <span>{{ weather_data }}</span>
+        </div>
+    </div>
+    
+    <div style="display: flex; justify-content: left;">
+        <div>
+            <a href="{{ url_for('best_time') }}" class="button">Best time</a>
+        </div>
+    </div>
+
+    <h1>VNO flights</h1>
+    
+    <table class="flights-data-table">
+        <thead>
+            <tr>
+                <th>Final time</th>
+                <th>Type</th>
+                <th>Origin city</th>
+                <th>Destination city</th>
+                <th>Flight number</th>
+                <th>Aircraft model</th>
+                <th>Airline</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for flight in flights_data %}
+            <tr>
+                <td>{{ flight['Final time'] }}</td>
+                <td>{{ flight['Type'] }}</td>
+                <td>{{ flight['Origin city'] }}</td>
+                <td>{{ flight['Destination city'] }}</td>
+                <td>{{ flight['Flight number'] }}</td>
+                <td>{{ flight['Aircraft model'] }}</td>
+                <td>{{ flight['Airline'] }}</td>
+                <td>{{ flight['Status'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    <script>
+        $(document).ready(function() {
+            $('.flights-data-table').DataTable({
+                "pageLength": 25
+            });
+        });
+    </script>
+    
+</body>
+</html>

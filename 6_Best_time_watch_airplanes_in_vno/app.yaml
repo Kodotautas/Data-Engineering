@@ -1,0 +1,17 @@
+runtime: python312
+
+# F1 = 2 workers, 384 MB memory, 600 MHz CPU
+instance_class: F1
+
+env: standard
+
+automatic_scaling:    
+    max_instances: 1    
+    min_instances: 0    
+    min_idle_instances: 0    
+    max_idle_instances: 1
+
+entrypoint: gunicorn -b :$PORT app:app
+
+runtime_config:
+    operating_system: "ubuntu22"

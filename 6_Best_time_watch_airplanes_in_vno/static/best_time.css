@@ -1,0 +1,112 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #E6E6FA
+}
+h1 {
+    text-align: center;
+    color: black;
+    font-size: 30px;
+}
+.smaller-text{
+    font-size: 19px;
+    color: grey
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-container button {
+    margin: 0;
+    padding: 0;
+    height: auto;
+}
+
+.graph-container {
+    display: flex;
+    justify-content: center;
+    width: auto;
+}
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.weather-data {
+    text-align: center;
+    color: grey;
+    font-size: 26px;
+}
+
+.coffee-button {
+    display: inline-block;
+    font-weight: 400;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-color: #333333;
+    border: 1px solid transparent;
+    padding: 10px 10px;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 15px;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    text-decoration: none;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-bottom: 25px;
+}
+.coffee-button:hover {
+    background-color: #5b5b5b;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 10px;
+    font-size: 20px;
+    margin: 5px 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #333333;
+    border: none;
+    border-radius: 15px;
+}
+.button:hover {
+    background-color: #5b5b5b;
+}
+.button:active {
+    background-color: #133337;
+    transform: translateY(4px);
+}
+
+.dateSelector {
+    display: inline-block;
+    padding: 10px 10px;
+    font-size: 20px;
+    margin: 1px 1px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #333333;
+    border: none;
+    border-radius: 15px;
+}
+.dateSelector:hover {
+    background-color: #5b5b5b;
+}
+.dateSelector:active {
+    background-color: #133337;
+    transform: translateY(4px);
+}
