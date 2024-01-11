@@ -24,5 +24,5 @@ OS: Pop!_OS 22.04 LTS
 | Data transfer | Bigquery -> .txt | 4 s | 5 s | -20% |
 | Data transfer | .csv -> Bigquery | 214 s | 13 s | +1646% 
 | Real-time data processing | Average latency between server & client | 0.356 ms | 0.322 ms | +11% |
-|| **Average (Py use Pandas):**| 70 s | 13 s | +538% |
-|| **Average (Py use Polars):**| 54 s | 13 s | +415% |
+|| **Average (Py use Pandas):**| **70 s** | **13 s** | **+538%** |
+|| **Average (Py use Polars):**| **54 s** | **13 s** | **+415%** |
