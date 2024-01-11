@@ -1,8 +1,8 @@
 ### Data engineering main tasks performance tests between Python and Rust
 
 **Equipment:**
-Python 3.12.0
-Rust 1.75.0
+Python -v 3.12.0
+Rust -v 1.75.0
 Laptop: AMD® Ryzen 5 6600hs, 16 GB
 OS: Pop!_OS 22.04 LTS
 
@@ -23,6 +23,6 @@ OS: Pop!_OS 22.04 LTS
 | **Data encoding / decoding** | Convert .csv to .arrow Polars | 20 s | 18 s | +11% |
 | **Data transfer** | Bigquery -> .txt | 4 s | 5 s | -20% |
 | **Data transfer** | .csv -> Bigquery | 214 s | 13 s | +1646% 
-| **Real-time data processing** | Average latency between server & client | 0.356 ms | 0.322 ms | +11% |
+| **Real-time data processing** | Average latency between Server & Client | 0.356 ms | 0.322 ms | +11% |
 || **Average (Py use Pandas):**| **70 s** | **13 s** | **+538%** |
 || **Average (Py use Polars):**| **54 s** | **13 s** | **+415%** |
