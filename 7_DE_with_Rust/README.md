@@ -21,6 +21,6 @@ OS: Pop!_OS 22.04 LTS
 | Data aggregation   | Read & filter Polars | 28 s | 7 s | +400%
 | Data encoding / decoding | Convert .csv to .arrow Pandas | 62 s || +344% |
 | Data encoding / decoding | Convert .csv to .arrow Polars | 20 s | 18 s | +11% |
-| Data transfer | From GCP Bigquery to .txt | 4 s | 5 s | -20% 
-| Data transfer | From .csv to Bigquery | 214 s | 13 s | +1646% 
+| Data transfer | Bigquery > .txt | 4 s | 5 s | -20% 
+| Data transfer | .csv > Bigquery | 214 s | 13 s | +1646% 
 | Real-time data processing | Average latency between server & client | 0.356 ms | 0.322 ms | +11% |
