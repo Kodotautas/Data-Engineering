@@ -5,6 +5,7 @@ Python 3.12.0
 Rust 1.75.0
 AMD® Ryzen 5 6600hs, 16 GB
 Pop!_OS 22.04 LTS
+Internet up to 500 Mbps
 
 **Dataset:** 
 [Chess games, 37 million rows, size: 4.4 GB, format: .csv](https://www.kaggle.com/datasets/arevel/chess-games) 
