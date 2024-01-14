@@ -26,3 +26,5 @@ Pop!_OS 22.04 LTS
 | **Real-time processing** | Average latency between Server & Client | 0.356 ms | 0.322 ms | +11% |
 || **Average (Py use Pandas):**| **70 s** | **13 s** | **+538%** |
 || **Average (Py use Polars):**| **54 s** | **13 s** | **+415%** |
+
+If you have any questions please check code or contact me.

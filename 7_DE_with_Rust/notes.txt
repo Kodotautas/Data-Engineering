@@ -1,6 +1,0 @@
--- done: test Py vs Rust read BQ table to console
--- done: Py vs Rust to upload csv to bigquery
--- done: filter csv file and measure times
--- done: data serialization from dataframe to json
--- done: data encoding to arrow format
--- realtime streaming test, compare latency

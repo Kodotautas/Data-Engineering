@@ -83,28 +83,28 @@ source_file_name = "/home/vytautas/Desktop/chess_games.csv"
 
 
 # test with pandas
-# start = time.time()
-# File.read_csv_with_pandas(source_file_name)
-# end = time.time()
-# # export time to txt file
-# with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
-#     f.write(f"Time elapsed with Py Pandas: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
+start = time.time()
+File.read_csv_with_pandas(source_file_name)
+end = time.time()
+# export time to txt file
+with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
+    f.write(f"Time elapsed with Py Pandas: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
-# # test with pandas and removing nulls
-# start = time.time()
-# File.read_csv_with_pandas_and_remove_nulls(source_file_name)
-# end = time.time()
-# # export time to txt file
-# with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
-#     f.write(f"Time elapsed with Py Pandas and removing nulls: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
+# test with pandas and removing nulls
+start = time.time()
+File.read_csv_with_pandas_and_remove_nulls(source_file_name)
+end = time.time()
+# export time to txt file
+with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
+    f.write(f"Time elapsed with Py Pandas and removing nulls: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
 # test with pandas and filtering event column
-# start = time.time()
-# File.read_csv_with_pandas_filter_event_column(source_file_name)
-# end = time.time()
-# # export time to txt file
-# with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
-#     f.write(f"Time elapsed with Py Pandas and filtering event column: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
+start = time.time()
+File.read_csv_with_pandas_filter_event_column(source_file_name)
+end = time.time()
+# export time to txt file
+with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
+    f.write(f"Time elapsed with Py Pandas and filtering event column: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
 # test with pandas and converting to arrow
 start = time.time()
@@ -115,28 +115,28 @@ with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
     f.write(f"Time elapsed with Py Pandas and converting to json: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
 # # test with polars
-# start = time.time()
-# File.read_csv_with_polars(source_file_name)
-# end = time.time()
-# # export time to txt file
-# with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
-#     f.write(f"Time elapsed with Py Polars: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
+start = time.time()
+File.read_csv_with_polars(source_file_name)
+end = time.time()
+# export time to txt file
+with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
+    f.write(f"Time elapsed with Py Polars: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
-# # test with polars and removing nulls
-# start = time.time()
-# File.read_csv_with_polars_and_remove_nulls(source_file_name)
-# end = time.time()
-# # export time to txt file
-# with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
-#     f.write(f"Time elapsed with Py Polars and removing nulls: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
+# test with polars and removing nulls
+start = time.time()
+File.read_csv_with_polars_and_remove_nulls(source_file_name)
+end = time.time()
+# export time to txt file
+with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
+    f.write(f"Time elapsed with Py Polars and removing nulls: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
 # test with polars and filtering event column
-# start = time.time()
-# File.read_csv_with_polars_filter_event_column(source_file_name)
-# end = time.time()
-# # export time to txt file
-# with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
-#     f.write(f"Time elapsed with Py Polars and filtering event column: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
+start = time.time()
+File.read_csv_with_polars_filter_event_column(source_file_name)
+end = time.time()
+# export time to txt file
+with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
+    f.write(f"Time elapsed with Py Polars and filtering event column: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
 # test with polars and converting to arrow
 start = time.time()
@@ -147,17 +147,17 @@ with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
     f.write(f"Time elapsed with Py Polars and converting to json: {(end - start)} seconds to read {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
 # test with BigQuery
-# start = time.time()
-# File.upload_to_bigquery(source_file_name, "data_tests", "chess_games")
-# end = time.time()
-# # export time to txt file
-# with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
-#     f.write(f"Time elapsed with Py BigQuery: {(end - start)} seconds to upload {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
+start = time.time()
+File.upload_to_bigquery(source_file_name, "data_tests", "chess_games")
+end = time.time()
+# export time to txt file
+with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
+    f.write(f"Time elapsed with Py BigQuery: {(end - start)} seconds to upload {source_file_name} which size is {os.path.getsize(source_file_name)} bytes.\n")
 
 # # test with BigQuery
-# start = time.time()
-# File.read_from_bigquery("data_tests", "chess_games", "chess_games_from_bigquery.txt")
-# end = time.time()
-# # export time to txt file
-# with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
-#     f.write(f"Time elapsed with Python BigQuery: {(end - start)} seconds to read table from BigQuery and save as .txt.\n")
+start = time.time()
+File.read_from_bigquery("data_tests", "chess_games", "chess_games_from_bigquery.txt")
+end = time.time()
+# export time to txt file
+with open("7_DE_with_Rust/with_python/times.txt", "a") as f:
+    f.write(f"Time elapsed with Python BigQuery: {(end - start)} seconds to read table from BigQuery and save as .txt.\n")
