@@ -1,9 +1,9 @@
 ### Python and Rust Performance for Data Engineering
 
-**Stuff:**
+**Environment:**
 Python 3.12.0
 Rust 1.75.0
-AMD® Ryzen 5 6600hs, 16 GB
+AMD Ryzen 5 6600hs, 16 GB
 Pop!_OS 22.04 LTS
 Internet up to 500 Mbps
 

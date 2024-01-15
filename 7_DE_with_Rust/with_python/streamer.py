@@ -1,9 +1,9 @@
-# combined.py
 import socket
 import time
 import threading
 
 def start_server(stop_flag):
+    """Starts a server that listens for connections and prints received data."""
     host = 'localhost'
     port = 12345
     buffer_size = 1024
@@ -28,6 +28,7 @@ def start_server(stop_flag):
     print("Server stopped")
 
 def start_client():
+    """Starts a client that sends data to the server."""
     host = 'localhost'
     port = 12345
     buffer_size = 1024
@@ -65,6 +66,7 @@ def start_client():
         f.write(f"Average latency: {average_latency}\n")
 
 if __name__ == "__main__":
+    """Starts a server and client, and measures latency."""
     stop_flag = [False]  # Shared flag
 
     server_thread = threading.Thread(target=start_server, args=(stop_flag,))

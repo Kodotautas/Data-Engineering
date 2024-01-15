@@ -19,12 +19,14 @@ struct Streamer;
 
 
 impl FileHandler {
+    // Read CSV file using Polars and return DataFrame
     fn read_csv_with_polars(file_name: &str) -> Result<DataFrame, Box<dyn std::error::Error>> {
         let df = CsvReader::from_path(file_name)?.finish()?;
         
         Ok(df)
     }
 
+    // Read CSV file using Polars and drop null values
     fn read_csv_with_polars_drop_nulls(file_name: &str) -> Result<DataFrame, Box<dyn std::error::Error>> {
         let df = CsvReader::from_path(file_name)?.finish()?;
     
@@ -34,6 +36,7 @@ impl FileHandler {
         Ok(df)
     }
     
+    // Read CSV file using Polars and filter event column
     fn read_csv_and_filter_event_column(file_name: &str) -> Result<Vec<StringRecord>, Box<dyn Error>> {
         let mut rdr = ReaderBuilder::new().from_path(file_name)?;
         let headers = rdr.headers()?.clone();
@@ -53,7 +56,7 @@ impl FileHandler {
         Ok(records)
     }
     
-
+    // Convert CSV file to Arrow file
     fn csv_to_arrow(csv_file: &str, schema_json: &str, arrow_file: &str) -> io::Result<()> {
         let output = Command::new("csv2arrow")
             .arg("--schema-file")
@@ -69,7 +72,7 @@ impl FileHandler {
         Ok(())
     }
 
-
+    // Read from BigQuery
     async fn read_from_bigquery() -> Result<(), Box<dyn std::error::Error>> {
         let gcp_sa_key = env::var("GOOGLE_APPLICATION_CREDENTIALS")
             .map_err(|_| "Environment variable GOOGLE_APPLICATION_CREDENTIALS is not set")?;
@@ -102,6 +105,7 @@ impl FileHandler {
         Ok(())
     }
 
+    // Load data to BigQuery
     fn load_csv_to_bigquery(dataset: &str, table: &str, bucket: &str, file: &str) -> std::io::Result<()> {
         let output = Command::new("bq")
             .arg("load")
@@ -274,7 +278,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     write!(file, "Time elapsed to load data to BigQuery: {} seconds to load data to BigQuery.\n",
         duration.as_secs_f64())?;
 
-    // lauch stream processor
+    // lauch stream processor to measure latency
     Streamer::main_stream_processor();
 
     Ok(())
