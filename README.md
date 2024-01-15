@@ -14,3 +14,5 @@ There is data engineering projects / learnings completed on free time.
 5 - Dashboard about Lithuania transport market (cars, motorcycles, ships), pipeline build using GCP tools: Storage, Bigquery, Dataflow, Dataform, Looker Studio
 
 6 - Simple web app to see the best times to watch planes in Vilnius International Airport (VNO) spot. Tools: Python, Flask and deployed on GCP App Engine.
+
+7 - Python and Rust Performance for Data Engineering comparison.
