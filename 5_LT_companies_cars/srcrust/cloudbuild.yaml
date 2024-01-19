@@ -23,4 +23,4 @@ steps:
 timeout: 800s
 
 substitutions:
-  _SERVICE_NAME: traficoffenders
+  _SERVICE_NAME: srcrust
