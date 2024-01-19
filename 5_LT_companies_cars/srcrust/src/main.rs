@@ -63,7 +63,7 @@ impl Processor {
 
 
 async fn information(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
-    Ok(Response::new(Body::from("Loaded data to BigQuery")))
+    Ok(Response::new(Body::from("Loading data to BigQuery")))
 }
 
 #[tokio::main]
