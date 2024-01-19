@@ -25,9 +25,6 @@ impl Processor {
         // Print download time in seconds
         println!("Download data took {} seconds", download_start.elapsed().as_secs());
 
-        // Convert Bytes to Vec<u8>
-        let bytes_vec = bytes.to_vec();
-
         // Start timing upload
         let upload_start = Instant::now();
 
@@ -36,7 +33,7 @@ impl Processor {
         let _uploaded = client.upload_object(&UploadObjectRequest {
             bucket: bucket.to_string(),
             ..Default::default()
-        }, bytes_vec, &upload_type).await?;
+        }, bytes, &upload_type).await?;
 
         // Print upload time
         println!("Upload took {} seconds", upload_start.elapsed().as_secs());
@@ -65,8 +62,8 @@ impl Processor {
 }
 
 
-async fn rustless(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
-    Ok(Response::new(Body::from("Hello, World!")))
+async fn information(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
+    Ok(Response::new(Body::from("Loaded data to BigQuery")))
 }
 
 #[tokio::main]
@@ -90,7 +87,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // creates one from our `rustless` function.
     let make_svc = make_service_fn(|_conn| async {
         // service_fn converts our function into a `Service`
-        Ok::<_, Infallible>(service_fn(rustless))
+        Ok::<_, Infallible>(service_fn(information))
     });
 
     let server = Server::bind(&addr).serve(make_svc);
