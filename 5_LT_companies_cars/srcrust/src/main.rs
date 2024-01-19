@@ -57,7 +57,7 @@ impl Processor {
             eprintln!("Error: {}", String::from_utf8_lossy(&output.stderr));
         }
         
-        println!("Loading data to BigQuery took {} seconds", download_start.elapsed().as_secs());
+        println!("Loading data to BigQuery took {} seconds. Finished!", download_start.elapsed().as_secs());
 
         Ok(())
     }
