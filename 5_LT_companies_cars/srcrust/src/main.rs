@@ -71,7 +71,7 @@ async fn rustless(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    std::env::set_var("GOOGLE_APPLICATION_CREDENTIALS", "/home/vytautas/.config/gcloud/application_default_credentials.json");
+    // std::env::set_var("GOOGLE_APPLICATION_CREDENTIALS", "/home/vytautas/.config/gcloud/application_default_credentials.json");
     
     let config = ClientConfig::default();
     let url = "https://get.data.gov.lt/datasets/gov/ird/anr/KetPazeidejas/:format/csv";
