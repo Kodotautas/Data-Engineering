@@ -2,8 +2,8 @@ FROM rust
 
 COPY . .
 
-EXPOSE 8080
+EXPOSE 8080:8080
 
 RUN cargo build --release
 
-CMD [ "./target/release/srcrust" ]
+CMD [ "./target/release/src_rust" ]
