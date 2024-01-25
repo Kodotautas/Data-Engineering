@@ -1,5 +1,5 @@
 - done: add ages groups in dataform table
 - done: bad drivers date slider, how to do it?
 - done: add more date range managers
-- fix info page
-- need architecture chart
+- done: fix info page
+- done: need architecture chart
