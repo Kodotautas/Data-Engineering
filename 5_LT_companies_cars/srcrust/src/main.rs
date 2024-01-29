@@ -7,7 +7,7 @@ use hyper::{Server, Body, Response, Request};
 use std::convert::Infallible;
 use std::net::SocketAddr;
 
-struct Processor;
+struct Processor; // Processor struct
 
 impl Processor {
     async fn download_and_upload(_config: ClientConfig, url: &str, bucket: &str, object_name: &str) -> Result<(), Box<dyn std::error::Error>> {
