@@ -11,3 +11,6 @@ serde_json = "1.0.113"
 reqwest = "0.11.24"
 awc = { version = "3.4.0", features = ["rustls"] }
 actix-rt = "2.9.0"
+tokio = { version = "1.36.0", features = ["full"] }
+tokio-tungstenite = { version = "0.21.0", features = ["rustls-tls-webpki-roots"] }
+futures = "0.3.30"
