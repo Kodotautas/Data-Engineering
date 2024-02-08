@@ -14,15 +14,12 @@ async fn main() {
     let (mut write, read) = ws_stream.split();
 
     let read = read.for_each(|message| async {
-        match message {
-            Ok(msg) => {
-                if msg.is_text() || msg.is_binary() {
-                    myprocessing(msg.to_text().unwrap());
-                }
+        if let Ok(msg) = message {
+            if msg.is_text() || msg.is_binary() {
+                processing(msg.to_text().unwrap_or_default());
             }
-            Err(e) => {
-                println!("Error in message: {}", e);
-            }
+        } else if let Err(e) = message {
+            println!("Error in message: {}", e);
         }
     });
 
@@ -36,17 +33,41 @@ async fn main() {
     let _ = futures::join!(read, write);
 }
 
-fn myprocessing(message: &str) {
+
+fn processing(message: &str) {
     let data: serde_json::Value = serde_json::from_str(message).unwrap();
-    let info = data["data"]["properties"].as_object().unwrap();
-    let action = data["action"].as_str().unwrap();
+    let info = match data["data"]["properties"].as_object() {
+        Some(info) => info,
+        None => {
+            println!("Error: 'properties' field not found");
+            return;
+        }
+    };
+    
+    let action = match data["action"].as_str() {
+        Some(action) => action,
+        None => {
+            println!("Error: 'action' field not found");
+            return;
+        }
+    };
+
     println!(
         ">>>> {action:7} event from {auth:7}, unid:{unid}, T0:{time}, Mag:{mag}, Region: {flynn_region}",
         action = action,
-        auth = info["auth"].as_str().unwrap(),
-        unid = info["unid"].as_str().unwrap(),
-        time = info["time"].as_str().unwrap(),
-        mag = info["mag"].as_str().unwrap(),
-        flynn_region = info["flynn_region"].as_str().unwrap()
+        auth = info["auth"].as_str().unwrap_or("unknown"),
+        unid = info["unid"].as_str().unwrap_or("unknown"),
+        time = info["time"].as_str().unwrap_or("unknown"),
+        mag = info["mag"].as_f64().unwrap_or(0.0),
+        flynn_region = info["flynn_region"].as_str().unwrap_or("unknown")
     );
+
+    // concat the message to a file and constantly append to it
+    let mut _file = std::fs::OpenOptions::new()
+        .create(true)
+        .append(true)
+        .open("streamer.txt")
+        .unwrap();
+
+    let _ = writeln!(_file, "{}", message);
 }
