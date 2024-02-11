@@ -3,6 +3,8 @@ use tokio_tungstenite::tungstenite::protocol::Message;
 use url::Url;
 use tokio::time::{Duration, sleep};
 struct Pipeline;
+use tokio::fs::OpenOptions;
+use tokio::io::AsyncWriteExt; // for writeln!
 
 #[tokio::main]
 async fn main() {
@@ -14,10 +16,10 @@ async fn main() {
 
     let (mut write, read) = ws_stream.split();
 
-    let read = read.for_each(|message| async {
+    let read = read.for_each_concurrent(None, |message| async {
         if let Ok(msg) = message {
             if msg.is_text() || msg.is_binary() {
-                processing(msg.to_text().unwrap_or_default());
+                Pipeline::processing(msg.to_text().unwrap_or_default()).await;
             }
         } else if let Err(e) = message {
             println!("Error in message: {}", e);
@@ -35,7 +37,7 @@ async fn main() {
 }
 
 impl Pipeline{
-    fn processing(message: &str) {
+    async fn processing(message: &str) {
         let data: serde_json::Value = serde_json::from_str(message).unwrap();
         let info = match data["data"]["properties"].as_object() {
             Some(info) => info,
@@ -64,12 +66,13 @@ impl Pipeline{
         );
 
         // concat the message to a file and constantly append to it
-        let mut _file = std::fs::OpenOptions::new()
+        let mut file = OpenOptions::new()
             .create(true)
             .append(true)
             .open("streamer.txt")
+            .await
             .unwrap();
 
-        let _ = writeln!(_file, "{}", message);
+        let _ = file.write_all(format!("{}\n", message).as_bytes()).await;
     }
 }
