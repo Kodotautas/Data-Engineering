@@ -3,8 +3,10 @@ use tokio_tungstenite::tungstenite::protocol::Message;
 use url::Url;
 use tokio::time::{Duration, sleep};
 struct Pipeline;
-use tokio::fs::OpenOptions;
-use tokio::io::AsyncWriteExt; // for writeln!
+use std::process::Command;
+use std::fs::File;
+use std::io::Write;
+use std::env::temp_dir;
 
 #[tokio::main]
 async fn main() {
@@ -19,7 +21,7 @@ async fn main() {
     let read = read.for_each_concurrent(None, |message| async {
         if let Ok(msg) = message {
             if msg.is_text() || msg.is_binary() {
-                Pipeline::processing(msg.to_text().unwrap_or_default()).await;
+                Pipeline::processing(msg.to_text().unwrap_or_default());
             }
         } else if let Err(e) = message {
             println!("Error in message: {}", e);
@@ -36,8 +38,9 @@ async fn main() {
     let _ = futures::join!(read, write);
 }
 
+
 impl Pipeline{
-    async fn processing(message: &str) {
+    fn processing(message: &str) {
         let data: serde_json::Value = serde_json::from_str(message).unwrap();
         let info = match data["data"]["properties"].as_object() {
             Some(info) => info,
@@ -65,14 +68,34 @@ impl Pipeline{
             flynn_region = info["flynn_region"].as_str().unwrap_or("unknown")
         );
 
-        // concat the message to a file and constantly append to it
-        let mut file = OpenOptions::new()
-            .create(true)
-            .append(true)
-            .open("streamer.txt")
-            .await
-            .unwrap();
-
-        let _ = file.write_all(format!("{}\n", message).as_bytes()).await;
+            // Convert the JSON to a string
+            let dataset = "earthquakes";
+            let table = "earthquakes_raw";
+            let bucket = "rust-raw";
+            let file = "temp.json";
+            Self::load_json_to_bigquery(dataset, table, bucket, file, message).unwrap();
     }
-}
+
+    fn load_json_to_bigquery(dataset: &str, table: &str, bucket: &str, file: &str, json: &str) -> std::io::Result<()> {
+            // Write the JSON string to a temporary file
+            let mut path = temp_dir();
+            path.push(file);
+            let mut temp_file = File::create(&path)?;
+            write!(temp_file, "{}", json)?;
+    
+            // Upload the file to BigQuery
+            let output = Command::new("bq")
+                .arg("load")
+                .arg("--autodetect")
+                .arg("--source_format=NEWLINE_DELIMITED_JSON")
+                .arg(format!("{}.{}", dataset, table))
+                .arg(format!("gs://{}/{}", bucket, path.to_str().unwrap()))
+                .output()?;
+    
+            if !output.status.success() {
+                eprintln!("Error booom: {}", String::from_utf8_lossy(&output.stderr));
+            }
+    
+            Ok(())
+        }
+    }

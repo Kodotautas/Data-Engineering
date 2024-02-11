@@ -14,3 +14,4 @@ actix-rt = "2.9.0"
 tokio = { version = "1.36.0", features = ["full"] }
 tokio-tungstenite = { version = "0.21.0", features = ["rustls-tls-webpki-roots"] }
 futures = "0.3.30"
+google-cloud-auth = "0.13.0"
