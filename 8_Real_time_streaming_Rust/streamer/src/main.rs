@@ -93,7 +93,7 @@ impl Pipeline{
                 .output()?;
     
             if !output.status.success() {
-                eprintln!("Error booom: {}", String::from_utf8_lossy(&output.stderr));
+                eprintln!("Error: {}", String::from_utf8_lossy(&output.stderr));
             }
     
             Ok(())
