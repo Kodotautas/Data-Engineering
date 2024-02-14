@@ -81,7 +81,7 @@ impl Pipeline{
             // Event processing
             let start = Instant::now();
             Self::load_json_to_bigquery(dataset, table, bucket, file, &event_str).unwrap();
-            println!("Time elapsed in loading to BigQuery is: {:?}", start.elapsed().as_secs_f64());
+            println!("Time elapsed in loading to BigQuery is: {:?} seconds", start.elapsed().as_secs_f64());
     }
 
     fn load_json_to_bigquery(dataset: &str, table: &str, bucket: &str, file: &str, json: &str) -> std::io::Result<()> {
