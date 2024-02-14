@@ -1,12 +1,13 @@
 use futures::{SinkExt, StreamExt};
 use tokio_tungstenite::tungstenite::protocol::Message;
 use url::Url;
-use tokio::time::{Duration, sleep};
+use tokio::time::sleep;
 struct Pipeline;
 use std::process::Command;
 use std::fs::File;
 use std::io::Write;
 use std::env::temp_dir;
+use std::time::{Duration, Instant};
 
 #[tokio::main]
 async fn main() {
@@ -68,34 +69,53 @@ impl Pipeline{
             flynn_region = info["flynn_region"].as_str().unwrap_or("unknown")
         );
 
+            // Convert the event to a string
+            let event_str = serde_json::to_string(&data).unwrap();
+
             // Convert the JSON to a string
             let dataset = "earthquakes";
             let table = "earthquakes_raw";
             let bucket = "rust-raw";
             let file = "temp.json";
-            Self::load_json_to_bigquery(dataset, table, bucket, file, message).unwrap();
+
+            // Event processing
+            let start = Instant::now();
+            Self::load_json_to_bigquery(dataset, table, bucket, file, &event_str).unwrap();
+            println!("Time elapsed in loading to BigQuery is: {:?}", start.elapsed().as_secs_f64());
     }
 
     fn load_json_to_bigquery(dataset: &str, table: &str, bucket: &str, file: &str, json: &str) -> std::io::Result<()> {
-            // Write the JSON string to a temporary file
-            let mut path = temp_dir();
-            path.push(file);
-            let mut temp_file = File::create(&path)?;
-            write!(temp_file, "{}", json)?;
+        // Write the JSON string to a temporary file
+        let mut path = temp_dir();
+        path.push(file);
+        let mut temp_file = File::create(&path)?;
+        write!(temp_file, "{}", json)?;
     
-            // Upload the file to BigQuery
-            let output = Command::new("bq")
-                .arg("load")
-                .arg("--autodetect")
-                .arg("--source_format=NEWLINE_DELIMITED_JSON")
-                .arg(format!("{}.{}", dataset, table))
-                .arg(format!("gs://{}/{}", bucket, path.to_str().unwrap()))
-                .output()?;
+        // Upload the file to Google Cloud Storage
+        let output = Command::new("gsutil")
+            .arg("cp")
+            .arg(path.to_str().unwrap())
+            .arg(format!("gs://{}/{}", bucket, file))
+            .output()?;
     
-            if !output.status.success() {
-                eprintln!("Error: {}", String::from_utf8_lossy(&output.stderr));
-            }
-    
-            Ok(())
+        if !output.status.success() {
+            eprintln!("Error: {}", String::from_utf8_lossy(&output.stderr));
+            return Err(std::io::Error::new(std::io::ErrorKind::Other, "Failed to upload file to GCS"));
         }
+    
+        // Load the file from GCS to BigQuery
+        let output = Command::new("bq")
+            .arg("load")
+            .arg("--autodetect")
+            .arg("--source_format=NEWLINE_DELIMITED_JSON")
+            .arg(format!("{}.{}", dataset, table))
+            .arg(format!("gs://{}/{}", bucket, file))
+            .output()?;
+    
+        if !output.status.success() {
+            eprintln!("Error: {}", String::from_utf8_lossy(&output.stderr));
+        }
+    
+        Ok(())
     }
+}
