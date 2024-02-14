@@ -1,1 +1,1 @@
-- need fiz authorization
+- change gcs to gcp pub/sub
