@@ -2,12 +2,17 @@ use futures::{SinkExt, StreamExt};
 use tokio_tungstenite::tungstenite::protocol::Message;
 use url::Url;
 use tokio::time::sleep;
-struct Pipeline;
+use std::sync::Arc;
+use tokio::sync::Semaphore;
 use std::process::Command;
 use std::fs::File;
 use std::io::Write;
 use std::env::temp_dir;
 use std::time::{Duration, Instant};
+
+struct Pipeline {
+    semaphore: Arc<Semaphore>,
+}
 
 #[tokio::main]
 async fn main() {
@@ -19,13 +24,20 @@ async fn main() {
 
     let (mut write, read) = ws_stream.split();
 
-    let read = read.for_each_concurrent(None, |message| async {
-        if let Ok(msg) = message {
-            if msg.is_text() || msg.is_binary() {
-                Pipeline::processing(msg.to_text().unwrap_or_default());
+    let pipeline = Pipeline {
+        semaphore: Arc::new(Semaphore::new(10)),  // adjust as needed
+    };
+
+    let read = read.for_each_concurrent(None, |message| {
+        let pipeline = pipeline.clone();
+        async move {
+            if let Ok(msg) = message {
+                if msg.is_text() || msg.is_binary() {
+                    pipeline.processing(msg.to_text().unwrap_or_default()).await;
+                }
+            } else if let Err(e) = message {
+                println!("Error in message: {}", e);
             }
-        } else if let Err(e) = message {
-            println!("Error in message: {}", e);
         }
     });
 
@@ -39,35 +51,47 @@ async fn main() {
     let _ = futures::join!(read, write);
 }
 
+impl Clone for Pipeline {
+    fn clone(&self) -> Self {
+        Pipeline {
+            semaphore: Arc::clone(&self.semaphore),
+        }
+    }
+}
+
 
 impl Pipeline{
-    fn processing(message: &str) {
-        let data: serde_json::Value = serde_json::from_str(message).unwrap();
-        let info = match data["data"]["properties"].as_object() {
-            Some(info) => info,
-            None => {
-                println!("Error: 'properties' field not found");
-                return;
-            }
-        };
-        
-        let action = match data["action"].as_str() {
-            Some(action) => action,
-            None => {
-                println!("Error: 'action' field not found");
-                return;
-            }
-        };
+    async fn processing(&self, message: &str) {
+        let message = message.to_owned();
+        let semaphore = Arc::clone(&self.semaphore);
+        tokio::spawn(async move {
+            let _permit = semaphore.acquire().await.expect("Failed to acquire semaphore");
+            let data: serde_json::Value = serde_json::from_str(&message).unwrap();
+            let info = match data["data"]["properties"].as_object() {
+                Some(info) => info,
+                None => {
+                    println!("Error: 'properties' field not found");
+                    return;
+                }
+            };
+            
+            let action = match data["action"].as_str() {
+                Some(action) => action,
+                None => {
+                    println!("Error: 'action' field not found");
+                    return;
+                }
+            };
 
-        println!(
-            ">>>> {action:7} event from {auth:7}, unid:{unid}, T0:{time}, Mag:{mag}, Region: {flynn_region}",
-            action = action,
-            auth = info["auth"].as_str().unwrap_or("unknown"),
-            unid = info["unid"].as_str().unwrap_or("unknown"),
-            time = info["time"].as_str().unwrap_or("unknown"),
-            mag = info["mag"].as_f64().unwrap_or(0.0),
-            flynn_region = info["flynn_region"].as_str().unwrap_or("unknown")
-        );
+            println!(
+                ">>>> {action:7} event from {auth:7}, unid:{unid}, T0:{time}, Mag:{mag}, Region: {flynn_region}",
+                action = action,
+                auth = info["auth"].as_str().unwrap_or("unknown"),
+                unid = info["unid"].as_str().unwrap_or("unknown"),
+                time = info["time"].as_str().unwrap_or("unknown"),
+                mag = info["mag"].as_f64().unwrap_or(0.0),
+                flynn_region = info["flynn_region"].as_str().unwrap_or("unknown")
+            );
 
             // Convert the event to a string
             let event_str = serde_json::to_string(&data).unwrap();
@@ -80,11 +104,17 @@ impl Pipeline{
 
             // Event processing
             let start = Instant::now();
-            Self::load_json_to_bigquery(dataset, table, bucket, file, &event_str).unwrap();
-            println!("Time elapsed in loading to BigQuery is: {:?} seconds", start.elapsed().as_secs_f64());
+            let load_task = tokio::spawn(async move {
+                Self::load_json_to_bigquery(dataset, table, bucket, file, &event_str).await.unwrap();
+            });
+
+            // Wait for the load operation to complete
+            let _ = load_task.await;
+            println!("Time elapsed to process event: {:?} seconds", start.elapsed().as_secs_f64());
+        });
     }
 
-    fn load_json_to_bigquery(dataset: &str, table: &str, bucket: &str, file: &str, json: &str) -> std::io::Result<()> {
+    async fn load_json_to_bigquery(dataset: &str, table: &str, bucket: &str, file: &str, json: &str) -> std::io::Result<()> {
         // Write the JSON string to a temporary file
         let mut path = temp_dir();
         path.push(file);
