@@ -9,10 +9,6 @@ use std::fs::File;
 use std::io::Write;
 use std::env::temp_dir;
 use std::time::{Duration, Instant};
-use google_cloud_pubsub::client::{Client, ClientConfig};
-use google_cloud_googleapis::pubsub::v1::{PubsubMessage, PublishResponse};
-use google_cloud_pubsub::topic::TopicConfig;
-use google_cloud_pubsub::subscription::SubscriptionConfig;
 
 struct Pipeline {
     semaphore: Arc<Semaphore>,
@@ -109,58 +105,13 @@ impl Pipeline{
             // Event processing
             let start = Instant::now();
             let load_task = tokio::spawn(async move {
-                Self::publish_to_pubsub(dataset, table, bucket, file, &event_str).await.unwrap();
+                Self::load_json_to_bigquery(dataset, table, bucket, file, &event_str).await.unwrap();
             });
 
             // Wait for the load operation to complete
             let _ = load_task.await;
             println!("Time elapsed to process event: {:?} seconds", start.elapsed().as_secs_f64());
         });
-    }
-
-    async fn publish_to_pubsub(dataset: &str, table: &str, bucket: &str, file: &str, json: &str) -> Result<PublishResponse, Box<dyn std::error::Error>> {
-        let publisher = PublisherClient::new();
-        let mut publish_request = PublishRequest::new();
-        publish_request.set_topic("projects/[PROJECT_ID]/topics/[TOPIC_NAME]");  // replace with your project ID and topic name
-
-        let mut pubsub_message = PubsubMessage::new();
-        pubsub_message.set_data(json.to_string().into_bytes());
-
-        publish_request.set_messages(RepeatedField::from_vec(vec![pubsub_message]));
-
-        let response = publisher.publish(&publish_request)?;
-
-        Ok(response)
-    }
-
-    async fn subscribe_and_upload_to_bigquery() -> Result<(), Box<dyn std::error::Error>> {
-        let subscriber = SubscriberClient::new();
-        let subscription_name = "projects/data-engineering-with-rust/subscriptions/earthquakes-raw-sub";
-
-        loop {
-            let response = subscriber.pull(&PullRequest {
-                subscription: subscription_name.to_string(),
-                max_messages: Some(10),
-                return_immediately: Some(true),
-                ..Default::default()
-            })?;
-
-            for received_message in response.received_messages {
-                let message = received_message.message.unwrap();
-                let data = String::from_utf8(message.data)?;
-
-                Self::load_json_to_bigquery(dataset, table, bucket, file, &data).await?;
-
-                // Acknowledge the message
-                subscriber.acknowledge(&AcknowledgeRequest {
-                    subscription: subscription_name.to_string(),
-                    ack_ids: vec![received_message.ack_id],
-                    ..Default::default()
-                })?;
-            }
-
-            sleep(Duration::from_secs(1)).await;
-        }
     }
 
     async fn load_json_to_bigquery(dataset: &str, table: &str, bucket: &str, file: &str, json: &str) -> std::io::Result<()> {
