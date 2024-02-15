@@ -10,13 +10,12 @@ use std::io::Write;
 use std::env::temp_dir;
 use std::time::{Duration, Instant};
 use google_cloud_pubsub::client::{Client, ClientConfig};
-use google_cloud_googleapis::pubsub::v1::{PubsubMessage, PublishResponse};
-use google_cloud_pubsub::topic::TopicConfig;
-use google_cloud_pubsub::subscription::SubscriptionConfig;
+use google_cloud_googleapis::pubsub::v1::{PubsubMessage};
 
 struct Pipeline {
     semaphore: Arc<Semaphore>,
 }
+
 
 #[tokio::main]
 async fn main() {
@@ -118,47 +117,46 @@ impl Pipeline{
         });
     }
 
-    async fn publish_to_pubsub(dataset: &str, table: &str, bucket: &str, file: &str, json: &str) -> Result<PublishResponse, Box<dyn std::error::Error>> {
-        let publisher = PublisherClient::new();
-        let mut publish_request = PublishRequest::new();
-        publish_request.set_topic("projects/[PROJECT_ID]/topics/[TOPIC_NAME]");  // replace with your project ID and topic name
-
-        let mut pubsub_message = PubsubMessage::new();
-        pubsub_message.set_data(json.to_string().into_bytes());
-
-        publish_request.set_messages(RepeatedField::from_vec(vec![pubsub_message]));
-
-        let response = publisher.publish(&publish_request)?;
-
-        Ok(response)
+    async fn publish_to_pubsub(dataset: &str, table: &str, bucket: &str, file: &str, json: &str) -> Result<(), Box<dyn std::error::Error>> {
+        let config = ClientConfig::default();
+        let client = Client::new(config).await?;
+        let topic = client.topic("earthquakes-raw-sub");
+    
+        let message = PubsubMessage {
+            data: json.to_string().into_bytes(),
+            ..Default::default()
+        };
+    
+        let publisher = topic.new_publisher(None);
+        let _ = publisher.publish(message).await;
+    
+        Ok(())
     }
 
     async fn subscribe_and_upload_to_bigquery() -> Result<(), Box<dyn std::error::Error>> {
-        let subscriber = SubscriberClient::new();
-        let subscription_name = "projects/data-engineering-with-rust/subscriptions/earthquakes-raw-sub";
-
+        let dataset = "earthquakes";
+        let table = "earthquakes_raw";
+        let bucket = "rust-raw";
+        let file = "temp.json";
+    
+        let config = ClientConfig::default();
+        let client = Client::new(config).await?;
+        let subscription = client.subscription("earthquakes-raw-sub");
         loop {
-            let response = subscriber.pull(&PullRequest {
-                subscription: subscription_name.to_string(),
-                max_messages: Some(10),
-                return_immediately: Some(true),
-                ..Default::default()
-            })?;
-
-            for received_message in response.received_messages {
-                let message = received_message.message.unwrap();
-                let data = String::from_utf8(message.data)?;
-
-                Self::load_json_to_bigquery(dataset, table, bucket, file, &data).await?;
-
-                // Acknowledge the message
-                subscriber.acknowledge(&AcknowledgeRequest {
-                    subscription: subscription_name.to_string(),
-                    ack_ids: vec![received_message.ack_id],
-                    ..Default::default()
-                })?;
+            let response = subscription.pull(10, None).await?;
+        
+            for received_message in response {
+                let message = received_message.message;
+                if let Some(actual_message) = message {
+                    let data = String::from_utf8(actual_message.data)?;
+                    
+                    Self::load_json_to_bigquery(dataset, table, bucket, file, &data).await?;
+            
+                    // Acknowledge the message
+                    subscription.acknowledge(vec![received_message.ack_id]).await?;
+                }
             }
-
+        
             sleep(Duration::from_secs(1)).await;
         }
     }
