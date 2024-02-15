@@ -1,1 +1,4 @@
 - change gcs to gcp pub/sub
+
+error:
+thread 'tokio-runtime-worker' panicked at /home/vytautas/.cargo/registry/src/index.crates.io-6f17d22bba15001f/google-cloud-token-0.1.2/src/lib.rs:22:9:
