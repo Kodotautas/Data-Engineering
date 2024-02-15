@@ -4,10 +4,6 @@ use url::Url;
 use tokio::time::sleep;
 use std::sync::Arc;
 use tokio::sync::Semaphore;
-use std::process::Command;
-use std::fs::File;
-use std::io::Write;
-use std::env::temp_dir;
 use std::time::{Duration, Instant};
 use google_cloud_pubsub::client::{Client, ClientConfig};
 use google_cloud_googleapis::pubsub::v1::{PubsubMessage};
@@ -117,7 +113,7 @@ impl Pipeline{
         });
     }
 
-    async fn publish_to_pubsub(dataset: &str, table: &str, bucket: &str, file: &str, json: &str) -> Result<(), Box<dyn std::error::Error>> {
+    async fn publish_to_pubsub(_dataset: &str, _table: &str, _bucket: &str, _file: &str, json: &str) -> Result<(), Box<dyn std::error::Error>> {
         let config = ClientConfig::default();
         let client = Client::new(config).await?;
         let topic = client.topic("earthquakes-raw-sub");
@@ -146,53 +142,14 @@ impl Pipeline{
             let response = subscription.pull(10, None).await?;
         
             for received_message in response {
-                let message = received_message.message;
-                if let Some(actual_message) = message {
-                    let data = String::from_utf8(actual_message.data)?;
-                    
-                    Self::load_json_to_bigquery(dataset, table, bucket, file, &data).await?;
-            
-                    // Acknowledge the message
-                    subscription.acknowledge(vec![received_message.ack_id]).await?;
-                }
+                let message = received_message.message.clone();
+                let data = String::from_utf8(message.data)?;
+
+                // Acknowledge the message
+                received_message.ack().await?;
             }
         
             sleep(Duration::from_secs(1)).await;
         }
-    }
-
-    async fn load_json_to_bigquery(dataset: &str, table: &str, bucket: &str, file: &str, json: &str) -> std::io::Result<()> {
-        // Write the JSON string to a temporary file
-        let mut path = temp_dir();
-        path.push(file);
-        let mut temp_file = File::create(&path)?;
-        write!(temp_file, "{}", json)?;
-    
-        // Upload the file to Google Cloud Storage
-        let output = Command::new("gsutil")
-            .arg("cp")
-            .arg(path.to_str().unwrap())
-            .arg(format!("gs://{}/{}", bucket, file))
-            .output()?;
-    
-        if !output.status.success() {
-            eprintln!("Error: {}", String::from_utf8_lossy(&output.stderr));
-            return Err(std::io::Error::new(std::io::ErrorKind::Other, "Failed to upload file to GCS"));
-        }
-    
-        // Load the file from GCS to BigQuery
-        let output = Command::new("bq")
-            .arg("load")
-            .arg("--autodetect")
-            .arg("--source_format=NEWLINE_DELIMITED_JSON")
-            .arg(format!("{}.{}", dataset, table))
-            .arg(format!("gs://{}/{}", bucket, file))
-            .output()?;
-    
-        if !output.status.success() {
-            eprintln!("Error: {}", String::from_utf8_lossy(&output.stderr));
-        }
-    
-        Ok(())
     }
 }
