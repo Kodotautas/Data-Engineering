@@ -5,7 +5,7 @@ use tokio::time::sleep;
 use std::sync::Arc;
 use tokio::sync::Semaphore;
 use std::time::{Duration, Instant};
-use google_cloud_pubsub::client::{Client, ClientConfig};
+use google_cloud_pubsub::client::{ClientConfig, Client};
 use google_cloud_googleapis::pubsub::v1::{PubsubMessage};
 
 struct Pipeline {
@@ -104,7 +104,7 @@ impl Pipeline{
             // Event processing
             let start = Instant::now();
             let load_task = tokio::spawn(async move {
-                Self::publish_to_pubsub(dataset, table, bucket, file, &event_str).await.unwrap();
+                Self::publish_to_pubsub(&event_str).await.unwrap();
             });
 
             // Wait for the load operation to complete
@@ -113,9 +113,9 @@ impl Pipeline{
         });
     }
 
-    async fn publish_to_pubsub(_dataset: &str, _table: &str, _bucket: &str, _file: &str, json: &str) -> Result<(), Box<dyn std::error::Error>> {
-        let config = ClientConfig::default();
-        let client = Client::new(config).await?;
+    async fn publish_to_pubsub(json: &str) -> Result<(), Box<dyn std::error::Error>> {
+        let config = ClientConfig::default().with_auth().await.unwrap();
+        let client = Client::new(config).await.unwrap();
         let topic = client.topic("earthquakes-raw-sub");
     
         let message = PubsubMessage {
@@ -125,26 +125,28 @@ impl Pipeline{
     
         let publisher = topic.new_publisher(None);
         let _ = publisher.publish(message).await;
+        
+        println!("Published message to Pub/Sub");
     
         Ok(())
     }
-
+    
     async fn subscribe_and_upload_to_bigquery() -> Result<(), Box<dyn std::error::Error>> {
         let dataset = "earthquakes";
         let table = "earthquakes_raw";
         let bucket = "rust-raw";
         let file = "temp.json";
     
-        let config = ClientConfig::default();
-        let client = Client::new(config).await?;
+        let config = ClientConfig::default().with_auth().await.unwrap();
+        let client = Client::new(config).await.unwrap();
         let subscription = client.subscription("earthquakes-raw-sub");
         loop {
             let response = subscription.pull(10, None).await?;
         
             for received_message in response {
-                let message = received_message.message.clone();
-                let data = String::from_utf8(message.data)?;
-
+                let _message = received_message.message.clone();
+                let _data = String::from_utf8(_message.data)?;
+    
                 // Acknowledge the message
                 received_message.ack().await?;
             }
