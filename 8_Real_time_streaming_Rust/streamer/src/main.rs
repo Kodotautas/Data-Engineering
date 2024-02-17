@@ -7,6 +7,9 @@ use tokio::sync::Semaphore;
 use std::time::{Duration, Instant};
 use google_cloud_pubsub::client::{ClientConfig, Client};
 use google_cloud_googleapis::pubsub::v1::{PubsubMessage};
+use gcp_bigquery_client::BigQueryClient;
+use gcp_auth::Token;
+use gcp_bigquery_client::model::{InsertAllTableDataRequest, TableDataInsertAllRequestRowsItem};
 
 struct Pipeline {
     semaphore: Arc<Semaphore>,
@@ -24,7 +27,7 @@ async fn main() {
     let (mut write, read) = ws_stream.split();
 
     let pipeline = Pipeline {
-        semaphore: Arc::new(Semaphore::new(10)),  // adjust as needed
+        semaphore: Arc::new(Semaphore::new(10)),
     };
 
     let read = read.for_each_concurrent(None, |message| {
@@ -47,7 +50,7 @@ async fn main() {
         }
     };
 
-    let _ = futures::join!(read, write);
+    let _ = futures::join!(read, write, pipeline.subscribe_and_upload_to_bigquery());
 }
 
 impl Clone for Pipeline {
@@ -95,12 +98,6 @@ impl Pipeline{
             // Convert the event to a string
             let event_str = serde_json::to_string(&data).unwrap();
 
-            // Convert the JSON to a string
-            let dataset = "earthquakes";
-            let table = "earthquakes_raw";
-            let bucket = "rust-raw";
-            let file = "temp.json";
-
             // Event processing
             let start = Instant::now();
             let load_task = tokio::spawn(async move {
@@ -116,7 +113,7 @@ impl Pipeline{
     async fn publish_to_pubsub(json: &str) -> Result<(), Box<dyn std::error::Error>> {
         let config = ClientConfig::default().with_auth().await.unwrap();
         let client = Client::new(config).await.unwrap();
-        let topic = client.topic("earthquakes-raw-sub");
+        let topic = client.topic("earthquakes-raw");
     
         let message = PubsubMessage {
             data: json.to_string().into_bytes(),
@@ -125,30 +122,46 @@ impl Pipeline{
     
         let publisher = topic.new_publisher(None);
         let _ = publisher.publish(message).await;
-        
-        println!("Published message to Pub/Sub");
+        // println!("Published message: {}", json);
     
         Ok(())
     }
     
-    async fn subscribe_and_upload_to_bigquery() -> Result<(), Box<dyn std::error::Error>> {
-        let dataset = "earthquakes";
-        let table = "earthquakes_raw";
-        let bucket = "rust-raw";
-        let file = "temp.json";
-    
+    async fn subscribe_and_upload_to_bigquery(&self) -> Result<(), Box<dyn std::error::Error>> {
         let config = ClientConfig::default().with_auth().await.unwrap();
         let client = Client::new(config).await.unwrap();
         let subscription = client.subscription("earthquakes-raw-sub");
+    
+        // Create BigQuery client
+        let token = Token::new().await?;
+        let bigquery = BigQuery::new(token)?;
+    
         loop {
             let response = subscription.pull(10, None).await?;
         
             for received_message in response {
-                let _message = received_message.message.clone();
-                let _data = String::from_utf8(_message.data)?;
+                let message = received_message.message.clone();
+                let data = String::from_utf8(message.data)?;
+    
+                println!("Received message: {}", data);
     
                 // Acknowledge the message
                 received_message.ack().await?;
+    
+                // Convert the data to a TableRow
+                let row: TableRow = serde_json::from_str(&data)?;
+    
+                // Create an InsertAllTableDataRequest
+                let insert_request = InsertAllTableDataRequest {
+                    rows: vec![TableDataInsertAllRequestRows {
+                        insert_id: None,
+                        json: row,
+                    }],
+                    ..Default::default()
+                };
+    
+                // Insert the data into BigQuery
+                let _ = bigquery.insert_all("data-engineering-with-rust", "earthquakes", "earthquakes_raw", &insert_request).await?;
             }
         
             sleep(Duration::from_secs(1)).await;
