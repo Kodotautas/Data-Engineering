@@ -7,9 +7,6 @@ use tokio::sync::Semaphore;
 use std::time::{Duration, Instant};
 use google_cloud_pubsub::client::{ClientConfig, Client};
 use google_cloud_googleapis::pubsub::v1::{PubsubMessage};
-use gcp_bigquery_client::BigQueryClient;
-use gcp_auth::Token;
-use gcp_bigquery_client::model::{InsertAllTableDataRequest, TableDataInsertAllRequestRowsItem};
 
 struct Pipeline {
     semaphore: Arc<Semaphore>,
@@ -127,41 +124,19 @@ impl Pipeline{
         Ok(())
     }
     
-    async fn subscribe_and_upload_to_bigquery(&self) -> Result<(), Box<dyn std::error::Error>> {
+    async fn subscribe_and_upload_to_bigquery(&self) -> Result<(), Box<dyn std::error::Error>> {    
         let config = ClientConfig::default().with_auth().await.unwrap();
         let client = Client::new(config).await.unwrap();
         let subscription = client.subscription("earthquakes-raw-sub");
-    
-        // Create BigQuery client
-        let token = Token::new().await?;
-        let bigquery = BigQuery::new(token)?;
-    
         loop {
             let response = subscription.pull(10, None).await?;
         
             for received_message in response {
-                let message = received_message.message.clone();
-                let data = String::from_utf8(message.data)?;
-    
-                println!("Received message: {}", data);
+                let _message = received_message.message.clone();
+                let _data = String::from_utf8(_message.data)?;
     
                 // Acknowledge the message
                 received_message.ack().await?;
-    
-                // Convert the data to a TableRow
-                let row: TableRow = serde_json::from_str(&data)?;
-    
-                // Create an InsertAllTableDataRequest
-                let insert_request = InsertAllTableDataRequest {
-                    rows: vec![TableDataInsertAllRequestRows {
-                        insert_id: None,
-                        json: row,
-                    }],
-                    ..Default::default()
-                };
-    
-                // Insert the data into BigQuery
-                let _ = bigquery.insert_all("data-engineering-with-rust", "earthquakes", "earthquakes_raw", &insert_request).await?;
             }
         
             sleep(Duration::from_secs(1)).await;
