@@ -7,6 +7,7 @@ use tokio::sync::Semaphore;
 use std::time::{Duration, Instant};
 use google_cloud_pubsub::client::{ClientConfig, Client};
 use google_cloud_googleapis::pubsub::v1::{PubsubMessage};
+use gcp_bigquery_client::Client as BigQueryClient;
 
 struct Pipeline {
     semaphore: Arc<Semaphore>,
@@ -128,6 +129,11 @@ impl Pipeline{
         let config = ClientConfig::default().with_auth().await.unwrap();
         let client = Client::new(config).await.unwrap();
         let subscription = client.subscription("earthquakes-raw-sub");
+        
+        // Init BigQuery client
+        let gcp_sa_key = std::env::var("GOOGLE_APPLICATION_CREDENTIALS").unwrap();
+        let client = BigQueryClient::from_service_account_key_file(&gcp_sa_key).await?;
+        
         loop {
             let response = subscription.pull(10, None).await?;
         
@@ -138,7 +144,7 @@ impl Pipeline{
                 // Acknowledge the message
                 received_message.ack().await?;
             }
-        
+     
             sleep(Duration::from_secs(1)).await;
         }
     }
