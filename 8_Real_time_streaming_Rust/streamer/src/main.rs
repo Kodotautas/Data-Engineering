@@ -132,19 +132,30 @@ impl Pipeline{
         
         // Init BigQuery client
         let gcp_sa_key = std::env::var("GOOGLE_APPLICATION_CREDENTIALS").unwrap();
-        let client = BigQueryClient::from_service_account_key_file(&gcp_sa_key).await?;
+        let bq_client = BigQueryClient::from_service_account_key_file(&gcp_sa_key).await?;
+        
+        // Specify your dataset and table
+        let dataset_id = "earthquakes";
+        let table_id = "earthquakes_raw";
         
         loop {
             let response = subscription.pull(10, None).await?;
         
             for received_message in response {
-                let _message = received_message.message.clone();
-                let _data = String::from_utf8(_message.data)?;
+                let message = received_message.message.clone();
+                let data = String::from_utf8(message.data)?;
     
                 // Acknowledge the message
                 received_message.ack().await?;
+    
+                // Prepare the row to insert into BigQuery
+                let row = serde_json::from_str::<serde_json::Value>(&data)?;
+                let rows_to_insert = vec![row];
+    
+                // Insert the row into BigQuery
+                let _ = bq_client.insert_all(dataset_id, table_id, rows_to_insert).await?;
             }
-     
+    
             sleep(Duration::from_secs(1)).await;
         }
     }
