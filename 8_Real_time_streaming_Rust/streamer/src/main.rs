@@ -7,7 +7,6 @@ use tokio::sync::Semaphore;
 use std::time::{Duration, Instant};
 use google_cloud_pubsub::client::{ClientConfig, Client};
 use google_cloud_googleapis::pubsub::v1::{PubsubMessage};
-use gcp_bigquery_client::Client as BigQueryClient;
 
 struct Pipeline {
     semaphore: Arc<Semaphore>,
@@ -28,7 +27,7 @@ async fn main() {
         semaphore: Arc::new(Semaphore::new(10)),
     };
 
-    let read = read.for_each_concurrent(None, |message| {
+    let _read = read.for_each_concurrent(None, |message| {
         let pipeline = pipeline.clone();
         async move {
             if let Ok(msg) = message {
@@ -41,14 +40,12 @@ async fn main() {
         }
     });
 
-    let write = async {
+    let _write = async {
         loop {
             write.send(Message::Ping(vec![])).await.unwrap();
             sleep(Duration::from_secs(15)).await;
         }
     };
-
-    let _ = futures::join!(read, write, pipeline.subscribe_and_upload_to_bigquery());
 }
 
 impl Clone for Pipeline {
@@ -124,37 +121,4 @@ impl Pipeline{
     
         Ok(())
     }
-    
-    async fn subscribe_and_upload_to_bigquery(&self) -> Result<(), Box<dyn std::error::Error>> {    
-        let config = ClientConfig::default().with_auth().await.unwrap();
-        let client = Client::new(config).await.unwrap();
-        let subscription = client.subscription("earthquakes-raw-sub");
-        
-        // Init BigQuery client
-        let gcp_sa_key = std::env::var("GOOGLE_APPLICATION_CREDENTIALS").unwrap();
-        let bq_client = BigQueryClient::from_service_account_key_file(&gcp_sa_key).await?;
-        
-        // Specify your dataset and table
-        let dataset_id = "earthquakes";
-        let table_id = "earthquakes_raw";
-        
-        loop {
-            let response = subscription.pull(10, None).await?;
-        
-            for received_message in response {
-                let message = received_message.message.clone();
-                let data = String::from_utf8(message.data)?;
-    
-                // Acknowledge the message
-                received_message.ack().await?;
-    
-                // Prepare the row to insert into BigQuery
-                let row = serde_json::from_str::<serde_json::Value>(&data)?;
-                let rows_to_insert = vec![row];
-    
-                // Insert the row into BigQuery
-
-            sleep(Duration::from_secs(1)).await;
-        }
-    }}
 }
