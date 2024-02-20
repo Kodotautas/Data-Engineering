@@ -27,7 +27,7 @@ async fn main() {
         semaphore: Arc::new(Semaphore::new(10)),
     };
 
-    let _read = read.for_each_concurrent(None, |message| {
+    let read = read.for_each_concurrent(None, |message| {
         let pipeline = pipeline.clone();
         async move {
             if let Ok(msg) = message {
@@ -40,12 +40,17 @@ async fn main() {
         }
     });
 
-    let _write = async {
+    let write = async {
         loop {
             write.send(Message::Ping(vec![])).await.unwrap();
             sleep(Duration::from_secs(15)).await;
         }
     };
+
+    tokio::select! {
+        _ = read => println!("Read task completed"),
+        _ = write => println!("Write task completed"),
+    }
 }
 
 impl Clone for Pipeline {
@@ -55,7 +60,6 @@ impl Clone for Pipeline {
         }
     }
 }
-
 
 impl Pipeline{
     async fn processing(&self, message: &str) {
