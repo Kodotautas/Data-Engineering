@@ -120,7 +120,7 @@ impl Pipeline{
     
         let publisher = topic.new_publisher(None);
         let _ = publisher.publish(message).await;
-        // println!("Published message: {}", json);
+        println!("Published message: {}", json);
     
         Ok(())
     }
@@ -153,10 +153,8 @@ impl Pipeline{
                 let rows_to_insert = vec![row];
     
                 // Insert the row into BigQuery
-                let _ = bq_client.insert_all(dataset_id, table_id, rows_to_insert).await?;
-            }
-    
+
             sleep(Duration::from_secs(1)).await;
         }
-    }
+    }}
 }
