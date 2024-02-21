@@ -1,2 +1,3 @@
 - done: change gcs to gcp pub/sub
 - done: load to bigquery
+- add cloudbuild.yaml, dockerfile ant others for gcp cloud run
