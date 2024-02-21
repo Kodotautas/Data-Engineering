@@ -1,2 +1,2 @@
-- change gcs to gcp pub/sub
-- load to bigquery
+- done: change gcs to gcp pub/sub
+- done: load to bigquery
