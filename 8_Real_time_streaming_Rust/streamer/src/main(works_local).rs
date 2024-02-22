@@ -7,10 +7,6 @@ use tokio::sync::Semaphore;
 use std::time::{Duration, Instant};
 use google_cloud_pubsub::client::{ClientConfig, Client};
 use google_cloud_googleapis::pubsub::v1::{PubsubMessage};
-use hyper::service::{make_service_fn, service_fn};
-use hyper::{Server, Body, Response, Request};
-use std::convert::Infallible;
-use std::net::SocketAddr;
 
 struct Pipeline {
     semaphore: Arc<Semaphore>,
@@ -18,24 +14,7 @@ struct Pipeline {
 
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let port = std::env::var("PORT").unwrap_or_else(|_| String::from("8080"));
-    let addr = format!("0.0.0.0:{}", port).parse::<SocketAddr>()?;
-
-    let make_svc = make_service_fn(|_conn| async {
-        Ok::<_, Infallible>(service_fn(handle_request))
-    });
-
-    let server = Server::bind(&addr).serve(make_svc);
-
-    if let Err(e) = server.await {
-        eprintln!("server error: {}", e);
-    }
-
-    Ok(())
-}
-
-async fn handle_request(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
+async fn main() {
     let echo_uri = Url::parse("wss://www.seismicportal.eu/standing_order/websocket").unwrap();
     let (ws_stream, _) = tokio_tungstenite::connect_async(echo_uri)
         .await
@@ -48,36 +27,30 @@ async fn handle_request(_req: Request<Body>) -> Result<Response<Body>, Infallibl
         semaphore: Arc::new(Semaphore::new(10)),
     };
 
-    // Read task for processing messages
-    let read = async move {
-        read.for_each_concurrent(None, |message| {
-            let pipeline = pipeline.clone();
-            async move {
-                if let Ok(msg) = message {
-                    if msg.is_text() || msg.is_binary() {
-                        pipeline.processing(msg.to_text().unwrap_or_default()).await;
-                    }
-                } else if let Err(e) = message {
-                    println!("Error in message: {}", e);
+    let read = read.for_each_concurrent(None, |message| {
+        let pipeline = pipeline.clone();
+        async move {
+            if let Ok(msg) = message {
+                if msg.is_text() || msg.is_binary() {
+                    pipeline.processing(msg.to_text().unwrap_or_default()).await;
                 }
+            } else if let Err(e) = message {
+                println!("Error in message: {}", e);
             }
-        }).await;
-    };
-    
-    // Write task for server ping
-    let write = async move {
+        }
+    });
+
+    let write = async {
         loop {
             write.send(Message::Ping(vec![])).await.unwrap();
             sleep(Duration::from_secs(15)).await;
         }
     };
-    
-    let read_handle = tokio::spawn(read);
-    let write_handle = tokio::spawn(write);
 
-    let _ = tokio::try_join!(read_handle, write_handle);
-
-    Ok(Response::new(Body::from("OK")))
+    tokio::select! {
+        _ = read => println!("Read task completed"),
+        _ = write => println!("Write task completed"),
+    }
 }
 
 impl Clone for Pipeline {

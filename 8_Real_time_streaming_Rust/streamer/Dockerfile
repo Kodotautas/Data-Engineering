@@ -12,4 +12,4 @@ EXPOSE 8080:8080
 
 RUN cargo build --release
 
-CMD [ "./target/release/src_rust" ]
+CMD [ "./target/release/streamer" ]

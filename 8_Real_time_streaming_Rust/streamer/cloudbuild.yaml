@@ -23,4 +23,4 @@ steps:
 timeout: 800s
 
 substitutions:
-  _SERVICE_NAME: trafic-rules-violator
+  _SERVICE_NAME: earthquakes-streamer
