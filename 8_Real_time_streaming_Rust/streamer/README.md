@@ -1,8 +1,13 @@
 #### Overview
-Data engineering project with Rust to get real time streaming in GCP using Pub/Susb and load data to Bigquery.
+Data engineering project with Rust to get real time streaming in GCP using Pub/Sub and load data to Bigquery.
+
+It load seismic (almost) real time events. A Json message is sent through Websocket when an event is inserted or updated.
+
+Cloud build: `gcloud builds submit .`
 
 #### Key Features
-- `Time Grouping & Vizualization`: categorizes flights into 10-minute intervals for easy comprehension of flight distribution over time and vizualize number of counts.
+- `Real time streaming`: application allows real time stream events to BigQuery for later use for analytics / reporting.
+- `Performance` from Websocket to Bigquery table it took < 1s total time of processing.
 
 #### Architecture
 <div align="center">

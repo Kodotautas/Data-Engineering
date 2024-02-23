@@ -2,7 +2,7 @@
 
 Pipeline for Lithuanian traffic violations data to be added to the LT Transport dashboard for learning and bonding with Rust in Data Engineering.
 
-Build CLI: `gcloud build submit .`
+Build CLI: `gcloud builds submit .`
 
 ### Architecture:
 <div align="center">

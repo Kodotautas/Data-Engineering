@@ -20,7 +20,7 @@ steps:
         --region europe-west1 --platform managed \
         --allow-unauthenticated
 
-timeout: 800s
+timeout: 8000s
 
 substitutions:
   _SERVICE_NAME: earthquakes-streamer
