@@ -17,7 +17,7 @@ steps:
       - |
         gcloud run deploy ${_SERVICE_NAME} \
         --image gcr.io/$PROJECT_ID/${_SERVICE_NAME}:latest \
-        --region europe-west1 --platform managed \
+        --region europe-central2 --platform managed \
         --allow-unauthenticated
 
 timeout: 8000s
