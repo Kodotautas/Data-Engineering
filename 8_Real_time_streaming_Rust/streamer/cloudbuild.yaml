@@ -9,7 +9,7 @@ steps:
         -t gcr.io/$PROJECT_ID/${_SERVICE_NAME}:latest . && \
         docker push gcr.io/$PROJECT_ID/${_SERVICE_NAME}:latest
 
-  # Deploy to cloud run europe-west1
+  # Deploy to cloud run europe-central2
   - name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "bash"
     args:
@@ -20,7 +20,7 @@ steps:
         --region europe-central2 --platform managed \
         --allow-unauthenticated
 
-timeout: 8000s
+timeout: 2000s
 
 substitutions:
   _SERVICE_NAME: earthquakes-streamer
