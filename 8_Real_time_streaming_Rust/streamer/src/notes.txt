@@ -2,5 +2,6 @@
 - done: load to bigquery
 - done: add cloudbuild.yaml, dockerfile ant others for gcp cloud run
 - done: check video for cloud run example
-- build and test cloud run
+- done: build and test cloud run
+- test builded image / ir it works
 - add scheduler or trigger every 14 minutes to avoid cloud run idle....
