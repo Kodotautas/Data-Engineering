@@ -3,5 +3,6 @@
 - done: add cloudbuild.yaml, dockerfile ant others for gcp cloud run
 - done: check video for cloud run example
 - done: build and test cloud run
-- test builded image / ir it works
+- done: test builded image / ir it works
 - add scheduler or trigger every 14 minutes to avoid cloud run idle....
+- add in code muximum running days parameter
