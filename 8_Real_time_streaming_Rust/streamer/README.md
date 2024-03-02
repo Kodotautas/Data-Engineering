@@ -1,20 +1,18 @@
-#### Overview
-Data engineering project with Rust to get real time streaming in GCP using Pub/Sub and load data to Bigquery.
+#### Rust for Real-Time Data: A GCP Pub/Sub to BigQuery Pipeline
+This project delves into the construction of a real-time data pipeline using the strengths of Rust programming in Google Cloud Platform (GCP). The pipeline utilizes Pub/Sub. The ingested data loaded into BigQuery, GCP's serverless data warehouse, for further analysis and exploration.
 
-It load seismic (almost) real time events. A Json message is sent through Websocket when an event is inserted or updated.
+#### Seismic Data Pipeline
+* Processes near real-time seismic events.
+* Uses JSON messages via the path: Websocket > Pub/Sub > BigQuery.
+* Cloud Scheduler triggers Cloud Run every 14 minutes.
+* Event processing takes up to 5 seconds from Websocket API to BigQuery
 
-Cloud build: `gcloud builds submit .`
-
-#### Key Features
-- `Real time streaming`: application allows real time stream events to BigQuery for later use for analytics / reporting.
-- `Performance` from Websocket to Bigquery table it took < 1s total time of processing.
+#### Deployment:
+Use Cloud Build: `gcloud builds submit .`
 
 #### Architecture
 <div align="center">
-  <img src="./diagram/vno_app_architecture.jpeg" alt="Data Pipeline Diagram" width="300">
+  <img src="./diagram/Real-time streaming with rust.jpeg" alt="Data Pipeline Diagram" width="300">
 </div>
 
-#### Access the Web Application
-[Here](https://vno-viewpoint.appspot.com/) 
-
-For inquiries or feedback, feel free to reach out.
+If you have any questions - please contact me!
