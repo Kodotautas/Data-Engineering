@@ -4,5 +4,4 @@
 - done: check video for cloud run example
 - done: build and test cloud run
 - done: test builded image / ir it works
-- add scheduler or trigger every 14 minutes to avoid cloud run idle....
-- add in code muximum running days parameter
+- add scheduler or trigger every 14 minutes to avoid cloud run idle...
