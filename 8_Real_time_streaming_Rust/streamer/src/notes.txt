@@ -1,7 +1,0 @@
-- done: change gcs to gcp pub/sub
-- done: load to bigquery
-- done: add cloudbuild.yaml, dockerfile ant others for gcp cloud run
-- done: check video for cloud run example
-- done: build and test cloud run
-- done: test builded image / ir it works
-- done: add scheduler or trigger every 14 minutes to avoid cloud run idle...
