@@ -11,8 +11,7 @@ Please note while Cloud Run is a powerful platform for many scenarios, it's not 
 * Cloud Scheduler triggers Cloud Run every 14 minutes.
 * Event processing takes up to 5 seconds from Websocket API to BigQuery
 
-##### Deployment:
-Use Cloud Build: `gcloud builds submit .`
+Deploy run: `gcloud builds submit .`
 
 #### Architecture
 <div align="center">
