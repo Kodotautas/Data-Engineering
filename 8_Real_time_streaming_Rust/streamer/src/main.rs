@@ -35,6 +35,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
+// Handle incoming requests
 async fn handle_request(_req: Request<Body>) -> Result<Response<Body>, Infallible> {
     let echo_uri = Url::parse("wss://www.seismicportal.eu/standing_order/websocket").unwrap();
     let (ws_stream, _) = tokio_tungstenite::connect_async(echo_uri)
@@ -89,6 +90,7 @@ impl Clone for Pipeline {
 }
 
 impl Pipeline{
+    // Process the incoming message
     async fn processing(&self, message: &str) {
         let message = message.to_owned();
         let semaphore = Arc::clone(&self.semaphore);
@@ -136,6 +138,7 @@ impl Pipeline{
         });
     }
 
+    // Publish the event to Google Cloud Pub/Sub
     async fn publish_to_pubsub(json: &str) -> Result<(), Box<dyn std::error::Error>> {
         let config = ClientConfig::default().with_auth().await.unwrap();
         let client = Client::new(config).await.unwrap();
