@@ -15,6 +15,6 @@ There is data engineering projects / learnings completed on free time.
 
 6 - Simple web app to see the best times to watch planes in Vilnius International Airport (VNO) spot. Tools: Python, Flask and deployed on GCP App Engine.
 
-7 - Python and Rust Performance for Data Engineering comparison.
+7 - Python and Rust performance for Data Engineering comparison.
 
 8 - Real-time data pipeline using Rust in GCP. The pipeline utilizes Pub/Sub. The ingested data loaded into BigQuery.
