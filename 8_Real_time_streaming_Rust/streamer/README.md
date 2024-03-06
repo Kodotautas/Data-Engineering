@@ -20,23 +20,23 @@ Deploy run: `gcloud builds submit .`
 
 ##### Main stats from Cloud Run during streaming:
 <div align="center">
-  <img src="./diagram/Billable container instance time.png" alt="Billable container instance time" width="300">
+  <img src="./diagram/Billable container instance time.jpg" alt="Billable container instance time" width="300">
 </div>
 
 <div align="center">
-  <img src="./diagram/Received bytes.png" alt="Received bytes" width="300">
+  <img src="./diagram/Received bytes.jpg" alt="Received bytes" width="300">
 </div>
 
 <div align="center">
-  <img src="./diagram/Request count.png" alt="Request count" width="300">
+  <img src="./diagram/Request count.jpg" alt="Request count" width="300">
 </div>
 
 <div align="center">
-  <img src="./diagram/Container CPU utilisation.png" alt="CPU utilization" width="300">
+  <img src="./diagram/Container CPU utilisation.jpg" alt="CPU utilization" width="300">
 </div>
 
 <div align="center">
-  <img src="./diagram/Max. concurrent requests.png" alt="Concurrent requests" width="300">
+  <img src="./diagram/Max. concurrent requests.jpg" alt="Concurrent requests" width="300">
 </div>
 
 Please don’t hesitate to contact me for any clarifications :loudspeaker:
