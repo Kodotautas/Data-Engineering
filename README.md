@@ -17,4 +17,4 @@ There is data engineering projects / learnings completed on free time.
 
 7 - Python and Rust Performance for Data Engineering comparison.
 
-8 - Real-time data pipeline using Rust programming in Google Cloud Platform (GCP). The pipeline utilizes Pub/Sub. The ingested data loaded into BigQuery, GCP's serverless data warehouse for further analysis and exploration.
+8 - Real-time data pipeline using Rust in GCP. The pipeline utilizes Pub/Sub. The ingested data loaded into BigQuery.
