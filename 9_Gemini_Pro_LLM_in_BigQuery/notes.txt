@@ -1,2 +1,3 @@
+- europe west 1 is not supported (nedd recreate dataset and dataform models)
 - translate lithuanian text to english in bigquery
 - draw architecture with mermaid
