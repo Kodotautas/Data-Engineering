@@ -1,0 +1,2 @@
+- translate lithuanian text to english in bigquery
+- draw architecture with mermaid

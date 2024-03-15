@@ -1,4 +1,0 @@
-- done: load evrk to bigquery
-- try create chatbot
-- how to deploy it to public?
-- need automated pipeline with Rust.
