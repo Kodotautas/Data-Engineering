@@ -1,3 +1,4 @@
 - europe west 1 is not supported (nedd recreate dataset and dataform models)
+  or maybe can make replica secondary as primary
 - translate lithuanian text to english in bigquery
 - draw architecture with mermaid
