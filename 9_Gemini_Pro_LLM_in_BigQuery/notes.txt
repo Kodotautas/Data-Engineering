@@ -1,4 +1,4 @@
-- dataform not support LLM's
-- need find not direct solution
+- create dataset with eu region
 - translate lithuanian text to english in bigquery
 - draw architecture with mermaid
+- write readme.md file with instructions
