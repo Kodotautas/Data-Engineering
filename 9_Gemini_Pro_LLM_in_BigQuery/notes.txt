@@ -1,4 +1,5 @@
-- create dataset with eu region
+- done: create dataset with eu region
+- fix accesses
 - translate lithuanian text to english in bigquery
 - draw architecture with mermaid
 - write readme.md file with instructions
