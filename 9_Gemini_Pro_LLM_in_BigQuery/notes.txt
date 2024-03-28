@@ -1,5 +1,5 @@
 - done: create dataset with eu region
-- fix accesses
+- done: fix accesses
 - translate lithuanian text to english in bigquery
 - draw architecture with mermaid
 - write readme.md file with instructions
