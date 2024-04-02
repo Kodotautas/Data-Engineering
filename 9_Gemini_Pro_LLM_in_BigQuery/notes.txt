@@ -1,6 +1,6 @@
 - done: create dataset with eu region
 - done: fix accesses
 - done: translate lithuanian text to english in bigquery
-- need optimise query performance, looks json function not effective
+- still need optimise query performance, looks json function not effective
 - draw architecture with mermaid
 - write readme.md file with instructions
