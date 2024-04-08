@@ -18,3 +18,5 @@ There is data engineering projects / learnings completed on free time.
 7 - Python and Rust performance for Data Engineering comparison.
 
 8 - Real-time data pipeline using Rust in GCP. The pipeline utilizes Pub/Sub. The ingested data loaded into BigQuery.
+
+9 - Example how to use Gemini Pro as a text translator in BigQuery.
