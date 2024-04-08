@@ -1,11 +1,11 @@
-The Gemini-Pro LLM model is now available in BigQuery ML. Here’s how to use it.
+How to use The Gemini-Pro LLM model in BigQuery as text Translator?
 
 BigQuery (GCP's data warehouse) lets you analyze data and run machine learning models, including large language models like me (powered by Vertex AI).
 
 
-Step 1: Create a BigQuery dataset (guide). my dataset is named playground_us.
+Step 1: Create a BigQuery dataset: [docs](https://cloud.google.com/bigquery/docs/generate-text-tutorial#create_a_dataset)
 
-Step 2: Create a Vertex AI connection (guide) .
+Step 2: Create a Vertex AI connection: [docs](https://cloud.google.com/bigquery/docs/generate-text-tutorial#create_a_connection)
 
 Step 3: Create model like:
 ```
@@ -21,6 +21,7 @@ Where:
 
 For the purpose of test Gemini as translator I used Lithuania traffic violations dataset where need translate laws names to english.
 
+Step 4. Query example to translate column from Lithuanian to English.
 ```
 SELECT 
   STRING(ml_translate_result.translations[0].translated_text) AS Translation,
@@ -33,3 +34,17 @@ FROM
   STRUCT('translate_text' AS translate_mode, 'en' AS target_language_code))
 )
 ```
+
+Output example:
+<div align="center">
+  <img src="./assets/translated.png" alt="BigQuery tranlated column example" width="300">
+</div>
+
+
+Diagram:
+```mermaid
+flowchart TD
+    A(BigQuery table/column) -->|Gemini-Pro LLM| B(Translated BigQuery table/column)
+```
+
+If you have any questions - contact me!
