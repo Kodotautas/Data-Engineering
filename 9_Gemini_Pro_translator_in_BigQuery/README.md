@@ -1,6 +1,6 @@
 How to use The Gemini-Pro LLM model in BigQuery as text Translator? 🌍
 
-BigQuery (GCP's data warehouse) lets you analyze data and run machine learning models, including large language models like me (powered by Vertex AI).
+BigQuery (GCP's data warehouse) lets you analyze data and run machine learning models, including large language models like me (powered by Vertex AI). There is a way to use LLM's as translator.
 
 ##### STEPS
 
