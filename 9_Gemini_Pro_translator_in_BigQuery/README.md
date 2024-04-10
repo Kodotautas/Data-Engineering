@@ -17,8 +17,8 @@ OPTIONS (ENDPOINT = 'gemini-pro')
 ```
 
 Where:
-`vl-data-learn` - dataset
-`vertex-ai` - model name
+`vl-data-learn` - dataset,
+`vertex-ai` - model name,
 `eu.vertex-connection` - region & connection name
 
 For the purpose of test Gemini as translator I used Lithuania traffic violations dataset where need translate laws names to english.
