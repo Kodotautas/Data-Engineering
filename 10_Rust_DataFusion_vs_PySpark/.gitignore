@@ -1,2 +1,2 @@
 rust-datafusion/target/
-rust-datafusion/scr/data/
+rust-datafusion/src/data/
