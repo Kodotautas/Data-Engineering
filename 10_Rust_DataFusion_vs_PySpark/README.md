@@ -6,3 +6,6 @@ Used dataset from Kaggle: [ciclistic-trip-data](https://www.kaggle.com/datasets/
 
 
 #### Datafusion overview
+
+datafusion docs:
+https://arrow.apache.org/datafusion/user-guide/introduction.html
