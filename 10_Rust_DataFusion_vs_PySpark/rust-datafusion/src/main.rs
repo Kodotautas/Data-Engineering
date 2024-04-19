@@ -4,8 +4,8 @@ use std::time::Instant;
 
 
 fn main() {
-    // println!("DataFusion - NoSQL");
-    // no_sql().unwrap();
+    println!("DataFusion - NoSQL");
+    no_sql().unwrap();
     println!("DataFusion - SQL");
     sql().unwrap();
 }
@@ -45,7 +45,7 @@ async fn sql() -> datafusion::error::Result<()> {
         left join rides r3 on r.ride_id = r3.ride_id
         left join rides r4 on r.ride_id = r4.ride_id
         left join rides r5 on r.ride_id = r5.ride_id
-        group by rideable_type, member_casual
+        group by r.rideable_type, r2.member_casual
     ").await?;
 
     df.show().await?;
