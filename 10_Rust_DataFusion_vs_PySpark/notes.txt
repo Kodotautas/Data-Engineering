@@ -1,2 +1,4 @@
 - done: need fix column name error
-- start test with spark
+- done: start test with spark
+- test with large dataset (now tested with relative small)
+- or make challenge, like proccess 10 bill rows?

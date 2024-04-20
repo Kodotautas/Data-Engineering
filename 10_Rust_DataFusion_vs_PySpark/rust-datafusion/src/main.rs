@@ -6,8 +6,8 @@ use std::time::Instant;
 fn main() {
     println!("DataFusion - NoSQL");
     no_sql().unwrap();
-    println!("DataFusion - SQL");
-    sql().unwrap();
+    // println!("DataFusion - SQL");
+    // sql().unwrap();
 }
 
 #[tokio::main]
