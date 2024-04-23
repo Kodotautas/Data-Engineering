@@ -46,7 +46,7 @@ def sql():
 
 
 if __name__ == '__main__':
-    print("PySpark - No SQL")
-    no_sql()
+    # print("PySpark - No SQL")
+    # no_sql()
     print("PySpark - SQL")
     sql()

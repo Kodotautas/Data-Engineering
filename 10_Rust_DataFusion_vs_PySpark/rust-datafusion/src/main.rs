@@ -4,10 +4,10 @@ use std::time::Instant;
 
 
 fn main() {
-    println!("DataFusion - NoSQL");
-    no_sql().unwrap();
-    // println!("DataFusion - SQL");
-    // sql().unwrap();
+    // println!("DataFusion - NoSQL");
+    // no_sql().unwrap();
+    println!("DataFusion - SQL");
+    sql().unwrap();
 }
 
 #[tokio::main]
@@ -35,17 +35,14 @@ async fn sql() -> datafusion::error::Result<()> {
     // Not practical, but for test performance
     let df = fusion.sql("
         select 
-            r.rideable_type,
-            r2.member_casual,
-            count(r3.ride_id) as total_rides,
-            avg(r4.start_lat) as avg_start_lat,
-            avg(r5.start_lng) as avg_start_lng
+            rideable_type,
+            member_casual,
+            count(ride_id) as total_rides,
+            avg(start_lat) as avg_start_lat,
+            avg(start_lng) as avg_start_lng
         from rides r
-        left join rides r2 on r.ride_id = r2.ride_id
-        left join rides r3 on r.ride_id = r3.ride_id
-        left join rides r4 on r.ride_id = r4.ride_id
-        left join rides r5 on r.ride_id = r5.ride_id
-        group by r.rideable_type, r2.member_casual
+        where start_station_name = 'Michigan Ave & Jackson Blvd'
+        group by rideable_type, member_casual
     ").await?;
 
     df.show().await?;

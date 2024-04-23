@@ -1,4 +1,7 @@
 - done: need fix column name error
 - done: start test with spark
-- test with large dataset (now tested with relative small)
-- or make challenge, like proccess 10 bill rows?
+- tests: datafusion 10 bill new sql
+- tests: pyspark normal dataset (no sql)
+- tests: pyspark normal dataset (sql)
+- tests: pyspark 10 bill dataset (no sql)
+- tests: pyspark 10 bill dataset (sql)
