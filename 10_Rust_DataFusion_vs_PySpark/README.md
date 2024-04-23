@@ -26,6 +26,9 @@ Use Cases | analytics, prototyping, embedded analytics | Large-scale data proces
 #### Which is faster?
 Dataset (12 csv files, 19 - 153 MB each, total 1.1 Gb): [ciclistic-trip-data](https://www.kaggle.com/datasets/chihchungwuo/cyclistic-trip-data)
 
+
+increased: 4232 files, 192 Gb
+
 System:
 AMD® Ryzen 5 6600hs creator edition × 12
 16.0 GiB
