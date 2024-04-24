@@ -1,6 +1,4 @@
 ### Datafusion vs PySpark: performance comparison and thoughts
-$${\color{Datafusion vs PySpark: performance comparison and thoughts}Red}$$
-
 Can Rust's DataFusion challenge Spark's dominance in data engineering? DataFusion's recent performance improvements are intriguing.
 
 #### Datafusion & Spark
