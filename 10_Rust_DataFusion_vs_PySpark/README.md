@@ -10,20 +10,19 @@ Apache Spark: Open-source big data engine for handling massive datasets across c
 
 [Spark docs](https://spark.apache.org/docs/latest/)
 
-<!-- #### Comparison -->
-<!-- Feature | Apache DataFusion (Rust) | Apache Spark |
+#### Comparison
+Feature | Apache DataFusion (Rust) | Apache Spark |
 --- | --- | --- |
 Processing Model | Single-node, in-memory | Distributed, in-memory and out-of-memory |
 Language | Rust | Scala (primary), Java, Python, R |
-Scalability | Limited (can be distributed with Ballista) | Highly scalable |
+Scalability | Limited but on roadmap (can be distributed with Ballista) | Highly scalable |
 Supported Data Sources | CSV, Parquet, AVRO, JSON | Wide variety including CSV, Parquet, JSON, JDBC, and more |
-Performance | X times faster | Slower |
+Performance | Faster? | Slower? |
 Ease of Use | Simpler API, easier to learn | More complex API with a larger learning curve |
 Ecosystem | Smaller, growing ecosystem | Large, mature ecosystem with a wide range of libraries and tools
-Maturity | Relatively new project (5 years) | Established and widely used |
-Use Cases | analytics, prototyping, embedded analytics | Large-scale data processing, machine learning, real-time analytics3 | -->
+Maturity | Relatively new project (~5 years)| Established and widely used |
+Use Cases | Large scale analytics, prototyping, embedded analytics | Large-scale data processing, machine learning, real-time analytics |
 
-<!-- increased: 4232 files, 192 GB -->
 
 ### So... Which is faster? 1.1 GB dataset
 ##### System:
