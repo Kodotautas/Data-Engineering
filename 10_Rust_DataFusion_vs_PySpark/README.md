@@ -99,7 +99,7 @@ Took 427 ms which is again xx times faster than PySpark.
   <img src="./rust-datafusion/img/datafusion-sql-normal-dataset-chart.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
-#### ok... Multiply our dataset up to 10 billion rows!
+### ok... Multiply our dataset up to 10 billion rows!
 I multiplied main dataset 350 times and it increased to 4200 files and total 192 GB size.
 
 
