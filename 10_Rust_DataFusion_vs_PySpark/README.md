@@ -1,4 +1,4 @@
-#### Datafusion vs PySpark: performance comparison and other thoughts
+#### Datafusion vs PySpark: performance comparison and thoughts
 
 Can Rust's DataFusion challenge Spark's dominance in data engineering? DataFusion's recent performance improvements are intriguing.
 
@@ -11,25 +11,64 @@ Apache Spark: Open-source big data engine for handling massive datasets across c
 
 [Spark docs](https://spark.apache.org/docs/latest/)
 
-Feature | Apache DataFusion (Rust) | Apache Spark |
+<!-- #### Comparison -->
+<!-- Feature | Apache DataFusion (Rust) | Apache Spark |
 --- | --- | --- |
 Processing Model | Single-node, in-memory | Distributed, in-memory and out-of-memory |
 Language | Rust | Scala (primary), Java, Python, R |
 Scalability | Limited (can be distributed with Ballista) | Highly scalable |
 Supported Data Sources | CSV, Parquet, AVRO, JSON | Wide variety including CSV, Parquet, JSON, JDBC, and more |
-Performance | Potentially faster for smaller datasets due to Rust's memory management | Generally faster for large datasets due to distributed processing |
+Performance | X times faster | Slower |
 Ease of Use | Simpler API, easier to learn | More complex API with a larger learning curve |
 Ecosystem | Smaller, growing ecosystem | Large, mature ecosystem with a wide range of libraries and tools
 Maturity | Relatively new project (5 years) | Established and widely used |
-Use Cases | analytics, prototyping, embedded analytics | Large-scale data processing, machine learning, real-time analytics3 |
+Use Cases | analytics, prototyping, embedded analytics | Large-scale data processing, machine learning, real-time analytics3 | -->
 
-#### Which is faster?
-Dataset (12 csv files, 19 - 153 MB each, total 1.1 Gb): [ciclistic-trip-data](https://www.kaggle.com/datasets/chihchungwuo/cyclistic-trip-data)
+<!-- increased: 4232 files, 192 GB -->
 
-
-increased: 4232 files, 192 Gb
-
-System:
+#### So... Which is faster? 1.1 GB dataset
+##### System:
 AMD® Ryzen 5 6600hs creator edition × 12
 16.0 GiB
 Pop!_OS 22.04 LTS
+
+
+##### Dataset: [ciclistic-trip-data](https://www.kaggle.com/datasets/chihchungwuo/cyclistic-trip-data) (12 csv files, 19 - 153 MB each, total 1.1 GB)
+
+
+#### Test 1: Group by & count with functions
+
+###### PySpark
+took almost 6 seconds to get count's by bike type.
+
+<div align="center">
+  <img src="./pySpark/img/spark-nosql-normal-dataset-table.jpg" alt="BigQuery tranlated column example" width="325">
+</div>
+
+System:
+<div align="center">
+  <img src="./pySpark/img/spark-nosql-normal-dataset-chart.jpg" alt="BigQuery tranlated column example" width="300">
+</div>
+
+
+###### Datafusion
+took almost 313 ms which is faster 19x faster than PySpark!
+
+<div align="center">
+  <img src="./rust-datafusion/img/datafusion-nosql-standart-dataset.jpg" alt="BigQuery tranlated column example" width="325">
+</div>
+
+System:
+<div align="center">
+  <img src="./rust-datafusion/img/datafusion-nosql-normal-dataset-chart.jpg" alt="BigQuery tranlated column example" width="300">
+</div>
+
+
+
+
+
+
+
+
+
+
