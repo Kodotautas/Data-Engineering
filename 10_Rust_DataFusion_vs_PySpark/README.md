@@ -1,4 +1,4 @@
-#### Datafusion vs PySpark: performance comparison and thoughts
+### Datafusion vs PySpark: performance comparison and thoughts
 
 Can Rust's DataFusion challenge Spark's dominance in data engineering? DataFusion's recent performance improvements are intriguing.
 
@@ -26,7 +26,7 @@ Use Cases | analytics, prototyping, embedded analytics | Large-scale data proces
 
 <!-- increased: 4232 files, 192 GB -->
 
-#### So... Which is faster? 1.1 GB dataset
+### So... Which is faster? 1.1 GB dataset
 ##### System:
 AMD® Ryzen 5 6600hs creator edition × 12
 16.0 GiB
@@ -43,12 +43,11 @@ Find out how many cyclists in each class was.
 took almost 6 seconds to get count's by bike type.
 
 <div align="center">
-  <img src="./pySpark/img/spark-nosql-normal-dataset-table.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./pySpark/img/spark-nosql-normal-dataset-table.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
-System:
 <div align="center">
-  <img src="./pySpark/img/spark-nosql-normal-dataset-chart.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./pySpark/img/spark-nosql-normal-dataset-chart.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
 
@@ -56,12 +55,11 @@ System:
 took almost 313 ms which is faster 19x faster than PySpark!
 
 <div align="center">
-  <img src="./rust-datafusion/img/datafusion-nosql-standart-dataset.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./rust-datafusion/img/datafusion-nosql-standart-dataset.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
-System:
 <div align="center">
-  <img src="./rust-datafusion/img/datafusion-nosql-normal-dataset-chart.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./rust-datafusion/img/datafusion-nosql-normal-dataset-chart.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
 #### Test 2: Group by, filter, calculations using SQL
@@ -83,24 +81,22 @@ group by rideable_type, member_casual
 Took also almost 6 seconds, the same as previous.
 
 <div align="center">
-  <img src="./pySpark/img/spark-sql-normal-dataset-table.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./pySpark/img/spark-sql-normal-dataset-table.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
-System:
 <div align="center">
-  <img src="./pySpark/img/spark-sql-normal-dataset-chart.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./pySpark/img/spark-sql-normal-dataset-chart.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
 ###### Datafusion
 Took 427 ms which is again xx times faster than PySpark.
 
 <div align="center">
-  <img src="./rust-datafusion/img/datafusion-sql-normal-dataset.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./rust-datafusion/img/datafusion-sql-normal-dataset.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
-System:
 <div align="center">
-  <img src="./rust-datafusion/img/datafusion-sql-normal-dataset-chart.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./rust-datafusion/img/datafusion-sql-normal-dataset-chart.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
 #### ok... Multiply our dataset up to 10 billion rows!
@@ -113,12 +109,11 @@ I multiplied main dataset 350 times and it increased to 4200 files and total 192
 PySpark took 4 min. 5 seconds to calculate.
 
 <div align="center">
-  <img src="./pySpark/img/spark-nosql-10-bill-dataset.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./pySpark/img/spark-nosql-10-bill-dataset.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
-System:
 <div align="center">
-  <img src="./pySpark/img/spark-nosql-10-bill-chart.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./pySpark/img/spark-nosql-10-bill-chart.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
 ###### Datafusion
@@ -126,12 +121,11 @@ System:
 Rust based Datafusion took 68 seconds which is 3.8x times faster.
 
 <div align="center">
-  <img src="./rust-datafusion/img/datafusion-nosql-10-bill-dataset-count.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./rust-datafusion/img/datafusion-nosql-10-bill-dataset-count.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
-System:
 <div align="center">
-  <img src="./rust-datafusion/img/datafusion-nosql-10-bill-dataset-chart.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./rust-datafusion/img/datafusion-nosql-10-bill-dataset-chart.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
 
@@ -140,22 +134,21 @@ System:
 ###### PySpark
 PySpark completed this challenge in 4 min. 8 seconds.
 <div align="center">
-  <img src="./pySpark/img/spark-sql-10-bill-dataset.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./pySpark/img/spark-sql-10-bill-dataset.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
-System:
 <div align="center">
-  <img src="./pySpark/img/spark-sql-10-bill-dataset-chart.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./pySpark/img/spark-sql-10-bill-dataset-chart.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
 ###### Datafusion
 Completed it in 1 min. 31 second which is again faster than PySpark by 2.7x times
 
 <div align="center">
-  <img src="./rust-datafusion/img/datafusion-sql-10-bill-dataset.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./rust-datafusion/img/datafusion-sql-10-bill-dataset.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
 System:
 <div align="center">
-  <img src="./rust-datafusion/img/datafusion-sql-10-bill-dataset-chart.jpg" alt="BigQuery tranlated column example" width="325">
+  <img src="./rust-datafusion/img/datafusion-sql-10-bill-dataset-chart.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
