@@ -24,7 +24,7 @@ Maturity | Relatively new project (~5 years)| Established and widely used |
 Use Cases | Large scale analytics, prototyping, embedded analytics | Large-scale data processing, machine learning, real-time analytics |
 
 
-### So... Which is faster? 1.1 GB dataset
+### So... Which is faster using 1.1 GB dataset?
 ##### System:
 AMD® Ryzen 5 6600hs creator edition × 12
 16.0 GiB
@@ -60,7 +60,7 @@ took almost 313 ms which is faster 19x faster than PySpark!
   <img src="./rust-datafusion/img/datafusion-nosql-normal-dataset-chart.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
-#### Test 2: Group by, filter, calculations using SQL
+<!-- #### Test 2: Group by, filter, calculations using SQL
 
 Use SQL and little more calculations:
 ```
@@ -87,7 +87,7 @@ Took also almost 6 seconds, the same as previous.
 </div>
 
 ###### Datafusion
-Took 427 ms which is again xx times faster than PySpark.
+Took 427 ms which is 12x faster than PySpark.
 
 <div align="center">
   <img src="./rust-datafusion/img/datafusion-sql-normal-dataset.jpg" alt="BigQuery tranlated column example" width="500">
@@ -95,15 +95,26 @@ Took 427 ms which is again xx times faster than PySpark.
 
 <div align="center">
   <img src="./rust-datafusion/img/datafusion-sql-normal-dataset-chart.jpg" alt="BigQuery tranlated column example" width="500">
-</div>
+</div> -->
 
 ### ok... Multiply our dataset up to 10 billion rows!
-I multiplied main dataset 350 times and it increased to 4200 files and total 192 GB size.
+I multiplied main dataset by 350 times and it increased to 4200 files and total 192 GB size.
 
+Use SQL with more calculations:
+```
+select 
+  rideable_type,
+  member_casual,
+  count(ride_id) as total_rides,
+  avg(start_lat) as avg_start_lat,
+  avg(start_lng) as avg_start_lng
+from rides
+where start_station_name = 'Michigan Ave & Jackson Blvd'
+group by rideable_type, member_casual
+```
 
-###### PySpark
-#### Test 3: Group by & count with functions (10 bill rows)
-
+<!-- #### Test 2: Group by & count with functions (10 bill rows) -->
+<!-- ###### PySpark
 PySpark took 4 min. 5 seconds to calculate.
 
 <div align="center">
@@ -116,7 +127,7 @@ PySpark took 4 min. 5 seconds to calculate.
 
 ###### Datafusion
 
-Rust based Datafusion took 68 seconds which is 3.8x times faster.
+Rust based Datafusion took 68 seconds which is 3.8x faster.
 
 <div align="center">
   <img src="./rust-datafusion/img/datafusion-nosql-10-bill-dataset-count.jpg" alt="BigQuery tranlated column example" width="500">
@@ -124,13 +135,13 @@ Rust based Datafusion took 68 seconds which is 3.8x times faster.
 
 <div align="center">
   <img src="./rust-datafusion/img/datafusion-nosql-10-bill-dataset-chart.jpg" alt="BigQuery tranlated column example" width="500">
-</div>
+</div> -->
 
 
-#### Test 4: Group by, filter, calculations using SQL(10 bill rows)
+#### Test 2: Group by, filter, calculations using SQL (10 bill rows)
 
 ###### PySpark
-PySpark completed this challenge in 4 min. 8 seconds.
+PySpark completed challenge in 4 min. 8 seconds.
 <div align="center">
   <img src="./pySpark/img/spark-sql-10-bill-dataset.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
@@ -140,13 +151,12 @@ PySpark completed this challenge in 4 min. 8 seconds.
 </div>
 
 ###### Datafusion
-Completed it in 1 min. 31 second which is again faster than PySpark by 2.7x times
+Completed it in 1 min. 31 second which is again faster than PySpark by 2.7x.
 
 <div align="center">
   <img src="./rust-datafusion/img/datafusion-sql-10-bill-dataset.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
 
-System:
 <div align="center">
   <img src="./rust-datafusion/img/datafusion-sql-10-bill-dataset-chart.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
