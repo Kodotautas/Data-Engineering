@@ -18,6 +18,7 @@ Ease of Use | Simpler API, easier to learn | More complex API with a larger lear
 Ecosystem | Smaller, growing ecosystem | Large, mature ecosystem with a wide range of libraries and tools
 Maturity | Relatively new project (~5 years)| Established and widely used |
 Use Cases | Large scale analytics, prototyping, embedded analytics | Large-scale data processing, machine learning, real-time analytics |
+Like | API's to S3, GCP Storage | Real-time streaming
 
 
 ### So... Which is faster using 1.1 GB dataset?
