@@ -10,7 +10,7 @@ Apache Spark: Open-source big data engine for handling massive datasets across c
 
 [Spark docs](https://spark.apache.org/docs/latest/)
 
-#### Comparison
+##### Comparison table
 Feature | Apache DataFusion (Rust) | Apache Spark |
 --- | --- | --- |
 Processing Model | Single-node, in-memory | Distributed, in-memory and out-of-memory |
@@ -35,7 +35,7 @@ Pop!_OS 22.04 LTS
 
 
 #### Test 1: Group by & count with functions
-Find out how many cyclists in each class was.
+Find out how many cyclists in each class was using tools functions.
 
 ###### PySpark
 took almost 6 seconds to get count's by bike type.
@@ -100,19 +100,6 @@ Took 427 ms which is 12x faster than PySpark.
 ### ok... Multiply our dataset up to 10 billion rows!
 I multiplied main dataset by 350 times and it increased to 4200 files and total 192 GB size.
 
-Use SQL with more calculations:
-```
-select 
-  rideable_type,
-  member_casual,
-  count(ride_id) as total_rides,
-  avg(start_lat) as avg_start_lat,
-  avg(start_lng) as avg_start_lng
-from rides
-where start_station_name = 'Michigan Ave & Jackson Blvd'
-group by rideable_type, member_casual
-```
-
 <!-- #### Test 2: Group by & count with functions (10 bill rows) -->
 <!-- ###### PySpark
 PySpark took 4 min. 5 seconds to calculate.
@@ -140,6 +127,19 @@ Rust based Datafusion took 68 seconds which is 3.8x faster.
 
 #### Test 2: Group by, filter, calculations using SQL (10 bill rows)
 
+SQL for second test:
+```
+select 
+  rideable_type,
+  member_casual,
+  count(ride_id) as total_rides,
+  avg(start_lat) as avg_start_lat,
+  avg(start_lng) as avg_start_lng
+from rides
+where start_station_name = 'Michigan Ave & Jackson Blvd'
+group by rideable_type, member_casual
+```
+
 ###### PySpark
 PySpark completed challenge in 4 min. 8 seconds.
 <div align="center">
@@ -160,3 +160,21 @@ Completed it in 1 min. 31 second which is again faster than PySpark by 2.7x.
 <div align="center">
   <img src="./rust-datafusion/img/datafusion-sql-10-bill-dataset-chart.jpg" alt="BigQuery tranlated column example" width="500">
 </div>
+
+<!-- #### Conclusion
+There was similar tests on internet about one year ago there PySpark beaten Datafusion. Spark is well developed, have many integrations and in many companies it's like legacy tool. Don't forget that it's integrated in cloud services like AWS ERM or GCP Dataproc. 
+But after Datafusion updates situation is opposite. Projects which need performance, lower costs, stability and safety have good option - Apache Datafusion. Rust ecosystem is growing based on code share in GitHub (current 1.75% of whole code written in Rust) and currently in data engineering you can everything with it. -->
+
+#### So... Old guard vs. rising star?
+
+Remember the DataFusion vs. PySpark showdowns from last year? Spark, the industry OG, reigned supreme with its vast integrations and legacy status. Cloud giants like AWS and GCP even embraced it with open arms (think EMR and Dataproc).
+
+But fast forward to today, and the tables have turned. DataFusion's been on a tear, making it a strong contender for projects prioritizing performance, cost efficiency, and rock-solid stability.
+
+DataFusion's advantages:
+
+- Rust FTW: The Rust ecosystem is growing (1.75% of all GitHub code!) and it offers a complete data engineering toolkit.
+- Mean Machine: DataFusion delivers blazing-fast query execution, making it a dream for performance-hungry geeks.
+- Lean & Mean: Compared to Spark's bulkiness, DataFusion is a lightweight champ, keeping your costs in check.
+
+So, if you're a data ninja seeking a modern, high-performance query engine, DataFusion might be your new best friend.
