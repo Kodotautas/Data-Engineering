@@ -1,14 +1,12 @@
-### Datafusion vs PySpark: 10 billions rows performance comparison
+### Rust Datafusion vs PySpark: 10 billions rows performance comparison
 Can Rust's DataFusion challenge Spark's dominance in data engineering? DataFusion's recent performance improvements are intriguing.
 
 #### Datafusion & Spark
-DataFusion is a fast query engine for Rust that uses Apache Arrow for speedy data analysis. It supports common data formats and offers customization for specific needs, with a strong community for support.
+DataFusion ([docs](https://arrow.apache.org/datafusion/user-guide/introduction.html)) is a fast query engine for Rust that uses Apache Arrow for speedy data analysis. It supports common data formats and offers customization for specific needs, with a strong community for support.
 
-[Datafusion docs](https://arrow.apache.org/datafusion/user-guide/introduction.html)
 
-Apache Spark: Open-source big data engine for handling massive datasets across clusters, making it a popular choice.
 
-[Spark docs](https://spark.apache.org/docs/latest/)
+Apache Spark ([docs](https://spark.apache.org/docs/latest/)): Open-source big data engine for handling massive datasets across clusters, making it a popular choice.
 
 ##### Comparison table
 Feature | Apache DataFusion (Rust) | Apache Spark |
