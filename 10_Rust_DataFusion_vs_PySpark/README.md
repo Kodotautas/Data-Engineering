@@ -107,4 +107,4 @@ But fast forward to today and the situation is different. DataFusion's been on a
 - DataFusion delivers blazing-fast query execution, making it a dream for performance-hungry geeks.
 - Compared to Spark's bulkiness, DataFusion is a lightweight champ, keeping your costs in check.
 
-So... ninjas! Depends on project, but if you're looking for a modern, lightweight, high-performance query engine and don't need real time streaming then DataFusion should be on your list.
+So... ninjas! Depends on project, but if you're looking for a modern, lightweight, high-performance query engine using Apache Arrow and don't need real time streaming then DataFusion should be on your list.
