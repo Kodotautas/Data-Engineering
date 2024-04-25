@@ -7,7 +7,7 @@ DataFusion ([docs](https://arrow.apache.org/datafusion/user-guide/introduction.h
 Apache Spark ([docs](https://spark.apache.org/docs/latest/)): Open-source big data engine for handling massive datasets across clusters, making it a popular choice.
 
 ##### Comparison table
-Feature | Apache DataFusion (Rust) | Apache Spark |
+Feature | Apache DataFusion | Apache Spark |
 --- | --- | --- |
 Processing Model | Single-node, in-memory | Distributed, in-memory and out-of-memory |
 Language | Rust | Scala (primary), Java, Python, R |
