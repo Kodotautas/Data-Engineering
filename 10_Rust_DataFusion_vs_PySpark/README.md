@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="Versus.png" alt="BigQuery tranlated column example" width="250">
+  <img src="Versus.png" alt="BigQuery tranlated column example" width="300">
 </div>
 
 ### Rust Datafusion vs PySpark: 10 billions rows performance comparison
