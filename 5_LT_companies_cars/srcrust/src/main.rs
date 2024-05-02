@@ -9,6 +9,30 @@ use std::net::SocketAddr;
 
 struct Processor; // Processor struct
 
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // Bind to 0.0.0.0:8080
+    let port = std::env::var("PORT").unwrap_or_else(|_| String::from("8080"));
+    let addr = format!("0.0.0.0:{}", port).parse::<SocketAddr>()?;
+
+    // A `Service` is needed for every connection, so this
+    // creates one from our `information` function.
+    let make_svc = make_service_fn(|_conn| async {
+        // service_fn converts our function into a `Service`
+        Ok::<_, Infallible>(service_fn(information))
+    });
+
+    let server = Server::bind(&addr).serve(make_svc);
+
+    // Run this server for... forever!
+    if let Err(e) = server.await {
+        eprintln!("server error: {}", e);
+    }
+
+    Ok(())
+}
+
+
 impl Processor {
     async fn download_and_upload(_config: ClientConfig, url: &str, bucket: &str, object_name: &str) -> Result<(), Box<dyn std::error::Error>> {
         // Create client.
@@ -86,27 +110,4 @@ async fn information(_req: Request<Body>) -> Result<Response<Body>, Infallible> 
     }
 
     Ok(Response::new(Body::from("Loading data to BigQuery")))
-}
-
-#[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    // Bind to 0.0.0.0:8080
-    let port = std::env::var("PORT").unwrap_or_else(|_| String::from("8080"));
-    let addr = format!("0.0.0.0:{}", port).parse::<SocketAddr>()?;
-
-    // A `Service` is needed for every connection, so this
-    // creates one from our `information` function.
-    let make_svc = make_service_fn(|_conn| async {
-        // service_fn converts our function into a `Service`
-        Ok::<_, Infallible>(service_fn(information))
-    });
-
-    let server = Server::bind(&addr).serve(make_svc);
-
-    // Run this server for... forever!
-    if let Err(e) = server.await {
-        eprintln!("server error: {}", e);
-    }
-
-    Ok(())
 }
