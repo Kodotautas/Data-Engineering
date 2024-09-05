@@ -30,7 +30,7 @@ HAVING total_sold > 100
 ORDER BY avg_price DESC
 ```
 
-![current sql logic](image.png)
+![current sql logic](images/image.png)
 
 
 This structure can be hard to follow because the `SELECT` clause depends on the `FROM` clause, which actually comes later in the query. Logically, we think about data in a different order: we first decide where the data is coming from (`FROM`), then we filter it (`WHERE`), and finally, we decide what to retrieve (`SELECT`). This reverse order can be confusing, especially for beginners.
@@ -49,7 +49,7 @@ GROUP BY product_name
 |> ORDER BY avg_price DESC
 ```
 
-![alt text](image-1.png)
+![alt text](images/image-1.png)
 
 This version starts with `FROM` and uses the pipe operator (`|>`) to connect each step, making the query flow more naturally and easier to understand.
 
