@@ -1,24 +1,43 @@
-SQL (Structured Query Language) is the go-to language for managing and retrieving data from databases. It's been around for decades and is crucial for data engineers, developers, and analysts. However, while SQL is powerful, its syntax can be tricky, especially when you're dealing with complex queries. Recognizing these challenges, Google's researchers are working on a new way to write SQL that could make it easier and more intuitive.
+### Google reinventing SQL
+
+SQL (Structured Query Language) is the go-to language for managing and retrieving data from databases. It's been around for 50 years and is crucial for data engineers, developers, and analysts. However, while SQL is powerful, its syntax can be tricky, especially when you're dealing with complex queries. Recognizing these challenges, Google's researchers are working on a new way to write SQL that could make it easier and more intuitive.
 
 
-Photo by Arthur Osipyan on Unsplash
-What’s Wrong with Traditional SQL?
-Traditional SQL can be confusing, particularly because of the way queries are structured. Normally, a SQL query starts with the `SELECT` clause, like this:
+### Traditional SQL, while powerful, has several key disadvantages:
+
+1. *Unintuitive syntax:* The order of clauses (SELECT, FROM, WHERE) doesn't match the logical flow of data processing, making it harder for beginners to understand.
+
+2. *Verbosity:* Complex queries can become long and difficult to read, especially with multiple joins and subqueries.
+
+3. *Steep learning curve:* The syntax and structure of SQL can be intimidating for newcomers, particularly those from non-technical backgrounds.
+
+4. *Limited expressiveness:* Some operations that are simple in procedural languages can be cumbersome to express in SQL.
+
+5. *Readability issues:* As queries grow in complexity, they become harder to read and maintain, especially in collaborative environments.
+
+These limitations have led to various attempts to improve or reinvent SQL, including Google's new pipe syntax approach.
+
+Standart SQL example:
+```
 SELECT component_id, COUNT(*)
 FROM ticketing_system_table
 WHERE assignee_user.email = 'username@email.com'
 AND status IN (’NEW’, 'ASSIGNED’, 'ACCEPTED’)
 GROUP BY component_id
-ORDER BY component_id DESC; 
+ORDER BY component_id DESC
+```
 
 This structure can be hard to follow because the `SELECT` clause depends on the `FROM` clause, which actually comes later in the query. Logically, we think about data in a different order: we first decide where the data is coming from (`FROM`), then we filter it (`WHERE`), and finally, we decide what to retrieve (`SELECT`). This reverse order can be confusing, especially for beginners.
 Google’s New Approach: The Pipe Syntax
 To make SQL more user-friendly, Google’s researchers have introduced a new syntax that uses a "pipe operator" (`|>`). This operator lets you build queries in a way that follows the natural flow of thought. Here’s what the earlier query would look like with Google’s new syntax:
+
+```
 FROM ticketing_system_table
 |> WHERE assignee_user.email = 'username@email.com'
 AND status IN (’NEW’, 'ASSIGNED’, 'ACCEPTED’)
 |> AGGREGATE COUNT(*)
-GROUP AND ORDER BY component_id DESC;
+GROUP AND ORDER BY component_id DESC
+```
 
 This version starts with `FROM`, making it easier to follow. Each step of the query is connected by the pipe operator (`|>`), which means "take the result from the previous step and apply the next operation." This way, the query reads more like a set of instructions that follow the order we naturally think in.
 Why This is Important
