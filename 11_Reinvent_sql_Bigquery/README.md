@@ -15,44 +15,68 @@ SQL (Structured Query Language) is the go-to language for managing and retrievin
 
 5. *Readability issues:* As queries grow in complexity, they become harder to read and maintain, especially in collaborative environments.
 
-These limitations have led to various attempts to improve or reinvent SQL, including Google's new pipe syntax approach.
+These limitations have led to various attempts to improve or reinvent SQL.
 
-Standart SQL example:
+### Standart SQL examples:
+first example:
 ```
-SELECT component_id, COUNT(*)
-FROM ticketing_system_table
-WHERE assignee_user.email = 'username@email.com'
-AND status IN (’NEW’, 'ASSIGNED’, 'ACCEPTED’)
-GROUP BY component_id
-ORDER BY component_id DESC
+SELECT customer_name, total_amount
+FROM orders
+WHERE order_date > '2023-01-01'
+```
+second example:
+
+```
+SELECT product_name, AVG(price) as avg_price, SUM(quantity_sold) as total_sold
+FROM sales_table
+JOIN product_table ON sales_table.product_id = product_table.id
+WHERE sale_date BETWEEN '2023-01-01' AND '2023-12-31'
+AND category = 'Electronics'
+GROUP BY product_name
+HAVING total_sold > 100
+ORDER BY avg_price DESC
 ```
 
 This structure can be hard to follow because the `SELECT` clause depends on the `FROM` clause, which actually comes later in the query. Logically, we think about data in a different order: we first decide where the data is coming from (`FROM`), then we filter it (`WHERE`), and finally, we decide what to retrieve (`SELECT`). This reverse order can be confusing, especially for beginners.
 Google’s New Approach: The Pipe Syntax
 To make SQL more user-friendly, Google’s researchers have introduced a new syntax that uses a "pipe operator" (`|>`). This operator lets you build queries in a way that follows the natural flow of thought. Here’s what the earlier query would look like with Google’s new syntax:
 
+google's new approach for first example:
 ```
-FROM ticketing_system_table
-|> WHERE assignee_user.email = 'username@email.com'
-AND status IN (’NEW’, 'ASSIGNED’, 'ACCEPTED’)
-|> AGGREGATE COUNT(*)
-GROUP AND ORDER BY component_id DESC
+from orders
+|> where order_date > '2023-01-01'
+|> select customer_name, total_amount
 ```
 
-This version starts with `FROM`, making it easier to follow. Each step of the query is connected by the pipe operator (`|>`), which means "take the result from the previous step and apply the next operation." This way, the query reads more like a set of instructions that follow the order we naturally think in.
-Why This is Important
-Easier to Read: This new syntax makes SQL queries easier to read and understand because the order of operations follows a logical flow.
-Fewer Mistakes: Since the query structure is more straightforward, it’s less likely that you’ll make mistakes when writing complex queries.
-Better for Maintenance: Easier-to-read queries are also easier to maintain. When you or someone else needs to update the query later, it’s quicker to understand what’s going on.
-Modern Programming Style: The pipe syntax is similar to patterns used in modern programming languages, making it more familiar to developers who already use these languages.
-What People Think About It
-Google has started using this new syntax internally, especially in their GoogleSQL dialect, which is used in services like BigQuery. As of August 2024, around 1,600 users at Google are already using this new way to write SQL, and they seem to like it.
-However, not everyone is convinced. Dr. Richard Hipp, the creator of SQLite, is one of the skeptics. He agrees that starting with `FROM` could be more intuitive, but he’s not sure the pipe syntax is necessary. He thinks the traditional SQL syntax still works fine and doesn’t see a big enough benefit to justify the change.
-What Could Happen Next?
-It’s still unclear whether this new SQL syntax will catch on widely. A few things could influence its success:
+google's new approach for second example:
+```
+FROM sales_table
+|> JOIN product_table ON sales_table.product_id = product_table.id
+|> WHERE sale_date BETWEEN '2023-01-01' AND '2023-12-31'
+AND category = 'Electronics'
+|> AGGREGATE 
+    product_name,
+    AVG(price) AS avg_price,
+    SUM(quantity_sold) AS total_sold
+GROUP BY product_name
+|> HAVING total_sold > 100
+|> ORDER BY avg_price DESC
+```
 
-Community Support: If developers, database administrators, and educators like the new syntax, it could become more popular.
-Compatibility with Other Systems: For the new syntax to really take off, it would need to be supported by other popular database systems like PostgreSQL and MySQL.
-Tool Support: Developers would need their tools, like SQL editors and integrated development environments (IDEs), to support this new syntax with features like syntax highlighting and error checking.
-Conclusion
+This version starts with `FROM` and uses the pipe operator (`|>`) to connect each step, making the query flow more naturally and easier to understand.
+
+### Why it is better?
+1. Improved Readability: The pipe syntax follows a more natural, top-to-bottom flow of logic, making queries easier to understand.
+
+2. Logical Order: It aligns with how we typically think about data processing, starting with the data source and ending with the desired output.
+
+3. Modularity: The pipe operator (`|>`) clearly separates each step of the query, making it easier to modify or debug individual parts.
+
+4. Easier for Beginners: The intuitive structure makes SQL more approachable for newcomers and those familiar with modern data analysis tools.
+
+5. Better for Complex Queries: As queries become more intricate, the pipe syntax maintains clarity and readability.
+
+Overall, Google's approach simplifies SQL writing and comprehension, potentially making data analysis more accessible and efficient.
+
+### Conclusion
 Google’s new SQL syntax is an exciting development that could make SQL easier to use, especially for beginners. By restructuring how queries are written, Google aims to reduce the confusion that often comes with learning SQL. However, whether this new approach will become the standard is still up in the air. It will depend on whether the wider SQL community and major database systems decide to adopt it.
