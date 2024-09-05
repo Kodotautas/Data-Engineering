@@ -1,7 +1,6 @@
 ### Google reinventing SQL
 
-SQL (Structured Query Language) is the go-to language for managing and retrieving data from databases. It's been around for 50 years and is crucial for data engineers, developers, and analysts. However, while SQL is powerful, its syntax can be tricky, especially when you're dealing with complex queries. Recognizing these challenges, Google's researchers are working on a new way to write SQL that could make it easier and more intuitive.
-
+SQL, a 50-year-old language, is essential for database management. While its power is undeniable, its complex syntax can be challenging. Google is developing a simplified SQL approach for improved user experience.
 
 ### Traditional SQL, while powerful, has several key disadvantages:
 
@@ -18,13 +17,7 @@ SQL (Structured Query Language) is the go-to language for managing and retrievin
 These limitations have led to various attempts to improve or reinvent SQL.
 
 ### Standart SQL examples:
-first example:
-```
-SELECT customer_name, total_amount
-FROM orders
-WHERE order_date > '2023-01-01'
-```
-second example:
+example and logic:
 
 ```
 SELECT product_name, AVG(price) as avg_price, SUM(quantity_sold) as total_sold
@@ -37,31 +30,26 @@ HAVING total_sold > 100
 ORDER BY avg_price DESC
 ```
 
+![current sql logic](image.png)
+
+
 This structure can be hard to follow because the `SELECT` clause depends on the `FROM` clause, which actually comes later in the query. Logically, we think about data in a different order: we first decide where the data is coming from (`FROM`), then we filter it (`WHERE`), and finally, we decide what to retrieve (`SELECT`). This reverse order can be confusing, especially for beginners.
 Google’s New Approach: The Pipe Syntax
 To make SQL more user-friendly, Google’s researchers have introduced a new syntax that uses a "pipe operator" (`|>`). This operator lets you build queries in a way that follows the natural flow of thought. Here’s what the earlier query would look like with Google’s new syntax:
 
-google's new approach for first example:
-```
-from orders
-|> where order_date > '2023-01-01'
-|> select customer_name, total_amount
-```
+Google's sql approach and logic:
 
-google's new approach for second example:
 ```
 FROM sales_table
 |> JOIN product_table ON sales_table.product_id = product_table.id
-|> WHERE sale_date BETWEEN '2023-01-01' AND '2023-12-31'
-AND category = 'Electronics'
-|> AGGREGATE 
-    product_name,
-    AVG(price) AS avg_price,
-    SUM(quantity_sold) AS total_sold
+|> WHERE sale_date BETWEEN '2023-01-01' AND '2023-12-31' AND category = 'Electronics'
+|> AGGREGATE product_name, AVG(price) AS avg_price, SUM(quantity_sold) AS total_sold
 GROUP BY product_name
 |> HAVING total_sold > 100
 |> ORDER BY avg_price DESC
 ```
+
+![alt text](image-1.png)
 
 This version starts with `FROM` and uses the pipe operator (`|>`) to connect each step, making the query flow more naturally and easier to understand.
 
@@ -79,4 +67,8 @@ This version starts with `FROM` and uses the pipe operator (`|>`) to connect eac
 Overall, Google's approach simplifies SQL writing and comprehension, potentially making data analysis more accessible and efficient.
 
 ### Conclusion
-Google’s new SQL syntax is an exciting development that could make SQL easier to use, especially for beginners. By restructuring how queries are written, Google aims to reduce the confusion that often comes with learning SQL. However, whether this new approach will become the standard is still up in the air. It will depend on whether the wider SQL community and major database systems decide to adopt it.
+Google's innovative SQL syntax aims to simplify the language, especially for beginners, by streamlining query structures. However, its adoption as the industry standard remains uncertain, depending on acceptance by the broader SQL community and major database systems. Opinions about this new SQL dialect vary widely within the database community, with some praising its intuitive approach while others express concerns about potential complexity and deviation from established conventions. This debate underscores the ongoing evolution of database query languages.
+
+#### References
+##### Google paper: [Link](https://storage.googleapis.com/gweb-research2023-media/pubtools/1004848.pdf)
+##### Simons Wilson weblog: [Link](https://simonwillison.net/2024/Aug/24/pipe-syntax-in-sql/)
