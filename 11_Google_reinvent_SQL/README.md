@@ -32,7 +32,6 @@ ORDER BY avg_price DESC
 
 ![current sql logic](images/image.png)
 
-
 This structure can be hard to follow because the `SELECT` clause depends on the `FROM` clause, which actually comes later in the query. Logically, we think about data in a different order: we first decide where the data is coming from (`FROM`), then we filter it (`WHERE`), and finally, we decide what to retrieve (`SELECT`). This reverse order can be confusing, especially for beginners.
 Google’s New Approach: The Pipe Syntax
 To make SQL more user-friendly, Google’s researchers have introduced a new syntax that uses a "pipe operator" (`|>`). This operator lets you build queries in a way that follows the natural flow of thought. Here’s what the earlier query would look like with Google’s new syntax:
@@ -67,7 +66,7 @@ This version starts with `FROM` and uses the pipe operator (`|>`) to connect eac
 Overall, Google's approach simplifies SQL writing and comprehension, potentially making data analysis more accessible and efficient.
 
 ### Conclusion
-Google's innovative SQL syntax aims to simplify the language, especially for beginners, by streamlining query structures. However, its adoption as the industry standard remains uncertain, depending on acceptance by the broader SQL community and major database systems. Opinions about this new SQL dialect vary widely within the database community, with some praising its intuitive approach while others express concerns about potential complexity and deviation from established conventions. This debate underscores the ongoing evolution of database query languages.
+Google's new SQL syntax aims to simplify queries, especially for beginners. While it offers a more intuitive approach, its widespread adoption remains uncertain. The database community is divided, with some praising its simplicity and others concerned about potential complexities. This debate highlights the ongoing evolution of SQL.
 
 #### References
 ##### Google paper: [Link](https://storage.googleapis.com/gweb-research2023-media/pubtools/1004848.pdf)
