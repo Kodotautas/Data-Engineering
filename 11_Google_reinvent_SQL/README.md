@@ -20,13 +20,12 @@ These limitations have led to various attempts to improve or reinvent SQL.
 example and logic:
 
 ```
-SELECT product_name, AVG(price) as avg_price, SUM(quantity_sold) as total_sold
+SELECT product_name, AVG(price) as avg_price
 FROM sales_table
-JOIN product_table ON sales_table.product_id = product_table.id
-WHERE sale_date BETWEEN '2023-01-01' AND '2023-12-31'
-AND category = 'Electronics'
+JOIN product_table ON sales_table.id = product_table.id
+WHERE sale_date > '2023-01-01' AND category = 'TV'
 GROUP BY product_name
-HAVING total_sold > 100
+HAVING avg_price> 100
 ORDER BY avg_price DESC
 ```
 
@@ -40,12 +39,12 @@ Google's sql approach and logic:
 
 ```
 FROM sales_table
-|> JOIN product_table ON sales_table.product_id = product_table.id
-|> WHERE sale_date BETWEEN '2023-01-01' AND '2023-12-31' AND category = 'Electronics'
-|> AGGREGATE product_name, AVG(price) AS avg_price, SUM(quantity_sold) AS total_sold
-GROUP BY product_name
-|> HAVING total_sold > 100
+|> JOIN product_table ON sales_table.id = product_table.id
+|> WHERE sale_date > '2023-01-01' AND category = 'TV'
+|> AGGREGATE product_name, AVG(price) AS avg_price GROUP BY product_name
+|> HAVING avg_price > 100
 |> ORDER BY avg_price DESC
+|> SELECT product_name, avg_price
 ```
 
 ![alt text](images/image-1.png)
@@ -53,15 +52,15 @@ GROUP BY product_name
 This version starts with `FROM` and uses the pipe operator (`|>`) to connect each step, making the query flow more naturally and easier to understand.
 
 ### Why it is better?
-1. Improved Readability: The pipe syntax follows a more natural, top-to-bottom flow of logic, making queries easier to understand.
+1. *Improved Readability:* The pipe syntax follows a more natural, top-to-bottom flow of logic, making queries easier to understand.
 
-2. Logical Order: It aligns with how we typically think about data processing, starting with the data source and ending with the desired output.
+2. *Logical Order:* It aligns with how we typically think about data processing, starting with the data source and ending with the desired output.
 
-3. Modularity: The pipe operator (`|>`) clearly separates each step of the query, making it easier to modify or debug individual parts.
+3. *Modularity:* The pipe operator (`|>`) clearly separates each step of the query, making it easier to modify or debug individual parts.
 
-4. Easier for Beginners: The intuitive structure makes SQL more approachable for newcomers and those familiar with modern data analysis tools.
+4. *Easier for Beginners:* The intuitive structure makes SQL more approachable for newcomers and those familiar with modern data analysis tools.
 
-5. Better for Complex Queries: As queries become more intricate, the pipe syntax maintains clarity and readability.
+5. *Better for Complex Queries:* As queries become more intricate, the pipe syntax maintains clarity and readability.
 
 Overall, Google's approach simplifies SQL writing and comprehension, potentially making data analysis more accessible and efficient.
 
