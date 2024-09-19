@@ -1,2 +1,0 @@
-- need create image comparing old and new SQL syntax
-- prepare linkedin post with image and short description
