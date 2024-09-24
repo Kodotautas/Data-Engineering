@@ -22,3 +22,5 @@ There is data engineering projects / learnings completed on free time.
 9 - Example how to use Gemini Pro LLM as a text translator in BigQuery.
 
 10 - Rust Datafusion vs PySpark: 10 billions rows performance comparison.
+
+11 - Standard SLQ and Google Pipe SQL initiative comparison.
