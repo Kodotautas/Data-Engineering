@@ -24,3 +24,5 @@ There is data engineering projects / learnings completed on free time.
 10 - Rust Datafusion vs PySpark: 10 billions rows performance comparison.
 
 11 - Standard SQL and Google Pipe SQL initiative comparison.
+
+12 - BigQuery historical-based queries optimization feature
