@@ -26,3 +26,5 @@ There is data engineering projects / learnings completed on free time.
 11 - Standard SQL and Google Pipe SQL initiative comparison.
 
 12 - BigQuery historical-based queries optimization feature
+
+x
