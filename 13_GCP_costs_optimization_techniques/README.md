@@ -20,7 +20,7 @@
 
    [Google Cloud Billing documentation](https://cloud.google.com/billing/docs/how-to/budgets)
 
-   *Potential savings: 10-20%* through better cost awareness and proactive management
+   *Potential savings: 5-15%* through better cost awareness and proactive management
 
 ##### 2. Set up quotas and limits
    - Best practices:
@@ -32,7 +32,7 @@
 
    [Google Cloud Quotas documentation](https://cloud.google.com/compute/quotas-limits)
 
-   *Potential savings: 5-15%* by preventing unexpected resource usage spikes
+   *Potential savings: 3-10%* by preventing unexpected resource usage spikes
 
 ##### 3. Utilize preemptible instances & spot instances
    - Best practices:
@@ -45,9 +45,9 @@
    [Google Cloud Preemptible VMs documentation](https://cloud.google.com/compute/docs/instances/preemptible)
    [Google Cloud Spot VMs documentation](https://cloud.google.com/compute/docs/instances/spot)
 
-   *Potential savings: 60-90%* compared to regular instance pricing
-   - Spot VMs can save up to 91% compared to regular instances
-   - Preemptible VMs typically save 60-80%
+   *Potential savings: 40-70%* compared to regular instance pricing
+   - Spot VMs can save up to 60-80% compared to regular instances
+   - Preemptible VMs typically save 40-60%
 
 ##### 4. Leverage committed usage discounts (CUD)
    - Best practices:
@@ -59,9 +59,9 @@
 
    [Google Cloud CUD documentation](https://cloud.google.com/compute/docs/instances/signing-up-committed-use-discounts)
 
-   *Potential savings: 20-57%* depending on commitment term
-   - 1-year commitment: up to 37% discount
-   - 3-year commitment: up to 57% discount
+   *Potential savings: 15-40%* depending on commitment term
+   - 1-year commitment: up to 25% discount
+   - 3-year commitment: up to 40% discount
 
 ##### 5. Optimize with sustained use discounts
    - Best practices:
@@ -75,8 +75,8 @@
    ![sustained use discounts](images/sustained.png)
    *Figure 2: Sustained use discounts example*
 
-   *Potential savings: up to 30%* automatically applied for consistent usage
-   - Discounts start at 20% and increase to 30% for full-month usage
+   *Potential savings: up to 20%* automatically applied for consistent usage
+   - Discounts start at 10% and increase to 20% for full-month usage
 
 ##### 6. Configure billing & export
    - Best practices:
@@ -87,7 +87,7 @@
 
    [Google Cloud Billing Export documentation](https://cloud.google.com/billing/docs/how-to/export-data-bigquery)
 
-   *Potential savings: 5-15%* through better visibility and analysis
+   *Potential savings: 3-10%* through better visibility and analysis
 
 ##### 7. Implement organization policies
    - Best practices:
@@ -98,7 +98,7 @@
 
    [Google Cloud Organization Policies documentation](https://cloud.google.com/resource-manager/docs/organization-policy/overview)
 
-   *Potential savings: 10-20%* through better resource governance
+   *Potential savings: 5-15%* through better resource governance
 
 ##### 8. Schedule VM instances
    - Best practices:
@@ -110,7 +110,7 @@
 
    [Google Cloud Cloud Scheduler documentation](https://cloud.google.com/scheduler/docs/start-and-stop-compute-engine-instances-on-a-schedule)
 
-   *Potential savings: 45-65%* for non-production environments
+   *Potential savings: 30-50%* for non-production environments
    - Example: Shutting down dev/test instances during nights/weekends
 
 ##### 9. Configure lifecycle policies in Google Cloud Storage
@@ -122,9 +122,9 @@
 
    [Google Cloud Life Cycle Policy documentation](https://cloud.google.com/storage/docs/lifecycle)
 
-   *Potential savings: 20-50%* on storage costs
-   - Archive storage: up to 60% cheaper than standard storage
-   - Coldline storage: up to 50% cheaper than standard storage
+   *Potential savings: 15-35%* on storage costs
+   - Archive storage: up to 40% cheaper than standard storage
+   - Coldline storage: up to 30% cheaper than standard storage
 
 ##### 10. Monitor and remove unused disks and IP addresses
    - Best practices:
@@ -135,7 +135,7 @@
 
    [Google Cloud gcloud command documentation](https://cloud.google.com/compute/docs/viewing-and-applying-idle-resources-recommendations)
 
-   *Potential savings: 5-15%* by eliminating waste
+   *Potential savings: 3-10%* by eliminating waste
    - Unused static IPs cost ~$3/month each
 
 ##### 11. Configure custom virtual machine instances
@@ -147,7 +147,7 @@
 
    [Google Cloud Custom Machine Types documentation](https://cloud.google.com/compute/docs/instances/creating-instance-with-custom-machine-type)
 
-   *Potential savings: 10-30%* by right-sizing instances
+   *Potential savings: 5-20%* by right-sizing instances
 
 ##### 12. Prevent duplicated data in GCS buckets
    - Best practices:
@@ -155,7 +155,7 @@
       - consider versioning for important data
       - review bucket usage regularly
 
-   *Potential savings: 5-20%* on storage costs
+   *Potential savings: 3-15%* on storage costs
 
 ##### 13. Optimize region selection for costs and performance
    - Best practices:
@@ -166,8 +166,8 @@
 
    [Google Cloud Region Selection documentation](https://cloud.google.com/solutions/best-practices-compute-engine-region-selection)
 
-   *Potential savings: 10-40%* depending on region choice
-   - Some regions can be 20-40% cheaper than others
+   *Potential savings: 5-25%* depending on region choice
+   - Some regions can be 15-25% cheaper than others
 
 ##### 14. Optimize BigQuery performance and costs
    - Best practices:
@@ -183,9 +183,9 @@
 
    [Google Cloud Bigquery documentation](https://cloud.google.com/bigquery/docs/best-practices-performance-overview)
 
-   *Potential savings: 40-60%* on query costs
-   - Partitioning can reduce queried data by 50-80%
-   - Clustering can reduce queried data by 30-60%
+   *Potential savings: 20-40%* on query costs
+   - Partitioning can reduce queried data by 30-50%
+   - Clustering can reduce queried data by 20-40%
 
 ##### 15. Choose between on-demand vs provisioned capacity
    - Best practices:
@@ -196,7 +196,7 @@
 
    [Article about on demand vs provision capacity](https://www.cloudzero.com/blog/on-demand-vs-spot-instances/)
 
-   *Potential savings: 15-30%* through optimal capacity planning
+   *Potential savings: 10-20%* through optimal capacity planning
 
 ##### 16. Manage egress pricing
    - Best practices:
@@ -208,8 +208,8 @@
 
    [Google Cloud Egress Pricing documentation](https://cloud.google.com/vpc/network-pricing)
 
-   *Potential savings: 20-50%* on network costs
-   - Using CDN can reduce egress costs by 40-60%
+   *Potential savings: 15-35%* on network costs
+   - Using CDN can reduce egress costs by 25-40%
 
 ##### 17. Monitor resource utilization
    - Best practices:
@@ -218,7 +218,7 @@
       - consider using Stackdriver for advanced monitoring
       - review monitoring data regularly
 
-   *Potential savings: 10-25%* through better resource management
+   *Potential savings: 5-15%* through better resource management
 
 ##### 18. Leverage Cloud Shell for development
    - Best practices:
@@ -227,7 +227,7 @@
       - consider using Cloud Shell for interactive sessions
       - review Cloud Shell usage and costs regularly
 
-   *Potential savings: 5-10%* on development infrastructure
+   *Potential savings: 2-8%* on development infrastructure
 
 ##### 19. Plan service availability across regions
    - Best practices:
@@ -236,7 +236,7 @@
       - use Cloud Console or gcloud to check service availability
       - review service availability and costs regularly
 
-   *Potential savings: 10-30%* through optimal region selection
+   *Potential savings: 5-20%* through optimal region selection
 
 ##### 20. Choose optimal disk types
    - Best practices:
@@ -246,8 +246,8 @@
 
    [Google Cloud Disk Types documentation](https://cloud.google.com/compute/docs/disks)
 
-   *Potential savings: 20-50%* on storage costs
-   - Standard HDD is ~60% cheaper than SSD
+   *Potential savings: 15-35%* on storage costs
+   - Standard HDD is ~40% cheaper than SSD
 
 ##### 21. Utilize GCP Recommendations for cost optimization
    - Best practices:
@@ -257,7 +257,7 @@
 
    [Google Cloud Recommendations documentation](https://cloud.google.com/recommendations)
 
-   *Potential savings: 10-35%* by following automated recommendations
+   *Potential savings: 5-25%* by following automated recommendations
 
 ##### 22. Automate Dataproc cluster scheduling
    - Best practices:
@@ -269,5 +269,5 @@
 
    [Google Cloud Cloud Scheduler documentation](https://cloud.google.com/dataproc/docs/tutorials/workflow-scheduler)
 
-   *Potential savings: 40-60%* on Dataproc costs
+   *Potential savings: 25-45%* on Dataproc costs
    - Shutting down clusters when not in use
