@@ -94,7 +94,7 @@
    [Google Cloud Cloud Scheduler documentation](https://cloud.google.com/scheduler/docs/start-and-stop-compute-engine-instances-on-a-schedule)
 
 ##### 9. Life cycle policy in Google Cloud Storage
-    - Best practices:
+   - Best practices:
       - use lifecycle policy to manage objects
       - set policies for different storage classes
       - consider storage class for different types of data
@@ -103,7 +103,7 @@
    [Google Cloud Life Cycle Policy documentation](https://cloud.google.com/storage/docs/lifecycle)
 
 ##### 10. Identify unused disks and IP addresses
-    - Best practices:
+   - Best practices:
       - use gcloud command to identify unused disks
       - set up alerts for unused resources
       - consider automation for periodic checks
@@ -112,7 +112,7 @@
    [Google Cloud gcloud command documentation](https://cloud.google.com/compute/docs/viewing-and-applying-idle-resources-recommendations)
 
 ##### 11. Custom virtual machine instances
-    - Best practices:
+   - Best practices:
       - use custom machine types for specific workloads
       - consider vCPU and memory requirements
       - review machine types regularly
@@ -121,13 +121,13 @@
    [Google Cloud Custom Machine Types documentation](https://cloud.google.com/compute/docs/instances/creating-instance-with-custom-machine-type)
 
 ##### 12. Avoid dulicated data in GCS buckets
-    - Best practices:
+   - Best practices:
       - use naming conventions to avoid duplicates
       - consider versioning for important data
       - review bucket usage regularly
 
 ##### 13. Region selection for costs optimization and performance
-    - Best practices:
+   - Best practices:
       - choose regions based on data residency, performance, and compliance requirements
       - consider regional vs multi-regional options
       - use Cloud Console or gcloud to check service availability
@@ -136,7 +136,7 @@
    [Google Cloud Region Selection documentation](https://cloud.google.com/solutions/best-practices-compute-engine-region-selection)
 
 ##### 14. Bigquery optimization: 
-    - Best practices:
+   - Best practices:
       - avoid select *, 
       - use caching, 
       - turn on history based optimization feature
@@ -148,14 +148,14 @@
       - limit query number of bytes processed per query
 
 ##### 15. On demand vs provision capacity
-    - Best practices:
+   - Best practices:
       - use on-demand for flexible workloads
       - consider provisioned capacity for predictable workloads
       - use Cloud Console or gcloud to check pricing and availability
       - review capacity options regularly
 
 ##### 16. Egress pricing
-    - Best practices:
+   - Best practices:
       - understand egress pricing model
       - use caching to reduce egress costs
       - consider regional vs multi-regional storage
@@ -165,28 +165,28 @@
    [Google Cloud Egress Pricing documentation](https://cloud.google.com/vpc/network-pricing)
 
 ##### 17. Cloud monitoring for resource utilization
-    - Best practices:
+   - Best practices:
       - use Cloud Monitoring to track resource utilization
       - set up alerts for high resource usage
       - consider using Stackdriver for advanced monitoring
       - review monitoring data regularly
 
 ##### 18. Cloud Shell - free machine for development
-    - Best practices:
+   - Best practices:
       - use Cloud Shell for quick access to GCP resources
       - use Cloud Shell for development tasks
       - consider using Cloud Shell for interactive sessions
       - review Cloud Shell usage and costs regularly
 
 ##### 19. Different servces availability in regions: regional, zonal, multi-regional
-    - Best practices:
+   - Best practices:
       - understand availability options for different services
       - consider regional vs zonal services
       - use Cloud Console or gcloud to check service availability
       - review service availability and costs regularly
 
 ##### 20. Select disk type: HHD, SSD
-    - Best practices:
+   - Best practices:
       - consider HHD for cost-sensitive workloads
       - use SSD for high-performance, low-latency workloads
       - review disk types and costs regularly
@@ -194,7 +194,7 @@
    [Google Cloud Disk Types documentation](https://cloud.google.com/compute/docs/disks)
 
 ##### 21. GCP Recommendations for cost optimization
-    - Best practices:
+   - Best practices:
       - use GCP Recommendations for cost optimization
       - consider using Cloud Console or gcloud to check recommendations
       - review recommendations regularly
@@ -202,7 +202,7 @@
    [Google Cloud Recommendations documentation](https://cloud.google.com/recommendations)
 
 ##### 22. Schedule Dataproc cluster
-    - Best practices:
+   - Best practices:
       - use Cloud Scheduler to trigger Dataproc cluster
       - Cloud Functions to handle Dataproc cluster management logic
       - set up triggers based on time, API activity, or other events
