@@ -271,3 +271,6 @@
 
    *Potential savings: 25-45%* on Dataproc costs
    - Shutting down clusters when not in use
+
+   Table of potential savings:
+   ![alt text](images/potential_savings.png)
