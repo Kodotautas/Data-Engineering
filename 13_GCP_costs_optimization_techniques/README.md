@@ -1,4 +1,10 @@
 # GCP Costs Optimization Techniques and best practices
+Hey there! 👋
+
+I put together this guide to help teams save money on their GCP bills. Cloud costs can get out of hand quickly, but with some smart optimization techniques, you can keep your costs down while still getting great performance.
+
+Let's dive into some proven ways to optimize your GCP spending!
+
 
 ##### 1. Implement budgets and alerts
    Best practices for implementing budgets and alerts:
