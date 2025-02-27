@@ -1,4 +1,4 @@
-can be comaparison
+is data engineer job creative?
 
 its like 
 Lego Master Builder
