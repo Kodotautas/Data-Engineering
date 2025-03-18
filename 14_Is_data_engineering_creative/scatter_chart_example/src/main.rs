@@ -28,21 +28,21 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Define data points
     // Format: (Difficulty, Creativity, Label)
     let data_points = vec![
-        (10.0, 10.0, "Data Architecture Design"),
-        (9.0, 9.0, "Problem Solving for Edge Cases"), 
-        (8.0, 8.0, "Data Model Innovation"),
-        (7.0, 7.0, "Data Pipeline Optimization"),
-        (6.0, 6.0, "Data Quality Framework"),
-        (5.0, 5.0, "Custom Transformation Logic"),
-        (4.0, 4.0, "ETL with Unique Requirements"),
-        (3.5, 3.5, "Standard ETL Process Improvement"),
-        (3.0, 3.0, "Documentation of Complex Systems"),
-        (2.5, 2.5, "Configuration Management"),
-        (2.0, 2.0, "Compliance Implementation"),
-        (1.5, 1.5, "Basic ETL Implementation"),
-        (1.0, 1.0, "System Monitoring Enhancement"),
-        (0.5, 0.5, "Routine Maintenance"),
-        (0.25, 0.25, "Basic Documentation Updates"),
+        (10.0, 10.0, "Architecture Design"),
+        (9.0, 9.0, "Edge Case Solving"),
+        (8.0, 8.0, "Data Modeling"),
+        (7.0, 7.0, "Pipeline Tuning"),
+        (6.0, 6.0, "Quality Framework"),
+        (5.0, 5.0, "Custom ETL Logic"),
+        (4.0, 4.0, "Complex ETL"),
+        (3.5, 3.5, "ETL Improvement"),
+        (3.0, 3.0, "System Docs"),
+        (2.5, 2.5, "Config Mgmt"),
+        (2.0, 2.0, "Compliance"),
+        (1.5, 1.5, "Basic ETL"),
+        (1.0, 1.0, "Monitoring"),
+        (0.5, 0.5, "Maintenance"),
+        (0.25, 0.25, "Basic Docs"),
     ];
 
     // Helper function to get color based on value
@@ -81,12 +81,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             // Special handling for different points based on position
             let (font_size, x_offset, y_offset) = if idx >= data_points.len() - 2 {
                 // Bottom points - place labels above points
-                (10, 0.0, 0.5)  // Smaller font and position above point
+                (18, 0.0, 0.5)  // Increased from 10 to 15
             } else if idx < 2 {
                 // Top points - place labels below and left of points to keep them in view
-                (12, -0.5, -0.3)  // Smaller font and position below and left
+                (18, -0.5, -0.3)  // Increased from 12 to 18
             } else {
-                (12, 0.2, 0.2)  // Regular size for other points
+                (18, 0.2, 0.2)  // Increased from 12 to 18
             };
             
             chart.draw_series(std::iter::once(Text::new(
