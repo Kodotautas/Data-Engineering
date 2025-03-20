@@ -15,19 +15,26 @@ The chart visually demonstrates the correlation between task difficulty and requ
 - Rust (installed via [rustup](https://rustup.rs/))
 - Cargo (comes with Rust)
 
-## How to Run
+## Installation
 
-1. Navigate to this directory:
+1. Clone this repository:
+   ```bash
+   git clone <repository-url>
    ```
+
+2. Navigate to the project directory:
+   ```bash
    cd scatter_chart_example
    ```
 
-2. Build and run the project:
-   ```
+## Usage
+
+1. Build and run the project:
+   ```bash
    cargo run
    ```
 
-3. The output image `scatter_chart.png` will be generated in the project root directory.
+2. The output image `scatter_chart.png` will be generated in the project root directory.
 
 ## Libraries Used
 
@@ -36,4 +43,4 @@ The chart visually demonstrates the correlation between task difficulty and requ
 
 ## Data Source
 
-The data points used in this chart are derived from an analysis of various data engineering tasks categorized by creativity and difficulty levels. 
+The data points used in this chart are derived from an analysis of various data engineering tasks categorized by creativity and difficulty levels.
