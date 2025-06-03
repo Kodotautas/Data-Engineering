@@ -22,9 +22,11 @@ Data Source → Cloud Storage (CMEK) → BigQuery (CMEK) → Analytics
 
 ## 🛠️ Tech Stack
 - **Google Cloud Platform**: BigQuery, Cloud KMS, Cloud Storage
+- **Core Programming Language**: Rust (utilizing GCP Rust SDKs like `google-cloud-bigquery`, `google-cloud-kms`, `google-cloud-storage`)
 - **Infrastructure**: Terraform for reproducible setup
+- **Containerization & Orchestration**: Docker, Cloud Run, Cloud Scheduler
 - **Monitoring**: Cloud Logging, Cloud Monitoring
-- **Automation**: Cloud Functions for key rotation
+- **CI/CD**: Cloud Build (for building Rust applications/containers)
 
 ## 🔧 Pipeline Building Tools & Architecture
 
@@ -35,79 +37,20 @@ Data Source → Cloud Storage (CMEK) → BigQuery (CMEK) → Analytics
    - IAM roles and permissions
    - Cloud Storage buckets with encryption
 
-2. **Apache Beam with Dataflow** - Data Processing
-   - Handles large-scale data transformations
-   - Built-in encryption validation
-   - Performance monitoring capabilities
-   - Serverless scaling
+2. **Rust Applications with GCP SDKs** - Data Processing & Encryption Logic
+   - Utilize Rust crates like `google-cloud-bigquery`, `google-cloud-kms`, `google-cloud-storage`.
+   - Custom logic for data ingestion and validation (including CMEK checks).
+   - Can be containerized using Docker and deployed on Cloud Run for serverless execution.
+   - Offers performance benefits and memory safety for data handling.
 
-3. **Cloud Composer (Airflow)** - Orchestration
-   - DAGs for end-to-end pipeline execution
-   - Encryption status monitoring
-   - Automated key rotation scheduling
-   - Error handling and retries
-
-4. **dbt (Data Build Tool)** - Data Transformations
-   - SQL-based transformations in BigQuery
-   - Documentation and lineage tracking
-   - Testing data quality with encrypted datasets
-   - Version control for analytics code
-
-### Alternative Lightweight Approach
-For faster POC development, we could also use:
-- **Cloud Run** + **Cloud Scheduler** for containerized orchestration
-- **BigQuery scheduled queries** for transformations
-- **Python scripts** with BigQuery and KMS client libraries
-- **Cloud Build** for CI/CD automation
+3. **Cloud Run + Cloud Scheduler** - Orchestration & Automation
+   - Deploy containerized Rust applications as Cloud Run services.
+   - Use Cloud Scheduler to trigger services for pipeline execution (e.g., data ingestion).
+   - Provides a serverless, scalable way to manage workflows.
 
 ### Sample Pipeline Flow
 ```
-1. CSV/JSON files → Cloud Storage (CMEK)
-2. Cloud Scheduler triggers Cloud Run service
-3. Cloud Run job processes and validates encryption
-4. Load to BigQuery dataset (CMEK)
-5. dbt runs transformations and tests
-6. Monitoring dashboard shows encryption status
-```
-
-## 📋 Implementation Steps
-
-### Phase 1: Setup Encryption Infrastructure
-- [ ] Create Cloud KMS key ring and encryption key
-- [ ] Set up IAM permissions for BigQuery to use KMS keys
-- [ ] Configure BigQuery dataset with CMEK encryption
-
-### Phase 2: Build Data Pipeline
-- [ ] Create sample sensitive dataset (customer PII simulation)
-- [ ] Implement Cloud Storage bucket with CMEK
-- [ ] Set up BigQuery data loading with encryption validation
-- [ ] Add monitoring for encryption status
-
-### Phase 3: Security & Performance Testing
-- [ ] Implement key rotation mechanism
-- [ ] Performance benchmarking (CMEK vs default encryption)
-- [ ] Security audit logging and monitoring
-- [ ] Cost analysis documentation
-
-## 🎯 LinkedIn Post Angle
-**"How I Built a Secure Data Pipeline with Customer-Managed Encryption in BigQuery"**
-
-Key points to cover:
-- Why CMEK matters for sensitive data
-- Real performance impact (with numbers)
-- Step-by-step implementation insights
-- Security vs convenience trade-offs
-- Cost implications and recommendations
-
-## 📊 Success Metrics
-- Encryption applied to 100% of data at rest and in transit
-- Key rotation automated and tested
-- Performance impact documented and minimized
-- Compliance requirements met (demonstrate with audit logs)
-
-## 🎁 Deliverables
-1. Complete Terraform configuration
-2. Sample encrypted dataset and queries
-3. Performance comparison report
-4. Security monitoring dashboard
-5. LinkedIn post with real insights and metrics
+1. CSV/JSON files → Cloud Storage (CMEK) with sensitive data
+2. Cloud Scheduler triggers Cloud Run service (hosting a Rust application)
+3. Cloud Run Rust job (application) processes data from Cloud Storage, validates encryption using Cloud KMS, and interacts with BigQuery client libraries.
+4. Data is loaded into the BigQuery dataset (CMEK) by the Rust application which is encripted.
