@@ -22,6 +22,9 @@ resource "google_kms_crypto_key" "cmek_key" {
   }
 }
 
+# Data source to get current project information
+data "google_project" "current" {}
+
 # IAM binding for key administrators
 resource "google_kms_crypto_key_iam_binding" "key_admin" {
   crypto_key_id = google_kms_crypto_key.cmek_key.id
@@ -32,10 +35,12 @@ resource "google_kms_crypto_key_iam_binding" "key_admin" {
   ]
 }
 
-# Combined IAM binding for all services that need to encrypt/decrypt
+# Combined IAM binding for BigQuery, Cloud Storage, and Cloud Run service accounts
 resource "google_kms_crypto_key_iam_binding" "cmek_services" {
   crypto_key_id = google_kms_crypto_key.cmek_key.id
   role          = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
+
+  depends_on = [google_service_account.cloud_run_sa]
 
   members = [
     "serviceAccount:bq-${data.google_project.current.number}@bigquery-encryption.iam.gserviceaccount.com",
@@ -44,7 +49,10 @@ resource "google_kms_crypto_key_iam_binding" "cmek_services" {
   ]
 }
 
-# Data source to get current project information
-data "google_project" "current" {}
+# Wait for IAM propagation
+resource "time_sleep" "wait_for_storage_iam" {
+  depends_on = [google_kms_crypto_key_iam_binding.cmek_services]
+  create_duration = "120s"
+}
 
 # Outputs moved to outputs.tf to avoid duplicates 

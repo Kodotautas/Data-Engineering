@@ -193,9 +193,7 @@ curl -X POST $SERVICE_URL/process \
 curl $SERVICE_URL/metrics
 ```
 
-## 📝 Generated Metrics for LinkedIn
-
-After running the processing, you'll have real data to include in your LinkedIn post:
+## 📝 Generated Metrics
 
 - **Encryption validation results** (CMEK vs default)
 - **Performance benchmarks** (upload times, query times)
@@ -245,8 +243,4 @@ cd ../terraform && terraform apply
 1. **Run the application** to generate sample data
 2. **Collect performance metrics** for your analysis
 3. **Create visualizations** of the encryption performance
-4. **Write your LinkedIn post** with real insights!
 
----
-
-**💡 This application provides real, measurable data to showcase CMEK implementation in your LinkedIn content!** 

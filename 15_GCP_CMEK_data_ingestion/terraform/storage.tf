@@ -7,7 +7,7 @@ resource "google_storage_bucket" "data_bucket" {
   location      = var.region
   force_destroy = true
 
-  depends_on = [google_kms_crypto_key_iam_binding.cmek_services]
+  depends_on = [time_sleep.wait_for_storage_iam]
 
   # Enable CMEK encryption
   encryption {

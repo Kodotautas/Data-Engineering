@@ -110,7 +110,7 @@ class CMEKValidator:
                 "rotation_period": str(key.rotation_period),
                 "total_versions": len(versions),
                 "primary_version": key.primary.name if key.primary else None,
-                "created_time": key.create_time.isoformat() if key.create_time else None
+                "created_time": str(key.create_time) if key.create_time else None
             }
             
         except Exception as e:
@@ -122,7 +122,7 @@ class DataGenerator:
     """Generates sample data for testing CMEK performance"""
     
     @staticmethod
-    def generate_customers(num_records: int = 1000) -> pd.DataFrame:
+    def generate_customers(num_records: int = 1000000000) -> pd.DataFrame:
         """Generate sample customer data with PII"""
         np.random.seed(42)  # For reproducible data
         
@@ -141,7 +141,7 @@ class DataGenerator:
         return pd.DataFrame(customers)
     
     @staticmethod
-    def generate_transactions(num_records: int = 5000) -> pd.DataFrame:
+    def generate_transactions(num_records: int = 1000000000) -> pd.DataFrame:
         """Generate sample transaction data"""
         np.random.seed(42)
         
@@ -223,7 +223,10 @@ class PerformanceMeasurement:
         return self
     
     def __exit__(self, exc_type, exc_val, exc_tb):
-        execution_time_ms = int((time.time() - self.start_time) * 1000)
+        if self.start_time is not None:
+            execution_time_ms = int((time.time() - self.start_time) * 1000)
+        else:
+            execution_time_ms = 0
         
         self.monitor.record_metric({
             'encryption_type': self.encryption_type,
@@ -283,8 +286,8 @@ def process_data():
             
             encryption_validation = {
                 "bigquery": validator.validate_bigquery_encryption(BIGQUERY_DATASET),
-                "storage": validator.validate_storage_encryption(STORAGE_BUCKET),
-                "kms_key": validator.validate_kms_key_access(KMS_KEY_ID)
+                "storage": validator.validate_storage_encryption(STORAGE_BUCKET) if STORAGE_BUCKET else {"encrypted": False, "error": "STORAGE_BUCKET not configured"},
+                "kms_key": validator.validate_kms_key_access(KMS_KEY_ID) if KMS_KEY_ID else {"key_accessible": False, "error": "KMS_KEY_ID not configured"}
             }
             
             results["results"]["encryption_validation"] = encryption_validation
@@ -396,8 +399,8 @@ def validate_encryption():
         
         validation_results = {
             "bigquery": validator.validate_bigquery_encryption(BIGQUERY_DATASET),
-            "storage": validator.validate_storage_encryption(STORAGE_BUCKET),
-            "kms_key": validator.validate_kms_key_access(KMS_KEY_ID),
+            "storage": validator.validate_storage_encryption(STORAGE_BUCKET) if STORAGE_BUCKET else {"encrypted": False, "error": "STORAGE_BUCKET not configured"},
+            "kms_key": validator.validate_kms_key_access(KMS_KEY_ID) if KMS_KEY_ID else {"key_accessible": False, "error": "KMS_KEY_ID not configured"},
             "timestamp": datetime.now(timezone.utc).isoformat()
         }
         
@@ -444,4 +447,4 @@ def get_metrics():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8080))
-    app.run(host='0.0.0.0', port=port, debug=False) 
+    app.run(host='0.0.0.0', port=port, debug=False)

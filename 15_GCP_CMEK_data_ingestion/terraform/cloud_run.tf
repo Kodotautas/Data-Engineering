@@ -21,6 +21,18 @@ resource "google_project_iam_member" "cloud_run_bigquery_job" {
   member  = "serviceAccount:${google_service_account.cloud_run_sa.email}"
 }
 
+resource "google_project_iam_member" "cloud_run_storage" {
+  project = local.project_id
+  role    = "roles/storage.objectViewer"
+  member  = "serviceAccount:${google_service_account.cloud_run_sa.email}"
+}
+
+resource "google_project_iam_member" "cloud_run_storage_admin" {
+  project = local.project_id
+  role    = "roles/storage.admin"
+  member  = "serviceAccount:${google_service_account.cloud_run_sa.email}"
+}
+
 resource "google_project_iam_member" "cloud_run_logging" {
   project = local.project_id
   role    = "roles/logging.logWriter"
