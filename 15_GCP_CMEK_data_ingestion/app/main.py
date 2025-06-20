@@ -122,43 +122,58 @@ class DataGenerator:
     """Generates sample data for testing CMEK performance"""
     
     @staticmethod
-    def generate_customers(num_records: int = 1000000000) -> pd.DataFrame:
+    def generate_customers(num_records: int = 100000) -> pd.DataFrame:
         """Generate sample customer data with PII"""
         np.random.seed(42)  # For reproducible data
         
-        customers = []
-        for i in range(num_records):
-            customer = {
-                'customer_id': f"CUST_{i+1:06d}",
-                'email': f"user_{i+1}@example{np.random.randint(1, 10)}.com",
-                'full_name': f"Customer {i+1}",
-                'phone_number': f"+1{np.random.randint(1000000000, 9999999999)}",
-                'registration_date': datetime.now(timezone.utc),
-                'country': np.random.choice(['US', 'CA', 'UK', 'DE', 'FR', 'AU'])
-            }
-            customers.append(customer)
+        logger.info(f"Generating {num_records} customer records...")
         
-        return pd.DataFrame(customers)
+        # Generate data in vectorized way for better performance
+        customer_ids = [f"CUST_{i+1:08d}" for i in range(num_records)]
+        emails = [f"user_{i+1}@example{np.random.randint(1, 10)}.com" for i in range(num_records)]
+        full_names = [f"Customer {i+1}" for i in range(num_records)]
+        phone_numbers = [f"+1{np.random.randint(1000000000, 9999999999)}" for i in range(num_records)]
+        countries = np.random.choice(['US', 'CA', 'UK', 'DE', 'FR', 'AU'], size=num_records)
+        
+        customers_df = pd.DataFrame({
+            'customer_id': customer_ids,
+            'email': emails,
+            'full_name': full_names,
+            'phone_number': phone_numbers,
+            'registration_date': datetime.now(timezone.utc),
+            'country': countries
+        })
+        
+        logger.info(f"Generated {len(customers_df)} customer records")
+        return customers_df
     
     @staticmethod
-    def generate_transactions(num_records: int = 1000000000) -> pd.DataFrame:
+    def generate_transactions(num_records: int = 1000000, max_customer_id: int = 100000) -> pd.DataFrame:
         """Generate sample transaction data"""
         np.random.seed(42)
         
-        transactions = []
-        for i in range(num_records):
-            transaction = {
-                'transaction_id': f"TXN_{i+1:08d}",
-                'customer_id': f"CUST_{np.random.randint(1, 1001):06d}",
-                'amount': round(np.random.uniform(10.0, 2000.0), 2),
-                'currency': np.random.choice(['USD', 'EUR', 'GBP', 'CAD']),
-                'transaction_date': datetime.now(timezone.utc),
-                'merchant_name': f"Merchant {np.random.randint(1, 100)}",
-                'category': np.random.choice(['Food', 'Transport', 'Shopping', 'Entertainment', 'Healthcare'])
-            }
-            transactions.append(transaction)
+        logger.info(f"Generating {num_records} transaction records...")
         
-        return pd.DataFrame(transactions)
+        # Generate data in vectorized way for better performance
+        transaction_ids = [f"TXN_{i+1:010d}" for i in range(num_records)]
+        customer_ids = [f"CUST_{np.random.randint(1, max_customer_id+1):08d}" for i in range(num_records)]
+        amounts = np.round(np.random.uniform(10.0, 2000.0, size=num_records), 2)
+        currencies = np.random.choice(['USD', 'EUR', 'GBP', 'CAD'], size=num_records)
+        merchant_names = [f"Merchant {np.random.randint(1, 100)}" for i in range(num_records)]
+        categories = np.random.choice(['Food', 'Transport', 'Shopping', 'Entertainment', 'Healthcare'], size=num_records)
+        
+        transactions_df = pd.DataFrame({
+            'transaction_id': transaction_ids,
+            'customer_id': customer_ids,
+            'amount': amounts,
+            'currency': currencies,
+            'transaction_date': datetime.now(timezone.utc),
+            'merchant_name': merchant_names,
+            'category': categories
+        })
+        
+        logger.info(f"Generated {len(transactions_df)} transaction records")
+        return transactions_df
 
 
 class PerformanceMonitor:
@@ -176,7 +191,7 @@ class PerformanceMonitor:
         """Record a performance metric"""
         metric = {
             'metric_id': str(uuid.uuid4()),
-            'test_run_date': datetime.now(timezone.utc),
+            'test_run_date': datetime.now(timezone.utc).isoformat(),  # Convert to ISO string format
             **metric_data
         }
         self.metrics.append(metric)
@@ -189,7 +204,24 @@ class PerformanceMonitor:
         
         try:
             table_id = f"{PROJECT_ID}.{BIGQUERY_DATASET}.performance_metrics"
-            table = self.bq_client.get_table(table_id)
+            
+            # Try to get table, create if doesn't exist
+            try:
+                table = self.bq_client.get_table(table_id)
+            except exceptions.NotFound:
+                logger.info(f"Creating performance_metrics table: {table_id}")
+                schema = [
+                    bigquery.SchemaField("metric_id", "STRING", mode="REQUIRED"),
+                    bigquery.SchemaField("test_run_date", "TIMESTAMP", mode="REQUIRED"),
+                    bigquery.SchemaField("encryption_type", "STRING", mode="REQUIRED"),
+                    bigquery.SchemaField("operation_type", "STRING", mode="REQUIRED"),
+                    bigquery.SchemaField("execution_time_ms", "INTEGER", mode="REQUIRED"),
+                    bigquery.SchemaField("rows_processed", "INTEGER", mode="NULLABLE"),
+                    bigquery.SchemaField("data_size_bytes", "INTEGER", mode="NULLABLE"),
+                ]
+                table = bigquery.Table(table_id, schema=schema)
+                table = self.bq_client.create_table(table)
+                logger.info(f"Created table: {table_id}")
             
             errors = self.bq_client.insert_rows_json(table, self.metrics)
             
@@ -198,6 +230,7 @@ class PerformanceMonitor:
                 return {"status": "error", "errors": errors}
             
             saved_count = len(self.metrics)
+            logger.info(f"Successfully saved {saved_count} metrics to BigQuery")
             self.metrics.clear()  # Clear after saving
             
             return {"status": "success", "saved_count": saved_count}
@@ -296,9 +329,15 @@ def process_data():
         if action in ['daily_processing', 'test_data_generation']:
             logger.info("Generating sample data...")
             
+            # Get record counts from request or use defaults for POC
+            customers_count = request_data.get('customers_count', 100000)  # 100K customers
+            transactions_count = request_data.get('transactions_count', 1000000)  # 1M transactions
+            
+            logger.info(f"Generating {customers_count} customers and {transactions_count} transactions...")
+            
             # Generate sample datasets
-            customers_df = DataGenerator.generate_customers(1000)
-            transactions_df = DataGenerator.generate_transactions(5000)
+            customers_df = DataGenerator.generate_customers(customers_count)
+            transactions_df = DataGenerator.generate_transactions(transactions_count, customers_count)
             
             # Upload to Cloud Storage with performance monitoring
             with performance_monitor.measure_operation("STORAGE_UPLOAD", "CMEK") as measurement:

@@ -143,7 +143,7 @@ if [ $? -eq 0 ]; then
     echo -e "   Validate CMEK: ${GREEN}curl ${SERVICE_URL}/validate${NC}"
     echo -e "   Process Data: ${GREEN}curl -X POST ${SERVICE_URL}/process -H 'Content-Type: application/json' -d '{\"action\": \"test_data_generation\"}'${NC}"
     echo ""
-    echo -e "${BLUE}💡 The application is now ready to generate data for your LinkedIn post!${NC}"
+    echo -e "${BLUE}💡 The application is now ready to generate data."
     
 else
     echo -e "${RED}❌ Deployment failed${NC}"
