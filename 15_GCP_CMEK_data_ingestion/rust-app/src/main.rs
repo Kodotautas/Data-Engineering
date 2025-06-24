@@ -235,13 +235,9 @@ async fn process_cmek_data(process_config: ProcessConfig) -> Result<ProcessResul
 async fn main() -> Result<()> {
     // Initialize tracing
     tracing_subscriber::fmt()
-        .with_env_filter("info,cmek_poc_processor=debug")
         .init();
 
     info!("🦀 CMEK POC Processor (Rust) - Starting...");
-
-    // Load environment variables
-    dotenvy::dotenv().ok();
     
     // Parse command line arguments or use defaults
     let process_config = ProcessConfig {
