@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# CMEK POC - One-Step Deployment Script
+# CMEK POC - One-Step Deployment Script (Rust Version)
 # This script automates the complete deployment of the CMEK proof-of-concept
-# including infrastructure setup, application deployment, and testing
+# including infrastructure setup, Rust application deployment, and testing
 
 set -e  # Exit on any error
 
@@ -165,7 +165,7 @@ get_user_input() {
     echo "  - Cloud KMS key ring and encryption key"
     echo "  - BigQuery dataset with CMEK encryption"
     echo "  - Cloud Storage bucket with CMEK encryption"
-    echo "  - Cloud Run service for data processing"
+    echo "  - Cloud Run service for data processing (Rust)"
     echo "  - Cloud Scheduler job for automation"
     echo "  - IAM service accounts and permissions"
     echo
@@ -244,19 +244,27 @@ EOF
 
 # Function to deploy application
 deploy_application() {
-    print_status "Deploying Cloud Run application..."
+    print_status "Deploying Rust Cloud Run application..."
     
-    cd app
+    cd rust-app
     
-    # Make deploy script executable
-    chmod +x deploy.sh
-    
-    # Deploy using the script
-    ./deploy.sh
+    # Deploy Rust application
+    print_status "Building and deploying Rust CMEK POC..."
+    gcloud run deploy cmek-poc-processor \
+        --source . \
+        --platform managed \
+        --region "$REGION" \
+        --allow-unauthenticated \
+        --set-env-vars="PROJECT_ID=$PROJECT_ID,REGION=$REGION,BIGQUERY_DATASET=${DATASET_ID:-cmek_poc_dataset},STORAGE_BUCKET=$STORAGE_BUCKET,KMS_KEY_ID=$KMS_KEY_ID" \
+        --memory=4Gi \
+        --cpu=2 \
+        --timeout=3600 \
+        --max-instances=10 \
+        --port=8080
     
     cd ..
     
-    print_success "Application deployed successfully"
+    print_success "Rust application deployed successfully"
 }
 
 # Function to test deployment
@@ -344,7 +352,7 @@ display_results() {
     echo "  cd terraform && terraform destroy"
     echo
     
-    print_success "🎉 CMEK POC deployment completed successfully!"
+    print_success "🦀 CMEK POC (Rust) deployment completed successfully!"
 }
 
 # Function to handle errors
@@ -357,8 +365,8 @@ handle_error() {
 
 # Main execution
 main() {
-    echo "🚀 CMEK POC - One-Step Deployment"
-    echo "=================================="
+    echo "🦀 CMEK POC - One-Step Deployment (Rust)"
+    echo "========================================"
     echo
     
     # Check requirements

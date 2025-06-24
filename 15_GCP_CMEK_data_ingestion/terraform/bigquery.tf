@@ -99,6 +99,8 @@ resource "google_bigquery_table" "customers" {
     encryption  = "cmek"
     data_type   = "pii"
   }
+
+  deletion_protection = false
 }
 
 # Transactions table schema
@@ -163,6 +165,8 @@ resource "google_bigquery_table" "transactions" {
     encryption  = "cmek"
     data_type   = "financial"
   }
+
+  deletion_protection = false
 }
 
 # Performance metrics table for tracking CMEK performance
@@ -227,6 +231,8 @@ resource "google_bigquery_table" "performance_metrics" {
     encryption  = "cmek"
     purpose     = "metrics"
   }
+
+  deletion_protection = false
 }
 
 # Outputs moved to outputs.tf to avoid duplicates 
