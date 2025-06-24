@@ -45,8 +45,15 @@ resource "google_project_iam_member" "cloud_run_monitoring" {
   member  = "serviceAccount:${google_service_account.cloud_run_sa.email}"
 }
 
-# Cloud Run service for CMEK data processing
-resource "google_cloud_run_v2_service" "cmek_processor" {
+# Cloud Run Jobs service account permissions for job creation
+resource "google_project_iam_member" "cloud_run_jobs_run" {
+  project = local.project_id
+  role    = "roles/run.developer"
+  member  = "serviceAccount:${google_service_account.cloud_run_sa.email}"
+}
+
+# Cloud Run job for CMEK data processing
+resource "google_cloud_run_v2_job" "cmek_processor" {
   depends_on = [
     google_project_service.required_apis,
     google_service_account.cloud_run_sa
@@ -56,64 +63,78 @@ resource "google_cloud_run_v2_service" "cmek_processor" {
   location = local.region
   
   template {
-    service_account = google_service_account.cloud_run_sa.email
-    
-    scaling {
-      min_instance_count = 0
-      max_instance_count = 5
-    }
-    
-    containers {
-      # Placeholder image - we'll build and deploy our custom image later
-      image = "us-docker.pkg.dev/cloudrun/container/hello"
+    template {
+      service_account = google_service_account.cloud_run_sa.email
       
-      ports {
-        container_port = 8080
-      }
+      task_count = 1
+      parallelism = 1
       
-      # Environment variables for the service
-      env {
-        name  = "PROJECT_ID"
-        value = local.project_id
-      }
+      task_timeout = "3600s"
       
-      env {
-        name  = "REGION"
-        value = local.region
-      }
-      
-      env {
-        name  = "KMS_KEY_ID"
-        value = google_kms_crypto_key.cmek_key.id
-      }
-      
-      env {
-        name  = "BIGQUERY_DATASET"
-        value = google_bigquery_dataset.cmek_dataset.dataset_id
-      }
-      
-      env {
-        name  = "STORAGE_BUCKET"
-        value = google_storage_bucket.data_bucket.name
-      }
-      
-      # Resource limits
-      resources {
-        limits = {
-          cpu    = "2"
-          memory = "4Gi"
+      containers {
+        # Placeholder image - we'll build and deploy our custom image later
+        image = "us-docker.pkg.dev/cloudrun/container/hello"
+        
+        # Environment variables for the job
+        env {
+          name  = "PROJECT_ID"
+          value = local.project_id
         }
-        cpu_idle = true
+        
+        env {
+          name  = "REGION"
+          value = local.region
+        }
+        
+        env {
+          name  = "KMS_KEY_ID"
+          value = google_kms_crypto_key.cmek_key.id
+        }
+        
+        env {
+          name  = "BIGQUERY_DATASET"
+          value = google_bigquery_dataset.cmek_dataset.dataset_id
+        }
+        
+        env {
+          name  = "STORAGE_BUCKET"
+          value = google_storage_bucket.data_bucket.name
+        }
+        
+        env {
+          name  = "ACTION"
+          value = "daily_processing"
+        }
+        
+        env {
+          name  = "VALIDATE_ENCRYPTION"
+          value = "true"
+        }
+        
+        env {
+          name  = "RUN_PERFORMANCE_TEST"
+          value = "true"
+        }
+        
+        env {
+          name  = "CUSTOMERS_COUNT"
+          value = "1000"
+        }
+        
+        env {
+          name  = "TRANSACTIONS_COUNT"
+          value = "5000"
+        }
+        
+        # Resource limits
+        resources {
+          limits = {
+            cpu    = "2"
+            memory = "4Gi"
+          }
+        }
       }
     }
-    
-    # Timeout for long-running encryption operations
-    timeout = "3600s"
-  }
-  
-  traffic {
-    percent = 100
-    type    = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
   }
   
   labels = merge(local.common_labels, {
@@ -122,19 +143,22 @@ resource "google_cloud_run_v2_service" "cmek_processor" {
   })
 }
 
-# Allow unauthenticated invocations for testing (remove in production)
-resource "google_cloud_run_v2_service_iam_binding" "noauth" {
-  location = google_cloud_run_v2_service.cmek_processor.location
-  name     = google_cloud_run_v2_service.cmek_processor.name
+# IAM binding to allow the service account to run the job
+resource "google_cloud_run_v2_job_iam_binding" "job_runner" {
+  name     = google_cloud_run_v2_job.cmek_processor.name
+  location = google_cloud_run_v2_job.cmek_processor.location
   role     = "roles/run.invoker"
   members = [
-    "allUsers"
+    "serviceAccount:${google_service_account.cloud_run_sa.email}"
   ]
 }
 
 # Cloud Scheduler job to trigger data processing
 resource "google_cloud_scheduler_job" "cmek_processor_trigger" {
-  depends_on = [google_project_service.required_apis]
+  depends_on = [
+    google_project_service.required_apis,
+    google_cloud_run_v2_job.cmek_processor
+  ]
   
   name        = "${local.prefix}-scheduler"
   description = "Trigger CMEK data processing pipeline"
@@ -144,21 +168,15 @@ resource "google_cloud_scheduler_job" "cmek_processor_trigger" {
 
   http_target {
     http_method = "POST"
-    uri         = "${google_cloud_run_v2_service.cmek_processor.uri}/process"
+    uri         = "https://${local.region}-run.googleapis.com/apis/run.googleapis.com/v1/namespaces/${local.project_id}/jobs/${google_cloud_run_v2_job.cmek_processor.name}:run"
     
     headers = {
       "Content-Type" = "application/json"
     }
     
-    body = base64encode(jsonencode({
-      action = "daily_processing"
-      validate_encryption = true
-      run_performance_test = true
-    }))
-    
     oidc_token {
       service_account_email = google_service_account.cloud_run_sa.email
-      audience             = google_cloud_run_v2_service.cmek_processor.uri
+      audience             = "https://${local.region}-run.googleapis.com/"
     }
   }
 }

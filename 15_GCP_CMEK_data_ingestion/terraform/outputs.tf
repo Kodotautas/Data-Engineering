@@ -48,15 +48,10 @@ output "bigquery_tables" {
   }
 }
 
-# Cloud Run Outputs
-output "cloud_run_url" {
-  description = "The URL of the Cloud Run service"
-  value       = google_cloud_run_v2_service.cmek_processor.uri
-}
-
-output "cloud_run_service_name" {
-  description = "The name of the Cloud Run service"
-  value       = google_cloud_run_v2_service.cmek_processor.name
+# Cloud Run Job Outputs
+output "cloud_run_job_name" {
+  description = "The name of the Cloud Run job"
+  value       = google_cloud_run_v2_job.cmek_processor.name
 }
 
 output "cloud_run_service_account_email" {
@@ -87,8 +82,7 @@ output "deployment_summary" {
     bigquery_dataset = google_bigquery_dataset.cmek_dataset.dataset_id
     
     # Processing
-    cloud_run_service = google_cloud_run_v2_service.cmek_processor.name
-    cloud_run_url     = google_cloud_run_v2_service.cmek_processor.uri
+    cloud_run_job = google_cloud_run_v2_job.cmek_processor.name
     
     # Automation
     scheduler_job = google_cloud_scheduler_job.cmek_processor_trigger.name
@@ -106,9 +100,10 @@ output "useful_commands" {
     storage_list_files = "gsutil ls gs://${google_storage_bucket.data_bucket.name}/"
     storage_upload_sample = "gsutil cp sample-data.csv gs://${google_storage_bucket.data_bucket.name}/sample-data/"
     
-    # Cloud Run commands
-    cloud_run_logs = "gcloud run services logs read ${google_cloud_run_v2_service.cmek_processor.name} --region=${var.region}"
-    cloud_run_describe = "gcloud run services describe ${google_cloud_run_v2_service.cmek_processor.name} --region=${var.region}"
+    # Cloud Run Job commands
+    cloud_run_job_execute = "gcloud run jobs execute ${google_cloud_run_v2_job.cmek_processor.name} --region=${var.region}"
+    cloud_run_job_describe = "gcloud run jobs describe ${google_cloud_run_v2_job.cmek_processor.name} --region=${var.region}"
+    cloud_run_job_logs = "gcloud logging read \"resource.type=cloud_run_job AND resource.labels.job_name=${google_cloud_run_v2_job.cmek_processor.name}\" --limit=50 --format=table"
     
     # KMS commands
     kms_key_info = "gcloud kms keys describe ${google_kms_crypto_key.cmek_key.name} --keyring=${google_kms_key_ring.cmek_keyring.name} --location=${var.region}"
