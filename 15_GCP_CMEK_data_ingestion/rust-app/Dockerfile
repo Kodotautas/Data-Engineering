@@ -1,5 +1,5 @@
 # Build stage
-FROM rust:1.76-slim as builder
+FROM rust:1.82-slim as builder
 
 # Install required system dependencies
 RUN apt-get update && apt-get install -y \
@@ -40,12 +40,6 @@ RUN chown -R cmekuser:cmekuser /app
 
 # Switch to non-root user
 USER cmekuser
-
-# Expose port 8080 (Cloud Run default)
-EXPOSE 8080
-
-# Set environment variable for port
-ENV PORT=8080
 
 # Command to run the application
 CMD ["./cmek-poc-processor"] 
