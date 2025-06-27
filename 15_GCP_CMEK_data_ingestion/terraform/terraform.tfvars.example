@@ -1,0 +1,32 @@
+# Example Terraform Variables Configuration
+# Copy this file to terraform.tfvars and update with your values
+
+# REQUIRED: Your GCP Project ID
+project_id = "vl-data-learn"
+
+# REQUIRED: Your email address for BigQuery dataset ownership
+dataset_owner_email = "x@gmail.com"
+
+# OPTIONAL: Region for resources (default: us-central1)
+region = "eu-west1"
+
+# OPTIONAL: Environment name (default: demo)
+environment = "demo"
+
+# OPTIONAL: KMS key rotation period in seconds (default: 90 days)
+# key_rotation_period = "7776000"
+
+# OPTIONAL: Enable monitoring and alerting (default: true)
+# enable_monitoring = true
+
+# OPTIONAL: Storage bucket lifecycle (default: 90 days)
+# storage_lifecycle_age = 90
+
+# OPTIONAL: Cloud Run configuration
+# cloud_run_min_instances = 0
+# cloud_run_max_instances = 5
+# cloud_run_cpu = "2"
+# cloud_run_memory = "4Gi"
+
+# OPTIONAL: Scheduler frequency (default: daily at 9 AM UTC)
+# scheduler_frequency = "0 9 * * *" 
