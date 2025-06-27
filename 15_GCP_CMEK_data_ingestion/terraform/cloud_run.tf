@@ -63,13 +63,11 @@ resource "google_cloud_run_v2_job" "cmek_processor" {
   location = local.region
   
   template {
+    task_count = 1
+    parallelism = 1
+    
     template {
       service_account = google_service_account.cloud_run_sa.email
-      
-      task_count = 1
-      parallelism = 1
-      
-      task_timeout = "3600s"
       
       containers {
         # Placeholder image - we'll build and deploy our custom image later
