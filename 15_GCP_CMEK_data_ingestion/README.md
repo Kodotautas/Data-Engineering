@@ -1,56 +1,80 @@
-# POC: Customer-Managed Encryption Keys (CMEK) for BigQuery Data Pipeline
+# GCP CMEK Data Ingestion
 
-## 🎯 POC Objective
-Build a secure data pipeline demonstrating end-to-end encryption using Customer-Managed Encryption Keys (CMEK) in BigQuery, showcasing how to protect sensitive data while maintaining performance.
+Secure data ingestion pipeline using Customer-Managed Encryption Keys (CMEK) for data at rest encryption.
 
-## 🔧 What We'll Build
-A complete data pipeline that:
-1. **Creates a Cloud KMS key ring and key** for encryption management
-2. **Sets up a BigQuery dataset with CMEK encryption** 
-3. **Implements automated data ingestion** with encryption validation
-4. **Demonstrates key rotation** and security monitoring
-5. **Shows performance comparison** between default and CMEK encryption
+## What It Does
 
-## 🏗️ Architecture Components
+This project demonstrates secure data processing with CMEK encryption:
+- Encrypts data at rest using customer-managed encryption keys
+- Generates and processes sample customer and transaction data
+- Stores encrypted data in BigQuery and Cloud Storage
+- Provides automated data pipeline with Cloud Run and Rust
+
+## Infrastructure
+
+The deployment creates:
+- **Cloud KMS**: Key ring and encryption key for CMEK
+- **BigQuery**: Dataset with CMEK encryption
+- **Cloud Storage**: Bucket with CMEK encryption  
+- **Cloud Run**: Rust application for data processing
+- **Cloud Scheduler**: Automated pipeline execution
+- **IAM**: Service accounts and permissions
+
+## Prerequisites
+
+- Google Cloud CLI (`gcloud`)
+- Terraform
+- Docker (optional - Cloud Build handles containers)
+
+## Quick Deploy
+
+1. **Authenticate with GCP:**
+   ```bash
+   gcloud auth login
+   gcloud config set project YOUR_PROJECT_ID
+   ```
+
+2. **Run one-step deployment:**
+   ```bash
+   ./deploy_cmek_one_step.sh
+   ```
+
+3. **Follow the prompts:**
+   - Enter your GCP Project ID
+   - Enter your email address
+   - Select deployment region
+
+## Manual Deploy
+
+If you prefer manual deployment:
+
+```bash
+cd terraform
+cp terraform.tfvars.example terraform.tfvars
+# Edit terraform.tfvars with your values
+terraform init
+terraform plan
+terraform apply
 ```
-Data Source → Cloud Storage (CMEK) → BigQuery (CMEK) → Analytics
-                    ↓
-           Cloud KMS Key Management
-                    ↓
-              Monitoring & Auditing
+
+## Testing
+
+Run the demo to test the pipeline:
+```bash
+./demo.sh
 ```
 
-## 🛠️ Tech Stack
-- **Google Cloud Platform**: BigQuery, Cloud KMS, Cloud Storage
-- **Core Programming Language**: Rust (utilizing GCP Rust SDKs like `google-cloud-bigquery`, `google-cloud-kms`, `google-cloud-storage`)
-- **Infrastructure**: Terraform for reproducible setup
-- **Containerization & Orchestration**: Docker, Cloud Run, Cloud Scheduler
-- **Monitoring**: Cloud Logging, Cloud Monitoring
-- **CI/CD**: Cloud Build (for building Rust applications/containers)
+## Sample Data
 
-## 🔧 Pipeline Building Tools & Architecture
+The application generates:
+- 1,000 customer records (PII: emails, names, phone numbers)
+- 5,000 transaction records (financial data)
+- All data encrypted with CMEK
 
-### Core Pipeline Components
-1. **Terraform** - Infrastructure as Code
-   - KMS key rings and keys setup
-   - BigQuery datasets with CMEK configuration
-   - IAM roles and permissions
-   - Cloud Storage buckets with encryption
+## Cleanup
 
-2. **Rust Applications with GCP SDKs** - Data Processing & Encryption Logic
-   - Utilize Rust crates like `google-cloud-bigquery`, `google-cloud-kms`, `google-cloud-storage`.
-   - Custom logic for data ingestion and validation (including CMEK checks).
-   - Can be containerized using Docker and deployed on Cloud Run for serverless execution.
-   - Offers performance benefits and memory safety for data handling.
-
-3. **Cloud Run + Cloud Scheduler** - Orchestration & Automation
-   - Deploy containerized Rust applications as Cloud Run services.
-   - Use Cloud Scheduler to trigger services for pipeline execution (e.g., data ingestion).
-   - Provides a serverless, scalable way to manage workflows.
-
-### Sample Pipeline Flow
+To destroy all resources:
+```bash
+cd terraform
+terraform destroy
 ```
-1. CSV/JSON files → Cloud Storage (CMEK) with sensitive data
-2. Cloud Scheduler triggers Cloud Run service (hosting a Rust application)
-3. Cloud Run Rust job (application) processes data from Cloud Storage, validates encryption using Cloud KMS, and interacts with BigQuery client libraries.
-4. Data is loaded into the BigQuery dataset (CMEK) by the Rust application which is encripted.
